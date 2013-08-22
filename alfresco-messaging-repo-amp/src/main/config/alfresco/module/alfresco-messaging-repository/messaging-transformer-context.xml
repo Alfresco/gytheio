@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- Import the video transformer from the third party subsystem -->
+    <bean id="transformer.worker.RemoteVideo"
+        class="org.alfresco.repo.management.subsystems.SubsystemProxyFactory">
+        <property name="sourceApplicationContextFactory">
+            <ref bean="Messaging" />
+        </property>
+        <property name="sourceBeanName">
+            <value>transformer.worker.RemoteVideo</value>
+        </property>
+        <property name="interfaces">
+            <list>
+                <value>org.alfresco.repo.content.transform.MessagingContentTransformerWorker
+                </value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="transformer.RemoteVideo"
+        class="org.alfresco.repo.content.transform.AsyncProxyContentTransformer"
+        parent="baseContentTransformer">
+        <property name="worker">
+            <ref bean="transformer.worker.RemoteVideo" />
+        </property>
+    </bean>
+
+</beans>

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="activeMqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="${messaging.broker.url}" />
+    </bean>
+
+    <bean id="amqp" class="org.apache.camel.component.amqp.AMQPComponent">
+        <property name="connectionFactory" ref="activeMqConnectionFactory" />
+    </bean>
+    
+    <bean id="messagingObjectMapper" class="org.alfresco.messaging.jackson.ObjectMapperFactory" 
+        factory-method="createInstance" />
+    
+    <bean id="jsonTransformationRequestDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.transform.TransformationRequest" />
+    </bean>
+    <bean id="jsonTransformationReplyDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.transform.TransformationReply" />
+    </bean>
+    
+    <import resource="amqpRoutes.xml"/>
+
+    <camelContext id="camel" xmlns="http://camel.apache.org/schema/spring">
+        <!-- Set up the direct endpoints which can be routed below -->
+        <template id="transformWorkerRequestProducerTemplate"
+            defaultEndpoint="direct:alfresco.transform.worker.request" />
+        
+        <!-- TODO find a good way to switch routes, property value did not seem to work -->
+        <routeContextRef ref="amqpRoutes" />
+    </camelContext>
+
+    <bean id="baseTransformationRequestProducer" class="org.alfresco.messaging.camel.CamelMessageProducer" abstract="true">
+        <property name="producer" ref="transformWorkerRequestProducerTemplate" />
+    </bean>
+
+    <!--
+    <bean id="baseContentService" class="org.alfresco.repo.content.AsyncContentServiceImpl" abstract="true" init-method="init">
+      <property name="retryingTransactionHelper">
+          <ref bean="retryingTransactionHelper"/>
+      </property>
+      <property name="dictionaryService">
+          <ref bean="dictionaryService" />
+      </property>
+      <property name="nodeService">
+          <ref bean="nodeService" />
+      </property>
+      <property name="transformerRegistry">
+          <ref bean="contentTransformerRegistry" />
+      </property>
+      <property name="policyComponent">
+          <ref bean="policyComponent" />
+      </property>
+      <property name="mimetypeService">
+         <ref bean="mimetypeService"/>
+      </property>
+      <property name="avmService">
+          <ref bean="avmService"/>
+      </property>
+      <property name="imageMagickContentTransformer">
+         <ref bean="transformer.ImageMagick" />
+      </property>
+      <property name="eagerContentStoreCleaner" >
+         <ref bean="eagerContentStoreCleaner" />
+      </property>
+      <property name="ignoreEmptyContent" >
+         <value>${policy.content.update.ignoreEmpty}</value>
+      </property>
+      <property name="transformerDebug">
+         <ref bean="transformerDebug" />
+      </property>
+   </bean>
+   -->
+
+</beans>

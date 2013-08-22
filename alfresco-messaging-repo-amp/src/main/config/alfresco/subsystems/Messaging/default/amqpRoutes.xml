@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <routeContext id="amqpRoutes" xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="direct:alfresco.transform.worker.request.video" />
+            <marshal><custom ref="jsonTransformationRequestDataFormat"/></marshal>
+            <to uri="amqp:queue:alfresco.transform.worker.request.video?jmsMessageType=Text" />
+        </route>
+        <route>
+            <from uri="amqp:queue:alfresco.transform.worker.reply.video" />
+            <unmarshal><custom ref="jsonTransformationReplyDataFormat"/></unmarshal>
+            <to uri="bean:transformer.worker.RemoteVideo" />
+        </route>
+    </routeContext>
+
+</beans>
