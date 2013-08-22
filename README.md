@@ -79,5 +79,3 @@ Usage
 6. Start the repository
 7. Perform some video transformation, see usage in `alfresco-messaging-repo-amp`
 
-
-
