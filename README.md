@@ -4,7 +4,7 @@ Overview
 
 This project is spread out across several functional areas that should be useful for inclusion in many implementations but can be combined for the end result of an **Alfresco messaging content transformer for video**.
 
-The messaging content transformer uses a content transport implementation to make the content available to remote nodes, i.e. shared drive, S3, etc. then use **[Apache Camel](http://camel.apache.org/)** to route transformation requests to **[AMQP](http://www.amqp.org/)** queues on an **[ActiveMQ](http://activemq.apache.org/) broker*. 
+The messaging content transformer uses a content transport implementation to make the content available to remote nodes, i.e. shared drive, S3, etc. then use **[Apache Camel](http://camel.apache.org/)** to route transformation requests to **[AMQP](http://www.amqp.org/)** queues on an **[ActiveMQ](http://activemq.apache.org/) broker**. 
 
 Those transformation request messages are then processed by **[FFmpeg](http://www.ffmpeg.org/)** transformer nodes that also send replies to AMQP queues.
 
