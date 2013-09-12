@@ -36,6 +36,10 @@ You can use the `applyAmps` profile to apply the AMP to a specified `war.file.*t
 or let the plugin use your `CURRENT_PROJECT` environment variable for devenv and just execute:
 
    `mvn clean install -DrunTests -DapplyAmps -P wars-from-devenv-exploded`
+
+or let the plugin pull the artifacts from Maven using:
+
+   `mvn clean install -DapplyAmps -P wars-from-maven`
    
 Usage
 =====

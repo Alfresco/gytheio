@@ -354,6 +354,45 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>wars-from-maven</id>
+            <properties>
+                <war.artifactId.repo>alfresco</war.artifactId.repo>
+                <war.file.repo>${project.build.directory}/wars/${war.artifactId.repo}-${alfresco.version}.war</war.file.repo>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <version>2.8</version>
+                        <executions>
+                            <execution>
+                                <id>copy-wars</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>copy</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>${alfresco.groupId}</groupId>
+                                            <artifactId>${war.artifactId.repo}</artifactId>
+                                            <version>${alfresco.version}</version>
+                                            <type>war</type>
+                                            <destFileName>${war.artifactId.repo}-${alfresco.version}.war</destFileName>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}/wars</outputDirectory>
+                                    <overWriteReleases>false</overWriteReleases>
+                                    <overWriteSnapshots>true</overWriteSnapshots>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
 </project>
