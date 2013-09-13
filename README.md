@@ -10,7 +10,7 @@ Those transformation request messages are then processed by **[FFmpeg](http://ww
 
 Those transformation reply messages are then received by the messaging content transformer to associate the result as a completed content transformation.
 
-![AlfrescoOne Messaging Transformations](https://raw.github.com/Alfresco/alfresco-transformations/master/doc/resources/images/transformations-alfresoone-messaging.png)
+![AlfrescoOne Messaging Transformations](https://github.com/Alfresco/alfresco-transformations/blob/master/doc/resources/images/transformations-alfresoone-messaging.png?raw=true)
 
 Project Layout
 ==============
