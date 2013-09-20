@@ -12,13 +12,12 @@
     <modules>
         <module>alfresco-commons</module>
         <module>alfresco-commons-s3</module>
-        <module>alfresco-transformations-commons</module>
+        <module>alfresco-transform-commons</module>
         <module>alfresco-messaging-commons</module>
         <module>alfresco-messaging-amqp-direct</module>
         <module>alfresco-messaging-camel</module>
-        <module>alfresco-transformer-node-commons</module>
-        <module>alfresco-transformer-node-amqp</module>
-        <module>alfresco-transformer-node-ffmpeg</module>
+        <module>alfresco-transform-node-commons</module>
+        <module>alfresco-transform-node-ffmpeg</module>
     </modules>
 
     <properties>

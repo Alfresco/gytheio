@@ -78,16 +78,16 @@ public class MessagingContentTransformerWorkerImpl
         TransformationRequest request = new TransformationRequest(
                 remoteSourceContentReference, remoteTargetContentReference, requestOptions);
         
-        logger.debug("sending transformation request " + request.getTransformationRequestId());
+        logger.debug("sending transformation request " + request.getRequestId());
         
         messageProducer.send(request);
         
-        pendingTransformations.put(request.getTransformationRequestId(), 
+        pendingTransformations.put(request.getRequestId(), 
                 new PendingMessagingTransformation(request, reader, writer, executeAsynchronously));
         
         if (executeAsynchronously)
         {
-            return request.getTransformationRequestId();
+            return request.getRequestId();
         }
         else
         {
@@ -98,12 +98,12 @@ public class MessagingContentTransformerWorkerImpl
                 {
                     if (logger.isDebugEnabled())
                     {
-                        logger.debug("Polling for pending transformation " + request.getTransformationRequestId() +
+                        logger.debug("Polling for pending transformation " + request.getRequestId() +
                                 " completion in " + PENDING_TRANSFORM_POLLING_INTERVAL_MS + "ms");
                     }
                     Thread.sleep(PENDING_TRANSFORM_POLLING_INTERVAL_MS);
                     PendingMessagingTransformation pendingTransformation = pendingTransformations.get(
-                            request.getTransformationRequestId());
+                            request.getRequestId());
                     if (pendingTransformation.getStatus() == null)
                     {
                         // in-progress confirmation hasn't come back yet
@@ -111,7 +111,7 @@ public class MessagingContentTransformerWorkerImpl
                     }
                     if (pendingTransformation.getStatus().equals(TransformationReply.STATUS_COMPLETE))
                     {
-                        return request.getTransformationRequestId();
+                        return request.getRequestId();
                     }
                     if (pendingTransformation.getStatus().equals(TransformationReply.STATUS_ERROR))
                     {
@@ -158,17 +158,17 @@ public class MessagingContentTransformerWorkerImpl
         
         if (logger.isDebugEnabled())
         {
-            logger.debug("Received reply for transformation " + transformationReply.getTransformationRequestId() +
+            logger.debug("Received reply for transformation " + transformationReply.getRequestId() +
                     " with status=" + transformationReply.getStatus());
         }
         
         PendingMessagingTransformation pendingTransformation = pendingTransformations.get(
-                transformationReply.getTransformationRequestId());
+                transformationReply.getRequestId());
         if (pendingTransformation == null)
         {
             // TODO Need to better handle errors here, send an error message?
             logger.error("Unknown pending transformation: " + 
-                    transformationReply.getTransformationRequestId());
+                    transformationReply.getRequestId());
             return;
         }
         pendingTransformation.setLastReply(transformationReply);
@@ -186,12 +186,12 @@ public class MessagingContentTransformerWorkerImpl
             
             if (pendingTransformation.getExecuteAsynchronously())
             {
-                pendingTransformations.remove(transformationReply.getTransformationRequestId());
+                pendingTransformations.remove(transformationReply.getRequestId());
             }
             
             if (logger.isDebugEnabled())
             {
-                logger.debug("Transformation " + transformationReply.getTransformationRequestId() + " complete");
+                logger.debug("Transformation " + transformationReply.getRequestId() + " complete");
             }
         }
         else if (transformationReply.getStatus().equals(TransformationReply.STATUS_ERROR))
@@ -199,7 +199,7 @@ public class MessagingContentTransformerWorkerImpl
             logger.error(transformationReply.getDetail());
             if (pendingTransformation.getExecuteAsynchronously())
             {
-                pendingTransformations.remove(transformationReply.getTransformationRequestId());
+                pendingTransformations.remove(transformationReply.getRequestId());
             }
         }
     }

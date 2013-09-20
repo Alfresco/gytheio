@@ -14,7 +14,7 @@
 
     <properties>
         <alfresco.groupId>org.alfresco</alfresco.groupId>
-        <alfresco.version>4.2.d-SNAPSHOT</alfresco.version>
+        <alfresco.version>4.2.d</alfresco.version>
         <alfrescoRepoVersionMin>4.0.2</alfrescoRepoVersionMin>
         <alfrescoRepoVersionMax>4.2.99</alfrescoRepoVersionMax>
         <war.file>${war.file.repo}</war.file>
@@ -43,6 +43,46 @@
             <version>${alfresco.version}</version>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-mbeans</artifactId>
+            <version>${alfresco.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-wdr-deployment</artifactId>
+            <version>${alfresco.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-data-model</artifactId>
+            <version>${alfresco.version}</version>
+            <classifier>config</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-repository</artifactId>
+            <version>${alfresco.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>${alfresco.groupId}</groupId>
+            <artifactId>alfresco-repository</artifactId>
+            <version>${alfresco.version}</version>
+            <classifier>config</classifier>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.1-901-1.jdbc4</version>
+            <scope>test</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.alfresco</groupId>
@@ -51,7 +91,12 @@
         </dependency>
         <dependency>
             <groupId>org.alfresco</groupId>
-            <artifactId>alfresco-transformations-commons</artifactId>
+            <artifactId>alfresco-transform-commons</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.alfresco</groupId>
+            <artifactId>alfresco-hash-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
 
@@ -303,19 +348,9 @@
                                             <groupId>${alfresco.groupId}</groupId>
                                             <artifactId>alfresco-repository</artifactId>
                                             <version>${alfresco.version}</version>
-                                            <type>jar</type>
+                                            <type>test-jar</type>
                                             <overWrite>false</overWrite>
-                                            <includes>**/org/alfresco/RepositoryStartupTest.*</includes>
-                                            <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
-                                        </artifactItem>
-                                        <artifactItem>
-                                            <groupId>${alfresco.groupId}</groupId>
-                                            <artifactId>alfresco-repository</artifactId>
-                                            <version>${alfresco.version}</version>
-                                            <classifier>test-resources</classifier>
-                                            <type>jar</type>
-                                            <overWrite>false</overWrite>
-                                            <includes>quick/**</includes>
+                                            <includes>**/org/alfresco/RepositoryStartupTest.*,quick/**</includes>
                                             <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>

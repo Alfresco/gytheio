@@ -45,9 +45,9 @@ AMQP implementations which process and send messages and contains a Jackson-base
 Transformer Nodes
 -----------------
 
-* `alfresco-transformer-node-commons`
-* `alfresco-transformer-node-amqp`
-* `alfresco-transformer-node-ffmpeg`
+* `alfresco-transform-node-commons`
+* `alfresco-transform-node-amqp`
+* `alfresco-transform-node-ffmpeg`
 
 Content transformer node which acts as a `MessageConsumer` to process 
 `TransformationRequest` objects and sends `TransformationReply` objects 
@@ -76,7 +76,7 @@ Usage
 2. Build all modules from the root: `mvn clean install`
 3. Build and apply the AMP, see `alfresco-messaging-repo-amp`
 4. Start the ActiveMQ broker, see `messaging-broker-activemq`
-5. Start at least one transformer node, see ``alfresco-transformer-node-ffmpeg`
+5. Start at least one transformer node, see ``alfresco-transform-node-ffmpeg`
 6. Start the repository
 7. Perform some video transformation, see usage in `alfresco-messaging-repo-amp`
 
