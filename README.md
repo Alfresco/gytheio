@@ -24,10 +24,10 @@ Commons
 Serve as the minimal base for many content definitions, handling, 
 and utility operations.
 
-Transformation Commons
+Transform Commons
 ----------------------
 
-* `alfresco-transformations-commons`
+* `alfresco-transform-commons`
 
 Contains the basic definitions of `TransformationRequest` and `TransformationReply`
 objects and the transformation option objects to be sent to content transformers.
@@ -46,7 +46,6 @@ Transformer Nodes
 -----------------
 
 * `alfresco-transform-node-commons`
-* `alfresco-transform-node-amqp`
 * `alfresco-transform-node-ffmpeg`
 
 Content transformer node which acts as a `MessageConsumer` to process 
