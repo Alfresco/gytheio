@@ -17,6 +17,8 @@ to send `TransformationRequest` objects and can consume `TransformationReply` ob
 to update status and read the result of a completed transformation.
 5. Configures an *instance* of a messaging content transformer which supports
 various video transformations.
+6. Defines a `HashService` interface for computing hashes of `ContentReader` objects
+7. Defines a `HashServiceMessagingImpl` which uses a `MessageProducer` to send `HashRequest` objects and can consume `HashReply` objects to retrieve the results of the hash computation
 
 Building
 ========
@@ -51,4 +53,6 @@ Drop a video into Share then refresh and you should see a thumbnail.
 
 Any action which would request a video transformation should work, such
 as a copy and transform action.
+
+Hashes are requested `onContentUpdate` but the results are currently only logged.  In the future the value will be stored in a property on the content node, and in the case of `Versionable` nodes directly with the version aspect.
 

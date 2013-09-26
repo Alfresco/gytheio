@@ -88,8 +88,8 @@ Alfresco Repository AMP
 
 * `alfresco-messaging-repo-amp`
 
-Defines and configures the repository pieces needed for Camel routing and 
-a messaging content transformer for video.
+Defines and configures the repository pieces needed for Camel routing, 
+a messaging content transformer for video, and a messaging hash service for computing hash values.
 
 ActiveMQ Broker
 ---------------
