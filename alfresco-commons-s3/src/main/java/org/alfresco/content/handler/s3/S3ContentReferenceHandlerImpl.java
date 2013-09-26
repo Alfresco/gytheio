@@ -40,6 +40,11 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 
+/**
+ * AWS S3 content handler implementation
+ * 
+ * @author Ray Gauss II
+ */
 public class S3ContentReferenceHandlerImpl implements ContentReferenceHandler
 {
     private static final Log logger = LogFactory.getLog(S3ContentReferenceHandlerImpl.class);

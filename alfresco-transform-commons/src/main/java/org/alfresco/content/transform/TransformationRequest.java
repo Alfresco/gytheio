@@ -21,13 +21,14 @@ package org.alfresco.content.transform;
 import org.alfresco.content.AbstractContentRequest;
 import org.alfresco.content.ContentReference;
 import org.alfresco.content.transform.options.TransformationOptions;
+import org.alfresco.messaging.Request;
 
 /**
  * Represents a request for content transformation from source to target with transformation options
  * 
  * @author Ray Gauss II
  */
-public class TransformationRequest extends AbstractContentRequest
+public class TransformationRequest extends AbstractContentRequest implements Request<TransformationReply>
 {
     private ContentReference targetContentReference;
     private TransformationOptions options;
@@ -84,6 +85,12 @@ public class TransformationRequest extends AbstractContentRequest
     public void setOptions(TransformationOptions options)
     {
         this.options = options;
+    }
+
+    @Override
+    public Class<TransformationReply> getReplyClass()
+    {
+        return TransformationReply.class;
     }
     
 }

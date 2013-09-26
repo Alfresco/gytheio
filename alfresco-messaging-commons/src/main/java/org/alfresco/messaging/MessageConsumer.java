@@ -27,8 +27,18 @@ package org.alfresco.messaging;
 public interface MessageConsumer
 {
 
+    /**
+     * Performs any processing required upon receiving the given POJO message
+     * 
+     * @param message
+     */
     public void onReceive(Object message);
     
+    /**
+     * The class of POJO messages expected
+     * 
+     * @return the POJO message class
+     */
     public Class<?> getConsumingMessageBodyClass();
     
 }

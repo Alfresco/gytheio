@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
+ *
+ * This file is part of an Alfresco messaging investigation
+ *
+ * The Alfresco messaging investigation is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The Alfresco messaging investigation is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with the Alfresco messaging investigation. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.alfresco.content.transform;
 
 import org.apache.commons.logging.Log;
@@ -5,7 +23,14 @@ import org.apache.commons.logging.LogFactory;
 
 import org.alfresco.messaging.MessageConsumer;
 import org.alfresco.messaging.MessageProducer;
+import org.alfresco.messaging.MessagingException;
 
+/**
+ * A base implementation of a transform node which receives messages, uses a {@link ContentTransformerNodeWorker}
+ * to perform the transformation, then uses a {@link MessageProducer} to send the reply.
+ * 
+ * @author Ray Gauss II
+ */
 public class BaseContentTransformerNode implements MessageConsumer
 {
     private static final Log logger = LogFactory.getLog(BaseContentTransformerNode.class);
@@ -13,11 +38,21 @@ public class BaseContentTransformerNode implements MessageConsumer
     protected ContentTransformerNodeWorker transformerWorker;
     protected MessageProducer messageProducer;
     
+    /**
+     * Sets the transformer worker which does the actual work of the transformation
+     * 
+     * @param transformerWorker
+     */
     public void setWorker(ContentTransformerNodeWorker transformerWorker)
     {
         this.transformerWorker = transformerWorker;
     }
 
+    /**
+     * Sets the message producer used to send replies
+     * 
+     * @param messageProducer
+     */
     public void setMessageProducer(MessageProducer messageProducer)
     {
         this.messageProducer = messageProducer;
@@ -53,6 +88,10 @@ public class BaseContentTransformerNode implements MessageConsumer
         return TransformationRequest.class;
     }
     
+    /**
+     * Implementation of the progress reporter which sends reply messages with
+     * progress on the transformation.
+     */
     public class ContentTransformerNodeWorkerProgressReporterImpl implements ContentTransformerNodeWorkerProgressReporter
     {
         private TransformationRequest request;
@@ -62,7 +101,7 @@ public class BaseContentTransformerNode implements MessageConsumer
             this.request = request;
         }
         
-        public void onTransformationStarted()
+        public void onTransformationStarted() throws MessagingException
         {
             if (logger.isDebugEnabled())
             {
@@ -72,10 +111,10 @@ public class BaseContentTransformerNode implements MessageConsumer
             TransformationReply reply = 
                     new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
-            messageProducer.send(reply);
+            messageProducer.send(reply, request.getReplyTo());
         }
         
-        public void onTransformationProgress(float progress)
+        public void onTransformationProgress(float progress) throws MessagingException
         {
             if (logger.isDebugEnabled())
             {
@@ -85,10 +124,10 @@ public class BaseContentTransformerNode implements MessageConsumer
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
             reply.setProgress(progress);
-            messageProducer.send(reply);
+            messageProducer.send(reply, request.getReplyTo());
         }
         
-        public void onTransformationComplete()
+        public void onTransformationComplete() throws MessagingException
         {
             if (logger.isDebugEnabled())
             {
@@ -97,7 +136,7 @@ public class BaseContentTransformerNode implements MessageConsumer
             }
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_COMPLETE);
-            messageProducer.send(reply);
+            messageProducer.send(reply, request.getReplyTo());
         }
     }
 

@@ -18,34 +18,21 @@
  */
 package org.alfresco.content;
 
-import java.util.UUID;
-
 import org.alfresco.content.ContentReference;
+import org.alfresco.messaging.AbstractRequest;
 
 /**
  * Represents a request for content transformation from source to target with transformation options
  * 
  * @author Ray Gauss II
  */
-public abstract class AbstractContentRequest
+public abstract class AbstractContentRequest extends AbstractRequest
 {
-    private final String requestId;
     private ContentReference sourceContentReference;
     
     public AbstractContentRequest()
     {
         super();
-        this.requestId = UUID.randomUUID().toString();
-    }
-    
-    /**
-     * Gets the generated UUID for the transformation request
-     * 
-     * @return the request ID
-     */
-    public String getRequestId()
-    {
-        return requestId;
     }
 
     /**

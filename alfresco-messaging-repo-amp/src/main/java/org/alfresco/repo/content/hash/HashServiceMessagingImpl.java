@@ -1,33 +1,60 @@
 package org.alfresco.repo.content.hash;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.alfresco.content.ContentReference;
+import org.alfresco.content.hash.HashReply;
 import org.alfresco.content.hash.HashRequest;
-import org.alfresco.messaging.MessageProducer;
+import org.alfresco.messaging.RequestReplyMessageProducer;
 import org.alfresco.messaging.content.transport.ContentTransport;
+import org.alfresco.model.ContentModel;
+import org.alfresco.repo.content.ContentServicePolicies.OnContentUpdatePolicy;
+import org.alfresco.repo.policy.JavaBehaviour;
+import org.alfresco.repo.policy.PolicyComponent;
 import org.alfresco.service.cmr.repository.ContentIOException;
 import org.alfresco.service.cmr.repository.ContentReader;
+import org.alfresco.service.cmr.repository.ContentService;
+import org.alfresco.service.cmr.repository.NodeRef;
+import org.alfresco.service.cmr.repository.hash.HashService;
+import org.alfresco.util.PropertyCheck;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class HashServiceMessagingImpl implements HashService
+public class HashServiceMessagingImpl implements HashService, OnContentUpdatePolicy
 {
     private static final Log logger = LogFactory.getLog(HashServiceMessagingImpl.class);
 
     private static final String DEFAULT_HASH_ALGORITHM = HashRequest.HASH_ALGORITHM_SHA_512;
+    private static final long SYNCHRONOUS_HASH_TIMEOUT_MS = 1000 * 60 * 2; // 2 minutes
+    
+    protected PolicyComponent policyComponent;
+    protected ContentService contentService;
     
     protected ContentTransport contentTransport;
-    protected MessageProducer messageProducer;
+    protected RequestReplyMessageProducer<HashRequest, HashReply> requestReplyMessageProducer;
+    protected ExecutorService executorService;
     protected boolean available;
-    
-    // TODO: In a clustered env this would have to be distributed (Hazelcast) or persisted
-    protected Set<String> pendingHashes = new HashSet<String>();
     
     public HashServiceMessagingImpl()
     {
         this.available = false;
+    }
+
+    public void setPolicyComponent(PolicyComponent policyComponent)
+    {
+        this.policyComponent = policyComponent;
+    }
+
+    public void setContentService(ContentService contentService)
+    {
+        this.contentService = contentService;
     }
 
     public void setContentTransport(ContentTransport contentTransport)
@@ -35,6 +62,17 @@ public class HashServiceMessagingImpl implements HashService
         this.contentTransport = contentTransport;
     }
     
+    public void setRequestReplyMessageProducer(
+            RequestReplyMessageProducer<HashRequest, HashReply> requestMessageProducer)
+    {
+        this.requestReplyMessageProducer = requestMessageProducer;
+    }
+
+    public void setExecutorService(ExecutorService executorService)
+    {
+        this.executorService = executorService;
+    }
+
     /**
      * @return Returns true if the transformer is functioning otherwise false
      */
@@ -57,35 +95,116 @@ public class HashServiceMessagingImpl implements HashService
         this.available = available;
     }
     
-    @Override
-    public String hash(ContentReader reader) throws ContentIOException
+    public void init()
     {
-        ContentReference remoteSourceContentReference;
+        PropertyCheck.mandatory(this, "policyComponent",  policyComponent);
+        PropertyCheck.mandatory(this, "contentService",  contentService);
+        PropertyCheck.mandatory(this, "contentTransport",  contentTransport);
+        PropertyCheck.mandatory(this, "requestMessageProducer",  requestReplyMessageProducer);
+        
+        if (executorService == null)
+        {
+            executorService = Executors.newCachedThreadPool();
+        }
+        
+        this.policyComponent.bindClassBehaviour(
+                OnContentUpdatePolicy.QNAME,
+                ContentModel.TYPE_CONTENT,
+                new JavaBehaviour(this, "onContentUpdate"));
+    }
+    
+    @Override
+    public Future<String> generateHashAsync(ContentReader reader, String hashAlgorithm)
+            throws ContentIOException
+    {
         try
         {
             // Get a reference to write to on the remote system
-            remoteSourceContentReference = 
+            ContentReference remoteSourceContentReference = 
                     contentTransport.createContentReference(reader.getMimetype());
             
             // Write source to remote content system
             contentTransport.write(reader, remoteSourceContentReference);
+            
+            HashRequest request = new HashRequest(
+                    remoteSourceContentReference, DEFAULT_HASH_ALGORITHM);
+            
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("sending hash request " + request.getRequestId());
+            }
+            
+            FutureTask<String> hashValueFuture = new FutureTask<String>(
+                    new ExtractHashValueCallable(requestReplyMessageProducer.asyncRequest(request)));
+            
+            executorService.execute(hashValueFuture);
+            
+            return hashValueFuture;
         }
         catch (Exception e)
         {
-            throw new ContentIOException(e.getMessage());
+            throw new ContentIOException(e.getMessage(), e);
+        }
+    }
+    
+    @Override
+    public String generateHash(ContentReader reader, String hashAlgorithm) throws ContentIOException
+    {
+        Future<String> hashValueFuture = generateHashAsync(reader, hashAlgorithm);
+        try
+        {
+            return hashValueFuture.get(SYNCHRONOUS_HASH_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        }
+        catch (InterruptedException e)
+        {
+            // We were asked to stop
+            hashValueFuture.cancel(true);
+            return null;
+        }
+        catch (ExecutionException e)
+        {
+            throw new ContentIOException("Hash failed: " + e.getMessage(), e);
+        }
+        catch (TimeoutException e)
+        {
+            throw new ContentIOException("Hash timed out: " + e.getMessage(), e);
+        }
+    }
+    
+    public class ExtractHashValueCallable implements Callable<String>
+    {
+        private Future<HashReply> replyFuture;
+        
+        public ExtractHashValueCallable(Future<HashReply> replyFuture)
+        {
+            this.replyFuture = replyFuture;
+        }
+
+        @Override
+        public String call() throws Exception
+        {
+            HashReply reply = replyFuture.get();
+            return reply.getHexValue();
+        }
+    }
+
+    @Override
+    public void onContentUpdate(NodeRef nodeRef, boolean newContent)
+    {
+        if (nodeRef == null)
+        {
+            return;
         }
         
-        HashRequest request = new HashRequest(
-                remoteSourceContentReference, DEFAULT_HASH_ALGORITHM);
+        ContentReader reader = contentService.getReader(nodeRef, ContentModel.PROP_CONTENT);
+        String hashValue = generateHash(reader, DEFAULT_HASH_ALGORITHM);
         
-        logger.debug("sending transformation request " + request.getRequestId());
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("nodeRef:" + nodeRef.toString() + " " + DEFAULT_HASH_ALGORITHM + "=" + hashValue);
+        }
         
-        messageProducer.send(request);
-        
-        pendingHashes.add(request.getRequestId());
-        
-        // TODO return hash
-        return null;
+        // TODO - check that content version has not changed then save value as property in the Versionable aspect
     }
 
 }

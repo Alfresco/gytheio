@@ -2,5 +2,5 @@
 Overview
 ========
 
-An Apache Camel `MessageProducer`.
+Apache Camel `MessageProducer` and `RequestReplyMessageProducer` implementations.
 

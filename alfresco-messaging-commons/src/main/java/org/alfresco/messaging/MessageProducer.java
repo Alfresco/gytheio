@@ -26,6 +26,21 @@ package org.alfresco.messaging;
 public interface MessageProducer
 {
 
-    public void send(Object message);
+    /**
+     * Send the given POJO message to the default queue for the producer
+     * 
+     * @param message
+     * @throws MessagingException
+     */
+    public void send(Object message) throws MessagingException;
+    
+    /**
+     * Send the given POJO message to the given queue
+     * 
+     * @param message
+     * @param queueName
+     * @throws MessagingException
+     */
+    public void send(Object message, String queueName) throws MessagingException;
     
 }

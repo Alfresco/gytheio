@@ -7,13 +7,24 @@
     <routeContext id="amqpRoutes" xmlns="http://camel.apache.org/schema/spring">
         <route>
             <from uri="direct:alfresco.transform.worker.request.video" />
-            <marshal><custom ref="jsonTransformationRequestDataFormat"/></marshal>
+            <marshal><custom ref="transformationRequestDataFormat"/></marshal>
             <to uri="amqp:queue:alfresco.transform.worker.request.video?jmsMessageType=Text" />
         </route>
         <route>
             <from uri="amqp:queue:alfresco.transform.worker.reply.video" />
-            <unmarshal><custom ref="jsonTransformationReplyDataFormat"/></unmarshal>
+            <unmarshal><custom ref="transformationReplyDataFormat"/></unmarshal>
             <to uri="bean:transformer.worker.RemoteVideo" />
+        </route>
+        <!-- Static replyTo can only be set in route, see https://issues.apache.org/jira/browse/CAMEL-4008 -->
+        <route>
+            <from uri="direct:alfresco.hash.request" />
+            <marshal><custom ref="hashRequestDataFormat"/></marshal>
+            <to uri="amqp:queue:alfresco.hash.request?jmsMessageType=Text&amp;replyTo=queue:alfresco.hash.reply" />
+        </route>
+        <route>
+            <from uri="amqp:queue:alfresco.hash.reply" />
+            <unmarshal><custom ref="hashReplyDataFormat"/></unmarshal>
+            <to uri="bean:hashRequestReplyMessageProducer" />
         </route>
     </routeContext>
 

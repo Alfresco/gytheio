@@ -1,14 +1,35 @@
+/*
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
+ *
+ * This file is part of an Alfresco messaging investigation
+ *
+ * The Alfresco messaging investigation is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * The Alfresco messaging investigation is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with the Alfresco messaging investigation. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.alfresco.messaging.amqp;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.alfresco.messaging.MessageConsumer;
 import org.alfresco.messaging.MessageProducer;
+import org.alfresco.messaging.Request;
 import org.apache.qpid.amqp_1_0.client.Connection;
 import org.apache.qpid.amqp_1_0.client.ConnectionException;
 import org.apache.qpid.amqp_1_0.client.Message;
@@ -34,7 +55,7 @@ public class AmqpDirectEndpoint implements MessageProducer
     private static final Log logger = LogFactory.getLog(AmqpDirectEndpoint.class);
 
     private static final int RECEIVER_CREDIT = 2000;
-    
+
     private String host;
     private String receiveQueueName;
     private String sendQueueName;
@@ -79,15 +100,28 @@ public class AmqpDirectEndpoint implements MessageProducer
                     }
                     if (stringMessage != null)
                     {
-                        Object request = objectMapper.readValue(stringMessage, 
+                        Object pojoMessage = objectMapper.readValue(stringMessage, 
                                 messageConsumer.getConsumingMessageBodyClass());
-                        if (request == null)
+                        if (pojoMessage == null)
                         {
                             logger.error("Request could not be unmarshalled");
                         }
                         else
                         {
-                            messageConsumer.onReceive(request);
+                            if (pojoMessage instanceof Request<?>)
+                            {
+                                // Check for a reply to queue message header
+                               if (StringUtils.isEmpty(((Request<?>) pojoMessage).getReplyTo()))
+                               {
+                                   String replyQueueName = message.getProperties().getReplyTo();
+                                   if (!StringUtils.isEmpty(replyQueueName))
+                                   {
+                                       ((Request<?>) pojoMessage).setReplyTo(replyQueueName);
+                                   }
+                               }
+                            }
+                            
+                            messageConsumer.onReceive(pojoMessage);
                         }
                     }
                     else
@@ -157,7 +191,7 @@ public class AmqpDirectEndpoint implements MessageProducer
         return session;
     }
     
-    private Sender getSender() throws SenderCreationException, ConnectionException
+    private Sender getDefaultSender() throws SenderCreationException, ConnectionException
     {
         if (sender == null)
         {
@@ -166,19 +200,40 @@ public class AmqpDirectEndpoint implements MessageProducer
         return sender;
     }
     
+    private Sender getSender(String queueName) throws SenderCreationException, ConnectionException
+    {
+        if (sendQueueName.equals(queueName))
+        {
+            return getDefaultSender();
+        }
+        return getSession().createSender(queueName);
+    }
     
     public void send(Object message) {
+        send(message, sendQueueName);
+    }
+    
+    public void send(Object message, String queueName) {
         try
         {
             Writer strWriter = new StringWriter();
             objectMapper.writeValue(strWriter, message);
             String stringMessage = strWriter.toString();
+
+            ArrayList<Section> sections = new ArrayList<>(2);
+            sections.add(new AmqpValue(stringMessage));
+            if (StringUtils.isEmpty(queueName))
+            {
+                queueName = sendQueueName;
+            }
+            
+            final Message amqpMessage = new Message(sections);
+            
             if (logger.isDebugEnabled())
             {
-                logger.debug("Sending message to " + host + ":" + sendQueueName + ": " + stringMessage);
+                logger.debug("Sending message to " + host + ":" + queueName + ": " + stringMessage);
             }
-            final Message amqpMessage = new Message(stringMessage);
-            getSender().send(amqpMessage);
+            getSender(queueName).send(amqpMessage);
         }
         catch (Exception e)
         {

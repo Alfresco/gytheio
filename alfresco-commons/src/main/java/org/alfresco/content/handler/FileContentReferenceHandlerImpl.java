@@ -1,3 +1,21 @@
+/*
+ * Copyright (C) 2005-2013 Alfresco Software Limited.
+ *
+ * This file is part of Alfresco
+ *
+ * Alfresco is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Alfresco is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
+ */
 package org.alfresco.content.handler;
 
 import org.apache.commons.io.FileUtils;
@@ -20,6 +38,13 @@ import org.alfresco.content.ContentReferenceUriImpl;
 import org.alfresco.service.cmr.repository.ContentIOException;
 import org.alfresco.util.TempFileProvider;
 
+/**
+ * Java {@link File} content reference handler implementation.
+ * <p>
+ * Content reference creation is delegated to {@link TempFileProvider}.
+ * 
+ * @author Ray Gauss II
+ */
 public class FileContentReferenceHandlerImpl implements ContentReferenceHandler
 {
     private static final Log logger = LogFactory.getLog(FileContentReferenceHandlerImpl.class);

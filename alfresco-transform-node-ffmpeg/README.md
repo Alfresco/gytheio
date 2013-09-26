@@ -4,7 +4,7 @@ Overview
 
 An FFmpeg AMQP content transformer node.
 
-The `FfmpegAmqpContentTransformerNode` itself is really just a convenience class
+The `FfmpegAmqpContentTransformerNodeBootsrap` itself is really just a convenience class
 to configure and instantiate an AMQP transformer node and start it's message listener.
 
 The `FfmpegContentTransformerNodeWorker` contains the code which converts transformation
@@ -24,7 +24,7 @@ Start an AMQP broker.  See the `messaging-broker-activemq` project.
 The single jar with dependencies can be launched with parameters passed for the 
 AMQP broker host, request queue, and reply queue, i.e.:
 
-    java -jar target/alfresco-transformer-node-ffmpeg-1.0-SNAPSHOT-jar-with-dependencies.jar localhost alfresco.transform.worker.request.video alfresco.transform.worker.reply.video
+    java -jar target/alfresco-transform-node-ffmpeg-1.0-SNAPSHOT-jar-with-dependencies.jar localhost alfresco.transform.worker.request.video alfresco.transform.worker.reply.video
 
 You should see a message indicating that the node is waiting for a message.
 

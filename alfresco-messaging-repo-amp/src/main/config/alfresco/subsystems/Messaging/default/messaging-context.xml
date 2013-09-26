@@ -16,13 +16,22 @@
     <bean id="messagingObjectMapper" class="org.alfresco.messaging.jackson.ObjectMapperFactory" 
         factory-method="createInstance" />
     
-    <bean id="jsonTransformationRequestDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+    <bean id="transformationRequestDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
         <constructor-arg ref="messagingObjectMapper" />
         <constructor-arg value="org.alfresco.content.transform.TransformationRequest" />
     </bean>
-    <bean id="jsonTransformationReplyDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+    <bean id="transformationReplyDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
         <constructor-arg ref="messagingObjectMapper" />
         <constructor-arg value="org.alfresco.content.transform.TransformationReply" />
+    </bean>
+    
+    <bean id="hashRequestDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.hash.HashRequest" />
+    </bean>
+    <bean id="hashReplyDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.hash.HashReply" />
     </bean>
     
     <import resource="amqpRoutes.xml"/>
@@ -31,6 +40,8 @@
         <!-- Set up the direct endpoints which can be routed below -->
         <template id="transformWorkerRequestProducerTemplate"
             defaultEndpoint="direct:alfresco.transform.worker.request" />
+        <template id="hashRequestProducerTemplate"
+            defaultEndpoint="direct:alfresco.hash.request" />
         
         <!-- TODO find a good way to switch routes, property value did not seem to work -->
         <routeContextRef ref="amqpRoutes" />
@@ -38,6 +49,10 @@
 
     <bean id="baseTransformationRequestProducer" class="org.alfresco.messaging.camel.CamelMessageProducer" abstract="true">
         <property name="producer" ref="transformWorkerRequestProducerTemplate" />
+    </bean>
+    
+    <bean id="baseHashRequestProducer" class="org.alfresco.messaging.camel.CamelRequestReplyMessageProducer" abstract="true">
+        <property name="producer" ref="hashRequestProducerTemplate" />
     </bean>
 
     <!--

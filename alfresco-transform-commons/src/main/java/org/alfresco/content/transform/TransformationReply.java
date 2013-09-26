@@ -19,11 +19,12 @@
 package org.alfresco.content.transform;
 
 import org.alfresco.content.ContentReference;
+import org.alfresco.messaging.Reply;
 
 /**
  * Represents a reply from a content transformer on the status of a transformation request.
  */
-public class TransformationReply
+public class TransformationReply implements Reply
 {
     public static final String STATUS_IN_PROGRESS = "in-progress";
     public static final String STATUS_COMPLETE = "complete";

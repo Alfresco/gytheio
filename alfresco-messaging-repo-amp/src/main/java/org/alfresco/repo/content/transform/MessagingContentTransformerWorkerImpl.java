@@ -12,6 +12,7 @@ import org.alfresco.content.transform.TransformationReply;
 import org.alfresco.content.transform.TransformationRequest;
 import org.alfresco.messaging.MessageConsumer;
 import org.alfresco.messaging.MessageProducer;
+import org.alfresco.messaging.MessagingException;
 import org.alfresco.service.cmr.repository.ContentIOException;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
@@ -80,7 +81,14 @@ public class MessagingContentTransformerWorkerImpl
         
         logger.debug("sending transformation request " + request.getRequestId());
         
-        messageProducer.send(request);
+        try
+        {
+            messageProducer.send(request);
+        }
+        catch (MessagingException e)
+        {
+            throw new ContentIOException("Messaging exception during transform: " + e.getMessage(), e);
+        }
         
         pendingTransformations.put(request.getRequestId(), 
                 new PendingMessagingTransformation(request, reader, writer, executeAsynchronously));
