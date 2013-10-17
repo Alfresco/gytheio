@@ -3,6 +3,9 @@
 
 <beans>
 
+    <import resource="classpath:alfresco/module/alfresco-messaging-repository/messaging-remote-context.xml" />
+    <import resource="classpath:alfresco/module/alfresco-messaging-repository/messaging-transformer-context.xml" />
+    
     <bean id="Messaging" class="org.alfresco.repo.management.subsystems.ChildApplicationContextFactory" parent="abstractPropertyBackedBean">
         <property name="autoStart">
             <value>true</value>

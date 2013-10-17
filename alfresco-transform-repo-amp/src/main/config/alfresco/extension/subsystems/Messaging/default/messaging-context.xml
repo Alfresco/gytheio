@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="amqp" class="org.apache.camel.component.amqp.AMQPComponent">
+        <property name="connectionFactory" ref="activeMqConnectionFactory" />
+    </bean>
+    
+    <bean id="transformationRequestDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.transform.TransformationRequest" />
+    </bean>
+    <bean id="transformationReplyDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.transform.TransformationReply" />
+    </bean>
+    
+    <bean id="hashRequestDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.hash.HashRequest" />
+    </bean>
+    <bean id="hashReplyDataFormat" class="org.apache.camel.component.jackson.JacksonDataFormat">
+        <constructor-arg ref="messagingObjectMapper" />
+        <constructor-arg value="org.alfresco.content.hash.HashReply" />
+    </bean>
+    
+    <import resource="transformRoutes.xml" />
+    <bean id="testNewRouteLoader" class="org.alfresco.messaging.camel.RouteLoader">
+        <property name="camelContextId" value="camelContext" />
+        <property name="routeContextId" value="transformRoutes" />
+    </bean>
+
+    <bean id="baseTransformationRequestProducer" class="org.alfresco.messaging.camel.CamelMessageProducer" abstract="true">
+        <property name="producer" ref="camelProducerTemplate" />
+    </bean>
+    
+    <bean id="baseHashRequestProducer" class="org.alfresco.messaging.camel.CamelRequestReplyMessageProducer" abstract="true">
+        <property name="producer" ref="camelProducerTemplate" />
+    </bean>
+
+    <!--
+    <bean id="baseContentService" class="org.alfresco.repo.content.AsyncContentServiceImpl" abstract="true" init-method="init">
+      <property name="retryingTransactionHelper">
+          <ref bean="retryingTransactionHelper"/>
+      </property>
+      <property name="dictionaryService">
+          <ref bean="dictionaryService" />
+      </property>
+      <property name="nodeService">
+          <ref bean="nodeService" />
+      </property>
+      <property name="transformerRegistry">
+          <ref bean="contentTransformerRegistry" />
+      </property>
+      <property name="policyComponent">
+          <ref bean="policyComponent" />
+      </property>
+      <property name="mimetypeService">
+         <ref bean="mimetypeService"/>
+      </property>
+      <property name="avmService">
+          <ref bean="avmService"/>
+      </property>
+      <property name="imageMagickContentTransformer">
+         <ref bean="transformer.ImageMagick" />
+      </property>
+      <property name="eagerContentStoreCleaner" >
+         <ref bean="eagerContentStoreCleaner" />
+      </property>
+      <property name="ignoreEmptyContent" >
+         <value>${policy.content.update.ignoreEmpty}</value>
+      </property>
+      <property name="transformerDebug">
+         <ref bean="transformerDebug" />
+      </property>
+   </bean>
+   -->
+
+</beans>
