@@ -3,11 +3,11 @@ package org.alfresco.messaging.content.transport;
 import java.io.InputStream;
 import java.util.UUID;
 
-import org.alfresco.content.ContentReference;
-import org.alfresco.content.handler.ContentReferenceHandler;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
 import org.alfresco.service.cmr.repository.MimetypeService;
+import org.gytheio.content.ContentReference;
+import org.gytheio.content.handler.ContentReferenceHandler;
 
 public class ContentTransportImpl implements ContentTransport
 {

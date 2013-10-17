@@ -18,9 +18,9 @@
  */
 package org.alfresco.messaging.content.transport;
 
-import org.alfresco.content.ContentReference;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
+import org.gytheio.content.ContentReference;
 
 /**
  * Defines methods for reading and writing files to a shared or remote content system.

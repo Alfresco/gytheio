@@ -4,23 +4,23 @@
         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.alfresco</groupId>
-    <artifactId>alfresco-transformations-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <groupId>org.gytheio</groupId>
+    <artifactId>gytheio-parent</artifactId>
+    <version>0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>alfresco-commons</module>
-        <module>alfresco-commons-s3</module>
-        <module>alfresco-transform-commons</module>
-        <module>alfresco-messaging-commons</module>
-        <module>alfresco-hash-commons</module>
-        <module>alfresco-messaging-amqp-direct</module>
-        <module>alfresco-messaging-camel</module>
-        <module>alfresco-transform-node-commons</module>
-        <module>alfresco-transform-node-ffmpeg</module>
-        <module>alfresco-hash-node-commons</module>
-        <module>alfresco-hash-node-javase</module>
+        <module>gytheio-commons</module>
+        <module>gytheio-commons-s3</module>
+        <module>gytheio-transform-commons</module>
+        <module>gytheio-messaging-commons</module>
+        <module>gytheio-hash-commons</module>
+        <module>gytheio-messaging-amqp-direct</module>
+        <module>gytheio-messaging-camel</module>
+        <module>gytheio-transform-node-commons</module>
+        <module>gytheio-transform-node-ffmpeg</module>
+        <module>gytheio-hash-node-commons</module>
+        <module>gytheio-hash-node-javase</module>
     </modules>
 
     <properties>

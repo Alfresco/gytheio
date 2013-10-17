@@ -11,9 +11,9 @@
     <import resource="classpath:/alfresco/subsystems/Messaging/default/messaging-context.xml" />
     
     <import resource="testRoutes.xml" />
-<!--     <bean id="testNewRouteLoader" class="org.alfresco.messaging.camel.RouteLoader">
+    <bean id="testNewRouteLoader" class="org.alfresco.messaging.camel.RouteLoader">
         <property name="camelContextId" value="camelContext" />
         <property name="routeContextId" value="customRoutes" />
-    </bean> -->
+    </bean>
 
 </beans>

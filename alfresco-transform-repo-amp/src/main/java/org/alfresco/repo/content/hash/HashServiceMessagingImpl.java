@@ -9,10 +9,6 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.alfresco.content.ContentReference;
-import org.alfresco.content.hash.HashReply;
-import org.alfresco.content.hash.HashRequest;
-import org.alfresco.messaging.RequestReplyMessageProducer;
 import org.alfresco.messaging.content.transport.ContentTransport;
 import org.alfresco.model.ContentModel;
 import org.alfresco.repo.content.ContentServicePolicies.OnContentUpdatePolicy;
@@ -26,6 +22,10 @@ import org.alfresco.service.cmr.repository.hash.HashService;
 import org.alfresco.util.PropertyCheck;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gytheio.content.ContentReference;
+import org.gytheio.content.hash.HashReply;
+import org.gytheio.content.hash.HashRequest;
+import org.gytheio.messaging.RequestReplyMessageProducer;
 
 public class HashServiceMessagingImpl implements HashService, OnContentUpdatePolicy
 {

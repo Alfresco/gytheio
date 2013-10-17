@@ -7,15 +7,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.alfresco.content.ContentReference;
-import org.alfresco.content.transform.TransformationReply;
-import org.alfresco.content.transform.TransformationRequest;
-import org.alfresco.messaging.MessageConsumer;
-import org.alfresco.messaging.MessageProducer;
-import org.alfresco.messaging.MessagingException;
 import org.alfresco.service.cmr.repository.ContentIOException;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
+import org.gytheio.content.ContentReference;
+import org.gytheio.content.transform.TransformationReply;
+import org.gytheio.content.transform.TransformationRequest;
+import org.gytheio.messaging.MessageConsumer;
+import org.gytheio.messaging.MessageProducer;
+import org.gytheio.messaging.MessagingException;
 
 public class MessagingContentTransformerWorkerImpl 
         extends AbstractRemoteContentTransformerWorker 

@@ -6,7 +6,7 @@
           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
           http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <bean id="messagingObjectMapper" class="org.alfresco.messaging.jackson.ObjectMapperFactory" 
+    <bean id="messagingObjectMapper" class="org.gytheio.messaging.jackson.ObjectMapperFactory" 
         factory-method="createInstance" />
 
     <bean id="activeMqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
@@ -32,6 +32,6 @@
     </bean>
     
     <!-- In the default routes, this is where a message goes if no queue is specified -->
-    <bean id="deadLetterQueue" class="org.alfresco.messaging.LoggingDeadLetterQueue" />
+    <bean id="deadLetterQueue" class="org.gytheio.messaging.LoggingDeadLetterQueue" />
 
 </beans>

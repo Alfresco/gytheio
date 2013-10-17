@@ -1,9 +1,9 @@
 package org.alfresco.repo.content.transform;
 
-import org.alfresco.content.transform.TransformationReply;
-import org.alfresco.content.transform.TransformationRequest;
 import org.alfresco.service.cmr.repository.ContentReader;
 import org.alfresco.service.cmr.repository.ContentWriter;
+import org.gytheio.content.transform.TransformationReply;
+import org.gytheio.content.transform.TransformationRequest;
 
 public class PendingMessagingTransformation
 {
