@@ -18,8 +18,8 @@
  */
 package org.gytheio.content.transform;
 
-import org.alfresco.content.transform.options.TransformationOptions;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.transform.options.TransformationOptions;
 
 /**
  * Defines the methods responsible for doing the work of transformation of a content reference

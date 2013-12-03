@@ -73,7 +73,7 @@ public class MessagingContentTransformerWorkerImpl
         }
             
         // Convert the options to a simple object for data formatters
-        org.alfresco.content.transform.options.TransformationOptions requestOptions = 
+        org.gytheio.content.transform.options.TransformationOptions requestOptions = 
                 optionsConverter.convert(options);
         
         TransformationRequest request = new TransformationRequest(

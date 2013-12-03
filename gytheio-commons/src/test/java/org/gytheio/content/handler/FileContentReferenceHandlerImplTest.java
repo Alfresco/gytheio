@@ -2,7 +2,6 @@ package org.gytheio.content.handler;
 
 import org.apache.commons.lang.StringUtils;
 import org.gytheio.content.ContentReference;
-import org.gytheio.content.ContentReferenceUriImpl;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.junit.Before;
@@ -25,7 +24,7 @@ public class FileContentReferenceHandlerImplTest
         ContentReference reference = handler.createContentReference(fileName, mediaType);
         assertEquals(mediaType, reference.getMediaType());
         
-        String uri = ((ContentReferenceUriImpl) reference).getUri();
+        String uri = reference.getUri();
         String createdFileName = uri.split("\\/")[uri.split("\\/").length-1];
         
         String origPrefix = fileName.substring(0, StringUtils.lastIndexOf(fileName, "."));

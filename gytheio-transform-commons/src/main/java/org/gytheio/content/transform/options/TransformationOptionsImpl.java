@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with the Alfresco messaging investigation. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.content.transform.options;
+package org.gytheio.content.transform.options;
 
 import java.util.Collection;
 import java.util.HashMap;

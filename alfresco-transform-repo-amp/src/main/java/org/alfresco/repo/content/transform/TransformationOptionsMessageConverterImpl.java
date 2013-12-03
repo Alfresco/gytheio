@@ -13,24 +13,24 @@ public class TransformationOptionsMessageConverterImpl implements Transformation
 {
     private static final Log logger = LogFactory.getLog(TransformationOptionsMessageConverterImpl.class);
 
-    public org.alfresco.content.transform.options.TransformationOptions
+    public org.gytheio.content.transform.options.TransformationOptions
             convert(org.alfresco.service.cmr.repository.TransformationOptions options)
     {
-        org.alfresco.content.transform.options.TransformationOptionsImpl requestOptions = null;
+        org.gytheio.content.transform.options.TransformationOptionsImpl requestOptions = null;
         
         if (options instanceof org.alfresco.repo.content.transform.magick.ImageTransformationOptions)
         {
             requestOptions = 
-                    new org.alfresco.content.transform.options.ImageTransformationOptions();
-            ((org.alfresco.content.transform.options.ImageTransformationOptions) requestOptions).setResizeOptions(
+                    new org.gytheio.content.transform.options.ImageTransformationOptions();
+            ((org.gytheio.content.transform.options.ImageTransformationOptions) requestOptions).setResizeOptions(
                     ((org.alfresco.repo.content.transform.magick.ImageTransformationOptions) options).getResizeOptions());
-            ((org.alfresco.content.transform.options.ImageTransformationOptions) requestOptions).setCommandOptions(
+            ((org.gytheio.content.transform.options.ImageTransformationOptions) requestOptions).setCommandOptions(
                     ((org.alfresco.repo.content.transform.magick.ImageTransformationOptions) options).getCommandOptions());
         }
         else
         {
             requestOptions = 
-                    new org.alfresco.content.transform.options.TransformationOptionsImpl();
+                    new org.gytheio.content.transform.options.TransformationOptionsImpl();
         }
         
         Map<String, Map<String, Serializable>> requestSourceOptions = 

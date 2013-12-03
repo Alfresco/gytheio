@@ -20,9 +20,9 @@ package org.gytheio.content.transform;
 
 import java.io.File;
 
-import org.alfresco.content.transform.options.TransformationOptions;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.handler.ContentReferenceHandler;
+import org.gytheio.content.transform.options.TransformationOptions;
 
 /**
  * Abstract transform node worker which uses a content reference handler to convert the 

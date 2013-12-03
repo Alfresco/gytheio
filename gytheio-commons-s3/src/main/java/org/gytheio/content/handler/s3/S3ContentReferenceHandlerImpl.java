@@ -26,7 +26,6 @@ import org.alfresco.service.cmr.repository.ContentIOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
-import org.gytheio.content.ContentReferenceUriImpl;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.util.TempFileProvider;
 
@@ -190,18 +189,27 @@ public class S3ContentReferenceHandlerImpl implements ContentReferenceHandler
         {
             return false;
         }
-        if (!(contentReference instanceof ContentReferenceUriImpl))
+        String uri = contentReference.getUri();
+        if (uri == null)
         {
             return false;
         }
-        return ((ContentReferenceUriImpl) contentReference).getUri().startsWith(
-                S3_STORE_PROTOCOL + S3_PROTOCOL_DELIMITER);
+        if (uri.startsWith(S3_STORE_PROTOCOL + S3_PROTOCOL_DELIMITER))
+        {
+            return true;
+        }
+        if ((uri.startsWith(HTTPS_PROTOCOL) || uri.startsWith(HTTP_PROTOCOL)) && 
+             uri.contains("s3.amazonaws.com/"))
+        {
+            return true;
+        }
+        return false;
     }
     
     @Override
     public ContentReference createContentReference(String fileName, String mediaType) throws ContentIOException
     {
-        return new ContentReferenceUriImpl(getRemoteBaseUrl() + fileName, mediaType);
+        return new ContentReference(getRemoteBaseUrl() + fileName, mediaType);
     }
 
     @Override
@@ -214,7 +222,7 @@ public class S3ContentReferenceHandlerImpl implements ContentReferenceHandler
         try
         {
             String s3Url = getS3UrlFromHttpUrl(
-                    ((ContentReferenceUriImpl) contentReference).getUri());
+                    contentReference.getUri());
             
             String tempExtension = getExtension(s3Url);
             File tempFile = TempFileProvider.createTempFile(
@@ -245,7 +253,7 @@ public class S3ContentReferenceHandlerImpl implements ContentReferenceHandler
             throw new ContentIOException("ContentReference not supported");
         }
         
-        String remotePath = getRelativePath(((ContentReferenceUriImpl) targetContentReference).getUri());
+        String remotePath = getRelativePath(targetContentReference.getUri());
         
         try
         {
@@ -265,8 +273,7 @@ public class S3ContentReferenceHandlerImpl implements ContentReferenceHandler
         }
         try
         {
-            String s3Url = getS3UrlFromHttpUrl(
-                    ((ContentReferenceUriImpl) contentReference).getUri());
+            String s3Url = getS3UrlFromHttpUrl(contentReference.getUri());
             
             if (logger.isDebugEnabled())
             {
@@ -291,7 +298,7 @@ public class S3ContentReferenceHandlerImpl implements ContentReferenceHandler
             throw new ContentIOException("ContentReference not supported");
         }
         
-        String remotePath = getRelativePath(((ContentReferenceUriImpl) targetContentReference).getUri());
+        String remotePath = getRelativePath(targetContentReference.getUri());
         
         try
         {
@@ -311,7 +318,7 @@ public class S3ContentReferenceHandlerImpl implements ContentReferenceHandler
             throw new ContentIOException("ContentReference not supported");
         }
         
-        String remotePath = getRelativePath(((ContentReferenceUriImpl) contentReference).getUri());
+        String remotePath = getRelativePath(contentReference.getUri());
         
         try
         {

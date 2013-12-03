@@ -18,9 +18,9 @@
  */
 package org.gytheio.content.transform;
 
-import org.alfresco.content.transform.options.TransformationOptions;
 import org.gytheio.content.AbstractContentRequest;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.messaging.Request;
 
 /**

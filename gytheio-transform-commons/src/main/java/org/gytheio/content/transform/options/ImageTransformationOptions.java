@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.content.transform.options;
+package org.gytheio.content.transform.options;
 
 import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
 

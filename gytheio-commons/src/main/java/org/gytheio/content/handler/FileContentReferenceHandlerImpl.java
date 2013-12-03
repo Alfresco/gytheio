@@ -35,7 +35,6 @@ import java.net.URISyntaxException;
 
 import org.alfresco.service.cmr.repository.ContentIOException;
 import org.gytheio.content.ContentReference;
-import org.gytheio.content.ContentReferenceUriImpl;
 import org.gytheio.util.TempFileProvider;
 
 /**
@@ -58,11 +57,7 @@ public class FileContentReferenceHandlerImpl implements ContentReferenceHandler
         {
             return false;
         }
-        if (!(contentReference instanceof ContentReferenceUriImpl))
-        {
-            return false;
-        }
-        return ((ContentReferenceUriImpl) contentReference).getUri().startsWith(URI_SCHEME_FILE);
+        return contentReference.getUri().startsWith(URI_SCHEME_FILE);
     }
     
     public ContentReference createContentReference(String fileName, String mediaType) throws ContentIOException
@@ -78,7 +73,7 @@ public class FileContentReferenceHandlerImpl implements ContentReferenceHandler
             		"mediaType=" + mediaType + ": " + tempFile.getAbsolutePath());
         }
         
-        return new ContentReferenceUriImpl(tempFile.toURI().toString(), mediaType);
+        return new ContentReference(tempFile.toURI().toString(), mediaType);
     }
 
     @Override
@@ -91,11 +86,11 @@ public class FileContentReferenceHandlerImpl implements ContentReferenceHandler
         if (logger.isDebugEnabled())
         {
             logger.debug("Getting file for content reference: " + 
-                    ((ContentReferenceUriImpl) contentReference).getUri());
+                    contentReference.getUri());
         }
         try
         {
-            return new File(new URI(((ContentReferenceUriImpl) contentReference).getUri()));
+            return new File(new URI(contentReference.getUri()));
         }
         catch (URISyntaxException e)
         {

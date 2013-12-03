@@ -26,6 +26,7 @@ import org.gytheio.messaging.Reply;
  */
 public class TransformationReply implements Reply
 {
+    public static final String STATUS_PENDING = "pending";
     public static final String STATUS_IN_PROGRESS = "in-progress";
     public static final String STATUS_COMPLETE = "complete";
     public static final String STATUS_ERROR = "error";
@@ -33,6 +34,7 @@ public class TransformationReply implements Reply
     private String requestId;
     private ContentReference targetContentReference;
     private String status;
+    private String jobId;
     private Float progress;
     private String detail;
     
@@ -111,6 +113,28 @@ public class TransformationReply implements Reply
     public void setStatus(String status)
     {
         this.status = status;
+    }
+
+    /**
+     * Gets the implementation's job ID for the transformation, separation from the
+     * Gytheio transformation request ID
+     * 
+     * @return the implementation job ID
+     */
+    public String getJobId()
+    {
+        return jobId;
+    }
+
+    /**
+     * Sets the implementation's job ID for the transformation, separation from the
+     * Gytheio transformation request ID
+     * 
+     * @param jobId
+     */
+    public void setJobId(String jobId)
+    {
+        this.jobId = jobId;
     }
 
     /**

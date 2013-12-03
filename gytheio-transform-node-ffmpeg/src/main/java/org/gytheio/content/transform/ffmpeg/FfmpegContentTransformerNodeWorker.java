@@ -22,14 +22,14 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.alfresco.content.transform.options.ImageTransformationOptions;
-import org.alfresco.content.transform.options.TransformationOptions;
 import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
 import org.alfresco.service.cmr.repository.TemporalSourceOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.transform.AbstractContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerNodeWorkerProgressReporter;
+import org.gytheio.content.transform.options.ImageTransformationOptions;
+import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.util.exec.RuntimeExec;
 
 /**

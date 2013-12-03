@@ -20,7 +20,7 @@ package org.gytheio.content.hash.javase;
 
 import static junit.framework.Assert.*;
 
-import org.gytheio.content.ContentReferenceUriImpl;
+import org.gytheio.content.ContentReference;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.gytheio.content.hash.ContentHashNodeWorker;
 import org.gytheio.content.hash.HashRequest;
@@ -47,7 +47,7 @@ public class JavaSeContentHashNodeWorkerTest
     
     protected void testHash(String hashAlgorithm, String expectedValue) throws Exception
     {
-        ContentReferenceUriImpl source = new ContentReferenceUriImpl(
+        ContentReference source = new ContentReference(
                 this.getClass().getResource("/quick.mpg").toURI().toString(), "video/mpeg");
         
         String value = worker.generateHash(source, hashAlgorithm);

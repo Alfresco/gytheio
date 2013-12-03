@@ -19,20 +19,55 @@
 package org.gytheio.content;
 
 /**
- * Defines a reference to content.  Implementations should further define
- * the reference
+ * URI implementation of the content reference interface.
  * 
- * @see {@link ContentReferenceUriImpl} implementation
  * @author Ray Gauss II
  */
-public interface ContentReference
+public class ContentReference
 {
+
+    private String uri;
+    private String mediaType;
+    
+    public ContentReference()
+    {
+    }
+    
+    public ContentReference(String uri, String mediaType)
+    {
+        super();
+        this.uri = uri;
+        this.mediaType = mediaType;
+    }
+
+    /**
+     * Gets the URI for the content reference
+     * 
+     * @return the content URI
+     */
+    public String getUri()
+    {
+        return uri;
+    }
     
     /**
-     * Gets the media (MIME) type for the content reference.
+     * Sets the URI for the content reference
      * 
-     * @return the content media type
+     * @param uri
      */
-    public String getMediaType();
+    public void setUri(String uri)
+    {
+        this.uri = uri;
+    }
+    
+    public String getMediaType()
+    {
+        return mediaType;
+    }
+    
+    public void setMediaType(String mediaType)
+    {
+        this.mediaType = mediaType;
+    }
 
 }

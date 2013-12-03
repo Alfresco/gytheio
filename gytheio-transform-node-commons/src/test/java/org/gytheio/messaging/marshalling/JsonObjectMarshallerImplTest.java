@@ -5,11 +5,11 @@ import static org.junit.Assert.*;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import org.alfresco.content.transform.options.ImageTransformationOptions;
 import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
 import org.alfresco.service.cmr.repository.PagedSourceOptions;
-import org.gytheio.content.ContentReferenceUriImpl;
+import org.gytheio.content.ContentReference;
 import org.gytheio.content.transform.TransformationRequest;
+import org.gytheio.content.transform.options.ImageTransformationOptions;
 import org.gytheio.messaging.jackson.ObjectMapperFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,10 +47,10 @@ public class JsonObjectMarshallerImplTest
         
         options.setResizeOptions(resizeOptions);
         
-        ContentReferenceUriImpl source = new ContentReferenceUriImpl(
+        ContentReference source = new ContentReference(
                 "file:/tmp/Alfresco/TempFileContentTransportImpl-88e9011d-6ecf-4a68-8f6c-342d0cd30fee6858578792784676782.mov", 
                 "video/quicktime");
-        ContentReferenceUriImpl target = new ContentReferenceUriImpl(
+        ContentReference target = new ContentReference(
                 "file:/tmp/Alfresco/TempFileContentTransportImpl-be08c51b-4282-4040-8a58-a1e4cd1df1472999488129563166381.png", 
                 "image/png");
         TransformationRequest request = 
@@ -72,7 +72,8 @@ public class JsonObjectMarshallerImplTest
         assertNotNull("Request was null", unmarshalledRequest);
         assertNotNull("Transformation options were null", unmarshalledRequest.getOptions());
         
-        ImageTransformationOptions unmarshalledOptions = (ImageTransformationOptions) unmarshalledRequest.getOptions();
+        ImageTransformationOptions unmarshalledOptions = 
+                (ImageTransformationOptions) unmarshalledRequest.getOptions();
        
         assertNotNull("Transformation resize options were null", unmarshalledOptions.getResizeOptions());
         

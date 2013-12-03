@@ -25,13 +25,14 @@ import java.io.File;
 
 import static junit.framework.Assert.*;
 
-import org.alfresco.content.transform.options.TransformationOptionsImpl;
 import org.alfresco.service.cmr.repository.TemporalSourceOptions;
-import org.gytheio.content.ContentReferenceUriImpl;
+import org.gytheio.content.ContentReference;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.gytheio.content.transform.ContentTransformerNodeWorker;
 import org.gytheio.content.transform.ContentTransformerNodeWorkerProgressReporter;
 import org.gytheio.content.transform.ffmpeg.FfmpegContentTransformerNodeWorker;
+import org.gytheio.content.transform.options.TransformationOptions;
+import org.gytheio.content.transform.options.TransformationOptionsImpl;
 import org.gytheio.util.TempFileProvider;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +62,7 @@ public class FfmpegContentTransformerNodeWorkerTest
         TemporalSourceOptions temporalSourceOptions = new TemporalSourceOptions();
         temporalSourceOptions.setOffset("00:00:00.5");
         temporalSourceOptions.setDuration("00:00:00.2");
-        TransformationOptionsImpl options = new TransformationOptionsImpl();
+        TransformationOptions options = new TransformationOptionsImpl();
         options.addSourceOptions(temporalSourceOptions);
         
             String sourceExtension = "mpg";
@@ -70,7 +71,7 @@ public class FfmpegContentTransformerNodeWorkerTest
             File sourceFile = new File(this.getClass().getResource("/quick.mpg").toURI());
             long origSize = sourceFile.length();
             
-            ContentReferenceUriImpl source = new ContentReferenceUriImpl(
+            ContentReference source = new ContentReference(
                     this.getClass().getResource("/quick.mpg").toURI().toString(), "video/mpeg");
             
             // make a writer for the target file
@@ -78,7 +79,7 @@ public class FfmpegContentTransformerNodeWorkerTest
                     getClass().getSimpleName() + "_quick_" + sourceExtension + "_",
                     "." + targetExtension);
             
-            ContentReferenceUriImpl target = new ContentReferenceUriImpl(
+            ContentReference target = new ContentReference(
                     targetFile.toURI().toString(), "video/mp4");
             
             
