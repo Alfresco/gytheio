@@ -31,7 +31,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.alfresco.content.transform.ffmpeg.FfmpegAmqpContentTransformerNodeBootstrap</mainClass>
+                            <mainClass>org.gytheio.content.transform.ffmpeg.FfmpegAmqpContentTransformerNodeBootstrap</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

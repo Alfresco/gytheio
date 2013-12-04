@@ -24,7 +24,7 @@ Start an AMQP broker.  See the `messaging-broker-activemq` project.
 The single jar with dependencies can be launched with parameters passed for the 
 AMQP broker host, request queue, and reply queue, i.e.:
 
-    java -jar target/alfresco-transform-node-ffmpeg-1.0-SNAPSHOT-jar-with-dependencies.jar localhost alfresco.transform.worker.request.video alfresco.transform.worker.reply.video
+    java -jar target/gytheio-transform-node-ffmpeg-0.1-SNAPSHOT-jar-with-dependencies.jar localhost alfresco.transform.worker.request.video alfresco.transform.worker.reply.video
 
 You should see a message indicating that the node is waiting for a message.
 
