@@ -14,12 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.gytheio</groupId>
-            <artifactId>gytheio-transform-commons</artifactId>
-            <version>${version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.gytheio</groupId>
-            <artifactId>gytheio-messaging-commons</artifactId>
+            <artifactId>gytheio-transform-messaging</artifactId>
             <version>${version}</version>
         </dependency>
     </dependencies>

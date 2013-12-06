@@ -28,7 +28,7 @@ import org.gytheio.messaging.MessageProducer;
 import org.gytheio.messaging.MessagingException;
 
 /**
- * A base implementation of a transform node which receives messages, uses a {@link ContentTransformerNodeWorker}
+ * A base implementation of a transform node which receives messages, uses a {@link ContentTransformerWorker}
  * to perform the transformation, then uses a {@link MessageProducer} to send the reply.
  * 
  * @author Ray Gauss II
@@ -37,7 +37,7 @@ public class BaseContentTransformerNode implements MessageConsumer
 {
     private static final Log logger = LogFactory.getLog(BaseContentTransformerNode.class);
 
-    protected ContentTransformerNodeWorker transformerWorker;
+    protected ContentTransformerWorker transformerWorker;
     protected MessageProducer messageProducer;
     
     /**
@@ -45,7 +45,7 @@ public class BaseContentTransformerNode implements MessageConsumer
      * 
      * @param transformerWorker
      */
-    public void setWorker(ContentTransformerNodeWorker transformerWorker)
+    public void setWorker(ContentTransformerWorker transformerWorker)
     {
         this.transformerWorker = transformerWorker;
     }
@@ -64,8 +64,8 @@ public class BaseContentTransformerNode implements MessageConsumer
     {
         TransformationRequest request = (TransformationRequest) message;
         logger.info("Processing transformation request " + request.getRequestId());
-        ContentTransformerNodeWorkerProgressReporterImpl progressReporter =
-                new ContentTransformerNodeWorkerProgressReporterImpl(request);
+        ContentTransformerWorkerProgressReporterImpl progressReporter =
+                new ContentTransformerWorkerProgressReporterImpl(request);
         try
         {
             progressReporter.onTransformationStarted();
@@ -94,16 +94,16 @@ public class BaseContentTransformerNode implements MessageConsumer
      * Implementation of the progress reporter which sends reply messages with
      * progress on the transformation.
      */
-    public class ContentTransformerNodeWorkerProgressReporterImpl implements ContentTransformerNodeWorkerProgressReporter
+    public class ContentTransformerWorkerProgressReporterImpl implements ContentTransformerWorkerProgressReporter
     {
         private TransformationRequest request;
         
-        public ContentTransformerNodeWorkerProgressReporterImpl(TransformationRequest request)
+        public ContentTransformerWorkerProgressReporterImpl(TransformationRequest request)
         {
             this.request = request;
         }
         
-        public void onTransformationStarted() throws MessagingException
+        public void onTransformationStarted() throws ContentTransformationException
         {
             if (logger.isDebugEnabled())
             {
@@ -113,10 +113,17 @@ public class BaseContentTransformerNode implements MessageConsumer
             TransformationReply reply = 
                     new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
-            messageProducer.send(reply, request.getReplyTo());
+            try
+            {
+                messageProducer.send(reply, request.getReplyTo());
+            }
+            catch (MessagingException e)
+            {
+                throw new ContentTransformationException(e);
+            }
         }
         
-        public void onTransformationProgress(float progress) throws MessagingException
+        public void onTransformationProgress(float progress) throws ContentTransformationException
         {
             if (logger.isDebugEnabled())
             {
@@ -126,10 +133,17 @@ public class BaseContentTransformerNode implements MessageConsumer
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
             reply.setProgress(progress);
-            messageProducer.send(reply, request.getReplyTo());
+            try
+            {
+                messageProducer.send(reply, request.getReplyTo());
+            }
+            catch (MessagingException e)
+            {
+                throw new ContentTransformationException(e);
+            }
         }
         
-        public void onTransformationComplete() throws MessagingException
+        public void onTransformationComplete() throws ContentTransformationException
         {
             if (logger.isDebugEnabled())
             {
@@ -138,7 +152,14 @@ public class BaseContentTransformerNode implements MessageConsumer
             }
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_COMPLETE);
-            messageProducer.send(reply, request.getReplyTo());
+            try
+            {
+                messageProducer.send(reply, request.getReplyTo());
+            }
+            catch (MessagingException e)
+            {
+                throw new ContentTransformationException(e);
+            }
         }
     }
 

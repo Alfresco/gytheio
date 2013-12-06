@@ -14,7 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>org.gytheio</groupId>
-            <artifactId>gytheio-messaging-commons</artifactId>
+            <artifactId>gytheio-commons</artifactId>
             <version>${version}</version>
         </dependency>
     </dependencies>

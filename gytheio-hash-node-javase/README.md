@@ -7,8 +7,8 @@ A Java SE AMQP content hash node.
 The `JavaSeAmqpContentHashNodeBootstrap` itself is really just a convenience class
 to configure and instantiate an AMQP hash node and start it's message listener.
 
-The `JavaSeContentHashNodeWorker` contains the code which computes a hash 
-of File objects.
+The `JavaSeContentHashNodeWorker` from the `gytheio-hash-worker-javase` dependency is used
+to compute the hash of File objects.
 
 Usage
 =====

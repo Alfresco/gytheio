@@ -38,7 +38,7 @@ public class FfmpegAmqpContentTransformerNodeBootstrap
     {
         AmqpNodeBootstrapUtils.validateArguments(args);
         
-        FfmpegContentTransformerNodeWorker worker = new FfmpegContentTransformerNodeWorker();
+        FfmpegContentTransformerWorker worker = new FfmpegContentTransformerWorker();
         worker.setContentReferenceHandler(new FileContentReferenceHandlerImpl());
         worker.init();
         

@@ -2,8 +2,8 @@
 Overview
 ========
 
-Contains the basic definitions of `TransformationRequest` and `TransformationReply`
-objects and the transformation option objects to be sent to content transformers.
+Contains the basic definitions of the transformation option objects 
+to be used by `ContentTransformerWorker`s.
 
 Note that classes brought from AlfrescoOne were kept as close to their originals
 as possible, primarily to aid in the marshalling process without having to make changes

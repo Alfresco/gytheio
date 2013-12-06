@@ -27,7 +27,7 @@ import org.gytheio.messaging.MessageConsumer;
 import org.gytheio.messaging.MessageProducer;
 
 /**
- * A base implementation of a hash node which receives messages, uses a {@link ContentHashNodeWorker}
+ * A base implementation of a hash node which receives messages, uses a {@link ContentHashWorker}
  * to perform the hash computation, then uses a {@link MessageProducer} to send the reply.
  * 
  * @author Ray Gauss II
@@ -36,7 +36,7 @@ public class BaseContentHashNode implements MessageConsumer
 {
     private static final Log logger = LogFactory.getLog(BaseContentHashNode.class);
 
-    protected ContentHashNodeWorker hashWorker;
+    protected ContentHashWorker hashWorker;
     protected MessageProducer messageProducer;
     
     /**
@@ -44,7 +44,7 @@ public class BaseContentHashNode implements MessageConsumer
      * 
      * @param hasherWorker
      */
-    public void setWorker(ContentHashNodeWorker hasherWorker)
+    public void setWorker(ContentHashWorker hasherWorker)
     {
         this.hashWorker = hasherWorker;
     }

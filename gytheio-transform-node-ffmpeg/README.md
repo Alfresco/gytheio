@@ -7,8 +7,8 @@ An FFmpeg AMQP content transformer node.
 The `FfmpegAmqpContentTransformerNodeBootsrap` itself is really just a convenience class
 to configure and instantiate an AMQP transformer node and start it's message listener.
 
-The `FfmpegContentTransformerNodeWorker` contains the code which converts transformation
-options Java objects to command-line parameters executed against File objects.
+The `FfmpegContentTransformerNodeWorker` from the `gytheio-transform-worker-ffmpeg` dependency is used
+to convert transformation options Java objects to command-line parameters executed against File objects.
 
 Usage
 =====

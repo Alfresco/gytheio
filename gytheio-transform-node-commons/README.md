@@ -9,6 +9,6 @@ This forms the basis of a content transformer node which acts as a
 No assumptions are made as to how those Java object messages are routed
 to or from the transformer node.
 
-A `ContentTransformerNodeWorker` performs the actual work of converting
+A `ContentTransformerWorker` performs the actual work of converting
 the transformation options Java objects to command-line or API 
 calls against `ContentReference` objects.
