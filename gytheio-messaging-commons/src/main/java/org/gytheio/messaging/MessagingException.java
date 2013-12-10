@@ -18,7 +18,7 @@
  */
 package org.gytheio.messaging;
 
-public class MessagingException extends Exception
+public class MessagingException extends RuntimeException
 {
     private static final long serialVersionUID = 8192266871339806688L;
 
