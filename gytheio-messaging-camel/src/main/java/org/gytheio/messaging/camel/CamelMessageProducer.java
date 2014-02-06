@@ -19,9 +19,8 @@
 package org.gytheio.messaging.camel;
 
 import org.apache.camel.ProducerTemplate;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.gytheio.messaging.MessageProducer;
+import org.gytheio.messaging.MessagingException;
 
 /**
  * An Apache Camel implementation of a message producer
@@ -30,8 +29,6 @@ import org.gytheio.messaging.MessageProducer;
  */
 public class CamelMessageProducer implements MessageProducer
 {
-    private static final Log logger = LogFactory.getLog(CamelMessageProducer.class);
-    
     protected static final String HEADER_JMS_AMQP_MESSAGE_FORMAT = "JMS_AMQP_MESSAGE_FORMAT";
     protected static final Long HEADER_JMS_AMQP_MESSAGE_FORMAT_VALUE = 0L;
     
@@ -83,7 +80,7 @@ public class CamelMessageProducer implements MessageProducer
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage(), e);
+            throw new MessagingException(e);
         }
     }
     
@@ -97,7 +94,7 @@ public class CamelMessageProducer implements MessageProducer
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage(), e);
+            throw new MessagingException(e);
         }
     }
 
