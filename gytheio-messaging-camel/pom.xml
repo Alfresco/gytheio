@@ -22,6 +22,11 @@
             <version>${version}</version>
         </dependency>
         <dependency>
+            <groupId>org.gytheio</groupId>
+            <artifactId>gytheio-health-commons</artifactId>
+            <version>${version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
             <version>${dependency.camel.version}</version>

@@ -13,6 +13,7 @@
         <module>gytheio-commons</module>
         <module>gytheio-messaging-commons</module>
         <module>gytheio-commons-s3</module>
+        <module>gytheio-health-commons</module>
         <module>gytheio-transform-commons</module>
         <module>gytheio-transform-messaging</module>
         <module>gytheio-hash-commons</module>
