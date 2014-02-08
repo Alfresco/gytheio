@@ -12,6 +12,7 @@ public class Heartbeat
     private String componentId;
     private String instanceId;
     private Long time;
+    private String status;
     
     public Heartbeat()
     {
@@ -22,6 +23,14 @@ public class Heartbeat
         this.componentId = componentId;
         this.instanceId = instanceId;
         this.time = System.currentTimeMillis();
+    }
+    
+    public Heartbeat(String componentId, String instanceId, String status)
+    {
+        this.componentId = componentId;
+        this.instanceId = instanceId;
+        this.time = System.currentTimeMillis();
+        this.status = status;
     }
     
     /**
@@ -45,7 +54,7 @@ public class Heartbeat
     }
     
     /**
-     * Gets the identifier for a particular instance of a component.
+     * Gets the identifier for a particular instance of a component such as an IP address.
      * 
      * @return the component instance ID
      */
@@ -82,6 +91,26 @@ public class Heartbeat
     public void setTime(Long time)
     {
         this.time = time;
+    }
+
+    /**
+     * Gets the optional status message which might include additional statistics on health.
+     * 
+     * @return the status message
+     */
+    public String getStatus()
+    {
+        return status;
+    }
+
+    /**
+     * Sets the optional status message which might include additional statistics on health.
+     * 
+     * @param status
+     */
+    public void setStatus(String status)
+    {
+        this.status = status;
     }
 
 }
