@@ -46,7 +46,7 @@ public class CompositeComponentUnavailableAction implements ComponentUnavailable
     
     
     @Override
-    public void execute(ComponentUnavailableException e)
+    public void execute(Throwable e)
     {
         if (actions == null)
         {
@@ -95,7 +95,7 @@ public class CompositeComponentUnavailableAction implements ComponentUnavailable
         return executorService;
     }
     
-    protected void execute(final ComponentUnavailableAction action, final ComponentUnavailableException e) throws Throwable
+    protected void execute(final ComponentUnavailableAction action, final Throwable e) throws Throwable
     {
         FutureTask<Void> task = null;
         try

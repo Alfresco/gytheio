@@ -13,6 +13,6 @@ public interface ComponentUnavailableAction
      * 
      * @param e the exception
      */
-    public void execute(ComponentUnavailableException e);
+    public void execute(Throwable e);
     
 }

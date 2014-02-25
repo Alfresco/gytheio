@@ -4,7 +4,6 @@ import org.apache.camel.CamelContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.health.ComponentUnavailableAction;
-import org.gytheio.health.ComponentUnavailableException;
 
 /**
  * ComponentUnavailableAction which stops a given Camel context.
@@ -55,7 +54,7 @@ public class ComponentUnavailableActionStopCamelContext implements ComponentUnav
     }
 
     @Override
-    public void execute(ComponentUnavailableException e)
+    public void execute(Throwable e)
     {
         logger.fatal("Shutting down " + camelContext.getName() + " due to " + 
                 e.getClass().getSimpleName() + ": " + e.getMessage());
