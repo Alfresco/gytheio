@@ -47,7 +47,7 @@ public class JavaSeContentHashWorkerTest
     protected void testHash(String hashAlgorithm, String expectedValue) throws Exception
     {
         ContentReference source = new ContentReference(
-                this.getClass().getResource("/quick.mpg").toURI().toString(), "video/mpeg");
+                this.getClass().getResource("/quick/quick.mpg").toURI().toString(), "video/mpeg");
         
         String value = worker.generateHash(source, hashAlgorithm);
         

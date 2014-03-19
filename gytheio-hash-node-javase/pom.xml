@@ -79,7 +79,7 @@
                                     <version>${version}</version>
                                     <type>test-jar</type>
                                     <overWrite>false</overWrite>
-                                    <includes>quick*</includes>
+                                    <includes>quick/*</includes>
                                     <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
