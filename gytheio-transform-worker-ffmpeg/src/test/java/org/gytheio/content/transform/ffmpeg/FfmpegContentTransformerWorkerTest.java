@@ -68,11 +68,11 @@ public class FfmpegContentTransformerWorkerTest
             String sourceExtension = "mpg";
             String targetExtension = "mp4";
             
-            File sourceFile = new File(this.getClass().getResource("/quick.mpg").toURI());
+            File sourceFile = new File(this.getClass().getResource("/quick/quick.mpg").toURI());
             long origSize = sourceFile.length();
             
             ContentReference source = new ContentReference(
-                    this.getClass().getResource("/quick.mpg").toURI().toString(), "video/mpeg");
+                    this.getClass().getResource("/quick/quick.mpg").toURI().toString(), "video/mpeg");
             
             // make a writer for the target file
             File targetFile = TempFileProvider.createTempFile(
