@@ -22,7 +22,7 @@ package org.alfresco.service.cmr.repository;
 import java.io.Serializable;
 import java.util.Map;
 
-import org.gytheio.content.mediatype.MediaTypes;
+import org.gytheio.content.mediatype.FileMediaType;
 
 /**
  * DTO used to store options for ImageMagick cropping.
@@ -42,7 +42,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
     public boolean isApplicableForMimetype(String sourceMimetype)
     {
         return ((sourceMimetype != null && 
-                sourceMimetype.startsWith(MediaTypes.PREFIX_IMAGE)) ||
+                sourceMimetype.startsWith(FileMediaType.PREFIX_IMAGE)) ||
                 super.isApplicableForMimetype(sourceMimetype));
     }
 

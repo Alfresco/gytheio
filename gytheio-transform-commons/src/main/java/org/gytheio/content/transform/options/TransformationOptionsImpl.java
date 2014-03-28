@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.alfresco.service.cmr.repository.TransformationOptionLimits;
 import org.alfresco.service.cmr.repository.TransformationSourceOptions;
 
 /**
@@ -33,6 +34,9 @@ public class TransformationOptionsImpl implements TransformationOptions
 {
     /** Source options based on its mimetype */
     private Map<Class<? extends TransformationSourceOptions>, TransformationSourceOptions> sourceOptionsMap;
+    
+    /** Time, KBytes and page limits */
+    private TransformationOptionLimits limits = new TransformationOptionLimits();
 
     public Map<Class<? extends TransformationSourceOptions>, TransformationSourceOptions> getSourceOptionsMap()
     {
@@ -97,5 +101,48 @@ public class TransformationOptionsImpl implements TransformationOptions
 //            newOptions = existingOptions.mergedOptions(sourceOptions);
 //        }
         sourceOptionsMap.put(sourceOptions.getClass(), newOptions);
+    }
+    
+    /**
+     * Gets the timeout (ms) on the InputStream after which an IOExecption is thrown
+     * to terminate very slow transformations or a subprocess is terminated (killed).
+     * @return timeoutMs in milliseconds. If less than or equal to zero (the default)
+     *         there is no timeout.
+     */
+    public long getTimeoutMs()
+    {
+        return limits.getTimeoutMs();
+    }
+
+    /**
+     * Sets a timeout (ms) on the InputStream after which an IOExecption is thrown
+     * to terminate very slow transformations or to terminate (kill) a subprocess.
+     * @param timeoutMs in milliseconds. If less than or equal to zero (the default)
+     *                  there is no timeout.
+     *                  If greater than zero the {@code readLimitTimeMs} must not be set.
+     */
+    public void setTimeoutMs(long timeoutMs)
+    {
+        limits.setTimeoutMs(timeoutMs);
+    }
+    
+    /**
+     * Get the page limit before returning EOF.
+     * @return If less than or equal to zero (the default) no limit should be applied.
+     */
+    public int getPageLimit()
+    {
+        return limits.getPageLimit();
+    }
+    
+    /**
+     * Set the number of pages read from the source before returning EOF.
+     * 
+     * @param pageLimit the number of pages to be read from the source. If less 
+     *        than or equal to zero (the default) no limit is applied.
+     */
+    public void setPageLimit(int pageLimit)
+    {
+        limits.setPageLimit(pageLimit);
     }
 }

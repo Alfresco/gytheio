@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.alfresco.service.cmr.repository.AbstractTransformationSourceOptions;
-import org.gytheio.content.mediatype.MediaTypes;
+import org.gytheio.content.mediatype.FileMediaType;
 
 /**
  * Time-based content conversion options to specify an offset and duration.
@@ -52,8 +52,8 @@ public class TemporalSourceOptions extends AbstractTransformationSourceOptions
     public boolean isApplicableForMimetype(String sourceMimetype)
     {
         return ((sourceMimetype != null && 
-                sourceMimetype.startsWith(MediaTypes.PREFIX_VIDEO) || 
-                sourceMimetype.startsWith(MediaTypes.PREFIX_AUDIO)) ||
+                sourceMimetype.startsWith(FileMediaType.PREFIX_VIDEO) || 
+                sourceMimetype.startsWith(FileMediaType.PREFIX_AUDIO)) ||
                 super.isApplicableForMimetype(sourceMimetype));
     }
     

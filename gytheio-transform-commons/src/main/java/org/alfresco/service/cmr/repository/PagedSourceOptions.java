@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.alfresco.service.cmr.repository.AbstractTransformationSourceOptions;
-import org.gytheio.content.mediatype.MediaTypes;
+import org.gytheio.content.mediatype.FileMediaType;
 
 /**
  * Paged content conversion options to specify a page number range.
@@ -52,24 +52,24 @@ public class PagedSourceOptions extends AbstractTransformationSourceOptions
     protected static List<String> getDefaultApplicableMimetypes()
     {
         List<String> defaults = new ArrayList<String>(17);
-        defaults.add(MediaTypes.MIMETYPE_PDF);
-        defaults.add(MediaTypes.MIMETYPE_WORD);
-        defaults.add(MediaTypes.MIMETYPE_PPT);
-        defaults.add(MediaTypes.MIMETYPE_IMAGE_TIFF);
-        defaults.add(MediaTypes.MIMETYPE_OPENDOCUMENT_PRESENTATION);
-        defaults.add(MediaTypes.MIMETYPE_OPENDOCUMENT_PRESENTATION_TEMPLATE);
-        defaults.add(MediaTypes.MIMETYPE_OPENDOCUMENT_TEXT_TEMPLATE);
-        defaults.add(MediaTypes.MIMETYPE_OPENOFFICE1_WRITER);
-        defaults.add(MediaTypes.MIMETYPE_OPENOFFICE1_IMPRESS);
-        defaults.add(MediaTypes.MIMETYPE_OPENXML_PRESENTATION);
-        defaults.add(MediaTypes.MIMETYPE_OPENXML_WORDPROCESSING);
-        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_IMPRESS);
-        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_IMPRESS_PACKED);
-        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_WRITER);
-        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_WRITER_GLOBAL);
-        defaults.add(MediaTypes.MIMETYPE_IWORK_KEYNOTE);
-        defaults.add(MediaTypes.MIMETYPE_IWORK_PAGES);
-        defaults.add(MediaTypes.MIMETYPE_WORDPERFECT);
+        defaults.add(FileMediaType.MEDIATYPE_PDF.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_WORD.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_PPT.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_IMAGE_TIFF.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_OPENDOCUMENT_PRESENTATION.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_OPENDOCUMENT_PRESENTATION_TEMPLATE.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_OPENDOCUMENT_TEXT_TEMPLATE.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_OPENOFFICE1_WRITER.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_OPENOFFICE1_IMPRESS.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_OPENXML_PRESENTATION.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_OPENXML_WORDPROCESSING.getMediaType());
+//        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_IMPRESS);
+//        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_IMPRESS_PACKED);
+//        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_WRITER);
+//        defaults.add(MediaTypes.MIMETYPE_STAROFFICE5_WRITER_GLOBAL);
+        defaults.add(FileMediaType.MEDIATYPE_IWORK_KEYNOTE.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_IWORK_PAGES.getMediaType());
+        defaults.add(FileMediaType.MEDIATYPE_WORDPERFECT.getMediaType());
         return defaults;
     }
     
