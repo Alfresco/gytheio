@@ -55,6 +55,8 @@
         <module>gytheio-transform-node-commons</module>
         <module>gytheio-transform-worker-ffmpeg</module>
         <module>gytheio-transform-node-ffmpeg</module>
+        <module>gytheio-transform-worker-imagemagick</module>
+        <module>gytheio-transform-node-imagemagick</module>
         <module>gytheio-hash-node-commons</module>
         <module>gytheio-hash-worker-javase</module>
         <module>gytheio-hash-node-javase</module>
