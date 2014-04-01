@@ -18,6 +18,11 @@
  */
 package org.gytheio.messaging.amqp;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
 import org.gytheio.messaging.MessageConsumer;
 import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 import org.gytheio.messaging.jackson.ObjectMapperFactory;
@@ -32,6 +37,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AmqpNodeBootstrapUtils
 {
 
+    public static final String PROP_MESSAGING_BROKER_URL = "gytheio.messaging.broker.url";
+    public static final String PROP_MESSAGING_BROKER_USERNAME = "gytheio.messaging.broker.username";
+    public static final String PROP_MESSAGING_BROKER_PASSWORD = "gytheio.messaging.broker.password";
+    public static final String PROP_MESSAGING_QUEUE_REQUEST = "gytheio.messaging.queue.request";
+    public static final String PROP_MESSAGING_QUEUE_REPLY = "gytheio.messaging.queue.reply";
+
     /**
      * Creates an AMQP endpoint (sender and receiver) from the given arguments
      * 
@@ -39,16 +50,42 @@ public class AmqpNodeBootstrapUtils
      * @param args
      * @return
      */
-    public static AmqpDirectEndpoint createEndpoint(MessageConsumer messageConsumer, String... args)
+    public static AmqpDirectEndpoint createEndpoint(MessageConsumer messageConsumer,
+            String brokerUrl,
+            String brokerUsername, String brokerPassword,
+            String requestQueueName, String replyQueueName)
     {
-        validateArguments(args);
+        validate(brokerUrl, requestQueueName, replyQueueName);
         
         AmqpDirectEndpoint messageProducer = new AmqpDirectEndpoint();
         ObjectMapper objectMapper = ObjectMapperFactory.createInstance();
         
-        ((AmqpDirectEndpoint) messageProducer).setHost(args[0]);
-        ((AmqpDirectEndpoint) messageProducer).setReceiveQueueName(args[1]);
-        ((AmqpDirectEndpoint) messageProducer).setSendQueueName(args[2]);
+        URI broker = null;
+        try
+        {
+            broker = new URI(brokerUrl);
+        }
+        catch (URISyntaxException e)
+        {
+            // This would have been caught by validation above
+        }
+        
+        ((AmqpDirectEndpoint) messageProducer).setHost(broker.getHost());
+        Integer brokerPort = broker.getPort();
+        if (brokerPort != null)
+        {
+            ((AmqpDirectEndpoint) messageProducer).setPort(brokerPort);
+        }
+        if (brokerUsername != null)
+        {
+            ((AmqpDirectEndpoint) messageProducer).setUsername(brokerUsername);
+        }
+        if (brokerPassword != null)
+        {
+            ((AmqpDirectEndpoint) messageProducer).setPassword(brokerPassword);
+        }
+        ((AmqpDirectEndpoint) messageProducer).setReceiveQueueName(requestQueueName);
+        ((AmqpDirectEndpoint) messageProducer).setSendQueueName(replyQueueName);
         
         
         ((AmqpDirectEndpoint) messageProducer).setMessageConsumer(messageConsumer);
@@ -57,11 +94,36 @@ public class AmqpNodeBootstrapUtils
         return messageProducer;
     }
     
-    public static void validateArguments(String[] args)
+    public static AmqpDirectEndpoint createEndpoint(MessageConsumer messageConsumer, Properties properties)
     {
-        if (args.length < 3)
+        String brokerUrl = properties.getProperty(PROP_MESSAGING_BROKER_URL);
+        String brokerUsername = properties.getProperty(PROP_MESSAGING_BROKER_USERNAME);
+        String brokerPassword = properties.getProperty(PROP_MESSAGING_BROKER_PASSWORD);
+        String receiveQueueName = properties.getProperty(PROP_MESSAGING_QUEUE_REQUEST);
+        String replyQueueName = properties.getProperty(PROP_MESSAGING_QUEUE_REPLY);
+        validate(brokerUrl, receiveQueueName, replyQueueName);
+        return createEndpoint(messageConsumer, 
+                brokerUrl, brokerUsername, brokerPassword,
+                receiveQueueName, replyQueueName);
+    }
+    
+    public static void validate(
+            String brokerUrl, String requestQueueName, String replyQueueName)
+    {
+        if (StringUtils.isEmpty(brokerUrl) || 
+                StringUtils.isEmpty(requestQueueName) || 
+                StringUtils.isEmpty(replyQueueName))
         {
-            throw new IllegalArgumentException("USAGE: host receiveQueueName sendQueueName");
+            throw new IllegalArgumentException(
+                    "brokerUrl, requestQueueName, and replyQueueName must not be empty");
+        }
+        try
+        {
+            new URI(brokerUrl);
+        }
+        catch (URISyntaxException e)
+        {
+            throw new IllegalArgumentException(e);
         }
     }
     

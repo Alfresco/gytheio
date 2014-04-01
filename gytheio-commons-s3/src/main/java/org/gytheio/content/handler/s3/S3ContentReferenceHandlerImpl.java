@@ -26,8 +26,8 @@ import org.alfresco.service.cmr.repository.ContentIOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.ContentReferenceHandler;
-import org.gytheio.util.TempFileProvider;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.BasicAWSCredentials;

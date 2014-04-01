@@ -39,6 +39,7 @@ import org.apache.qpid.amqp_1_0.type.UnsignedInteger;
 import org.apache.qpid.amqp_1_0.type.messaging.AmqpValue;
 import org.gytheio.messaging.MessageConsumer;
 import org.gytheio.messaging.MessageProducer;
+import org.gytheio.messaging.MessagingException;
 import org.gytheio.messaging.Request;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,8 +56,14 @@ public class AmqpDirectEndpoint implements MessageProducer
     private static final Log logger = LogFactory.getLog(AmqpDirectEndpoint.class);
 
     private static final int RECEIVER_CREDIT = 2000;
+    private static final int DEFAULT_PORT = 5672;
+    private static final String DEFAULT_USERNAME = "guest";
+    private static final String DEFAULT_PASSWORD = "password";
 
     private String host;
+    private int port = DEFAULT_PORT;
+    private String username = DEFAULT_USERNAME;
+    private String password = DEFAULT_PASSWORD;
     private String receiveQueueName;
     private String sendQueueName;
     
@@ -70,6 +77,8 @@ public class AmqpDirectEndpoint implements MessageProducer
     
     protected class AmqpListener implements Runnable
     {
+        protected boolean isInitialized = false;
+        
         public void run()
         {
             Connection connection = null;
@@ -77,6 +86,8 @@ public class AmqpDirectEndpoint implements MessageProducer
             {
                 Receiver receiver = getSession().createReceiver(receiveQueueName);
                 receiver.setCredit(UnsignedInteger.valueOf(RECEIVER_CREDIT), false);
+                
+                isInitialized = true;
                 
                 while (true)
                 {
@@ -152,6 +163,21 @@ public class AmqpDirectEndpoint implements MessageProducer
         this.host = host;
     }
 
+    public void setPort(int port)
+    {
+        this.port = port;
+    }
+
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+
+    public void setPassword(String password)
+    {
+        this.password = password;
+    }
+
     public void setReceiveQueueName(String receiveQueueName)
     {
         this.receiveQueueName = receiveQueueName;
@@ -176,7 +202,7 @@ public class AmqpDirectEndpoint implements MessageProducer
     {
         if (connection == null)
         {
-            connection = new Connection(host, 5672, "guest", "password");
+            connection = new Connection(host, port, username, password);
             
         }
         return connection;
@@ -237,7 +263,7 @@ public class AmqpDirectEndpoint implements MessageProducer
         }
         catch (Exception e)
         {
-            e.printStackTrace();
+            throw new MessagingException(e);
         }
     }
     
@@ -247,6 +273,20 @@ public class AmqpDirectEndpoint implements MessageProducer
             listener = new AmqpListener();
         }
         listener.run();
+    }
+    
+    public AmqpListener getListener()
+    {
+        if (listener == null)
+        {
+            listener = new AmqpListener();
+        }
+        return listener;
+    }
+    
+    public boolean isInitialized()
+    {
+        return listener != null && listener.isInitialized;
     }
 
 }

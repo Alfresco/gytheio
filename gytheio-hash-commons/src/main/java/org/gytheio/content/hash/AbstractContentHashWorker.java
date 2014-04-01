@@ -60,5 +60,14 @@ public abstract class AbstractContentHashWorker implements ContentHashWorker
     public abstract String generateHashInternal(
             InputStream sourceFile,
             String hashAlgorithm) throws Exception;
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "[");
+        builder.append("contentReferenceHandler: " + contentReferenceHandler.toString());
+        builder.append("]");
+        return builder.toString();
+    }
 
 }

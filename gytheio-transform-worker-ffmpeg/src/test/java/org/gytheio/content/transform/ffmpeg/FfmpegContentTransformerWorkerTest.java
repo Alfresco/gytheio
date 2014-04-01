@@ -27,13 +27,15 @@ import static junit.framework.Assert.*;
 
 import org.alfresco.service.cmr.repository.TemporalSourceOptions;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.file.FileProvider;
+import org.gytheio.content.file.TempFileProvider;
+import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.gytheio.content.transform.ContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
 import org.gytheio.content.transform.ffmpeg.FfmpegContentTransformerWorker;
 import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.content.transform.options.TransformationOptionsImpl;
-import org.gytheio.util.TempFileProvider;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -50,9 +52,14 @@ public class FfmpegContentTransformerWorkerTest
     
     @Before
     public void setUp() throws Exception {
+        FileProvider fileProvider = new TempFileProvider();
+        ContentReferenceHandler contentReferenceHandler = new FileContentReferenceHandlerImpl();
+        ((FileContentReferenceHandlerImpl) contentReferenceHandler).setFileProvider(fileProvider);
         transformerWorker = new FfmpegContentTransformerWorker();
-        ((FfmpegContentTransformerWorker) transformerWorker).setContentReferenceHandler(
-                new FileContentReferenceHandlerImpl());
+        ((FfmpegContentTransformerWorker) transformerWorker).setSourceContentReferenceHandler(
+                contentReferenceHandler);
+        ((FfmpegContentTransformerWorker) transformerWorker).setTargetContentReferenceHandler(
+                contentReferenceHandler);
         ((FfmpegContentTransformerWorker) transformerWorker).init();
     }
     

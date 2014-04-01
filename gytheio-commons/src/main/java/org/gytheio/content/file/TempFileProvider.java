@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.gytheio.util;
+package org.gytheio.content.file;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -51,7 +51,7 @@ import org.apache.commons.logging.LogFactory;
  * @author derekh
  * @author mrogers
  */
-public class TempFileProvider
+public class TempFileProvider implements FileProvider
 {
     private static final int BUFFER_SIZE = 40 * 1024;
 
@@ -71,13 +71,6 @@ public class TempFileProvider
     private static final Log logger = LogFactory.getLog(TempFileProvider.class);
     
     private static int MAX_RETRIES = 3;
-
-    /**
-     * Static class only
-     */
-    private TempFileProvider()
-    {
-    }
 
     /**
      * Get the Java Temp dir e.g. java.io.tempdir
@@ -302,6 +295,28 @@ public class TempFileProvider
                     "   directory: " + directory,
                     e);
         }
+    }
+
+    @Override
+    public File createFile(String prefix, String suffix)
+    {
+        return TempFileProvider.createTempFile(prefix, suffix);
+    }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "[");
+        builder.append("tempDir: " + getTempDir().toString());
+        builder.append("]");
+        return builder.toString();
+    }
+
+    @Override
+    public boolean isAvailable()
+    {
+        File dir = getTempDir();
+        return dir != null && dir.exists();
     }
 
 }

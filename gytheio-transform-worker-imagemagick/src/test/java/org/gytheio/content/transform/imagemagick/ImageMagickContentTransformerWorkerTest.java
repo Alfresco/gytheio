@@ -29,6 +29,8 @@ import org.alfresco.service.cmr.repository.TransformationSourceOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.file.FileProvider;
+import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.gytheio.content.mediatype.FileMediaType;
@@ -55,11 +57,15 @@ public class ImageMagickContentTransformerWorkerTest extends AbstractContentTran
     
     @Before
     public void setUp() throws Exception {
+        FileProvider fileProvider = new TempFileProvider();
         contentReferenceHandler = new FileContentReferenceHandlerImpl();
+        ((FileContentReferenceHandlerImpl) contentReferenceHandler).setFileProvider(fileProvider);
         progressReporter = new LoggingProgressReporterImpl();
         
         transformerWorker = new ImageMagickContentTransformerWorker();
-        ((ImageMagickContentTransformerWorker) transformerWorker).setContentReferenceHandler(
+        ((ImageMagickContentTransformerWorker) transformerWorker).setSourceContentReferenceHandler(
+                contentReferenceHandler);
+        ((ImageMagickContentTransformerWorker) transformerWorker).setTargetContentReferenceHandler(
                 contentReferenceHandler);
         ((ImageMagickContentTransformerWorker) transformerWorker).init();
     }

@@ -79,6 +79,7 @@ public class FfmpegContentTransformerWorker extends AbstractContentTransformerWo
     
     public void init()
     {
+        super.init();
         if (executer == null)
         {
             if (System.getProperty("ffmpeg.exe") != null)

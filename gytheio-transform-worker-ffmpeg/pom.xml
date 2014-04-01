@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-transform-commons</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -37,7 +37,7 @@
                                 <artifactItem>
                                     <groupId>org.gytheio</groupId>
                                     <artifactId>gytheio-commons</artifactId>
-                                    <version>${version}</version>
+                                    <version>${project.version}</version>
                                     <type>test-jar</type>
                                     <overWrite>false</overWrite>
                                     <includes>quick/*</includes>

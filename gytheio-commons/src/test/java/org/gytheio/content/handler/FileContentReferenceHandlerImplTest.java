@@ -2,6 +2,8 @@ package org.gytheio.content.handler;
 
 import org.apache.commons.lang.StringUtils;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.file.FileProvider;
+import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.junit.Before;
@@ -16,7 +18,9 @@ public class FileContentReferenceHandlerImplTest
     @Before
     public void setUp()
     {
+        FileProvider fileProvider = new TempFileProvider();
         handler = new FileContentReferenceHandlerImpl();
+        ((FileContentReferenceHandlerImpl) handler).setFileProvider(fileProvider);
     }
     
     protected void checkReference(String fileName, String mediaType)

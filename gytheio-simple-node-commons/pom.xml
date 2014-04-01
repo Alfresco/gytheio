@@ -9,19 +9,14 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>gytheio-transform-messaging</artifactId>
+    <artifactId>gytheio-simple-node-commons</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.gytheio</groupId>
-            <artifactId>gytheio-messaging-commons</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.gytheio</groupId>
-            <artifactId>gytheio-transform-commons</artifactId>
+            <artifactId>gytheio-messaging-amqp-direct</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
-
+    
 </project>

@@ -35,7 +35,7 @@ import java.net.URISyntaxException;
 
 import org.alfresco.service.cmr.repository.ContentIOException;
 import org.gytheio.content.ContentReference;
-import org.gytheio.util.TempFileProvider;
+import org.gytheio.content.file.FileProvider;
 
 /**
  * Java {@link File} content reference handler implementation.
@@ -49,6 +49,13 @@ public class FileContentReferenceHandlerImpl implements ContentReferenceHandler
     private static final Log logger = LogFactory.getLog(FileContentReferenceHandlerImpl.class);
     
     public static final String URI_SCHEME_FILE = "file:/";
+    
+    private FileProvider fileProvider;
+
+    public void setFileProvider(FileProvider fileProvider)
+    {
+        this.fileProvider = fileProvider;
+    }
 
     @Override
     public boolean isContentReferenceSupported(ContentReference contentReference)
@@ -65,7 +72,7 @@ public class FileContentReferenceHandlerImpl implements ContentReferenceHandler
         String suffix = fileName.substring(StringUtils.lastIndexOf(fileName, "."), fileName.length());
         String prefix = fileName.substring(0, StringUtils.lastIndexOf(fileName, "."));
         
-        File tempFile = TempFileProvider.createTempFile(prefix, suffix);
+        File tempFile = fileProvider.createFile(prefix, suffix);
         
         if (logger.isDebugEnabled())
         {
@@ -160,7 +167,18 @@ public class FileContentReferenceHandlerImpl implements ContentReferenceHandler
     @Override
     public boolean isAvailable()
     {
-        return true;
+        return fileProvider != null && fileProvider.isAvailable();
+    }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "[");
+        builder.append("fileProvider: " + fileProvider.toString());
+        builder.append(", ");
+        builder.append("isAvailable: " + isAvailable());
+        builder.append("]");
+        return builder.toString();
     }
 
 }

@@ -32,12 +32,21 @@ import org.gytheio.content.transform.options.TransformationOptions;
  */
 public abstract class AbstractContentTransformerWorker implements ContentTransformerWorker
 {
+    protected ContentReferenceHandler sourceContentReferenceHandler;
+    protected ContentReferenceHandler targetContentReferenceHandler;
     
-    protected ContentReferenceHandler contentReferenceHandler;
-    
-    public void setContentReferenceHandler(ContentReferenceHandler contentReferenceFileHandler)
+    public void setSourceContentReferenceHandler(ContentReferenceHandler sourceContentReferenceHandler)
     {
-        this.contentReferenceHandler = contentReferenceFileHandler;
+        this.sourceContentReferenceHandler = sourceContentReferenceHandler;
+    }
+    
+    public void setTargetContentReferenceHandler(ContentReferenceHandler targetContentReferenceHandler)
+    {
+        this.targetContentReferenceHandler = targetContentReferenceHandler;
+    }
+
+    public void init()
+    {
     }
 
     public void transform(
@@ -47,8 +56,8 @@ public abstract class AbstractContentTransformerWorker implements ContentTransfo
             ContentTransformerWorkerProgressReporter progressReporter) throws Exception
     {
         transformInternal(
-                contentReferenceHandler.getFile(source), source.getMediaType(), 
-                contentReferenceHandler.getFile(target), target.getMediaType(), 
+                sourceContentReferenceHandler.getFile(source), source.getMediaType(), 
+                targetContentReferenceHandler.getFile(target), target.getMediaType(), 
                 options,
                 progressReporter);
     }
@@ -70,5 +79,16 @@ public abstract class AbstractContentTransformerWorker implements ContentTransfo
             File targetFile, String targetMimetype,
             TransformationOptions options,
             ContentTransformerWorkerProgressReporter progressReporter) throws Exception;
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "[");
+        builder.append("sourceContentReferenceHandler: " + sourceContentReferenceHandler.toString());
+        builder.append(", ");
+        builder.append("targetContentReferenceHandler: " + targetContentReferenceHandler.toString());
+        builder.append("]");
+        return builder.toString();
+    }
 
 }
