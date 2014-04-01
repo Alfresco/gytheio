@@ -15,22 +15,22 @@
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-messaging-amqp-direct</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-hash-node-commons</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-hash-worker-javase</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-commons</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
@@ -76,7 +76,7 @@
                                 <artifactItem>
                                     <groupId>org.gytheio</groupId>
                                     <artifactId>gytheio-commons</artifactId>
-                                    <version>${version}</version>
+                                    <version>${project.version}</version>
                                     <type>test-jar</type>
                                     <overWrite>false</overWrite>
                                     <includes>quick/*</includes>

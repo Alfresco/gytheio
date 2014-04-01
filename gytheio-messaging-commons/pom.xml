@@ -19,7 +19,7 @@
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-commons</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

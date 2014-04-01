@@ -15,12 +15,12 @@
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-hash-commons</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-hash-messaging</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
     
