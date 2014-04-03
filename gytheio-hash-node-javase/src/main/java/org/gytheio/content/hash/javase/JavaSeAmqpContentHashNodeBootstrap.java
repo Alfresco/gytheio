@@ -19,17 +19,17 @@
 package org.gytheio.content.hash.javase;
 
 import org.gytheio.content.hash.BaseContentHashNode;
-import org.gytheio.content.transform.AbstractSimpleAmqpNodeBootstrap;
-import org.gytheio.messaging.MessageConsumer;
+import org.gytheio.content.node.AbstractSimpleAmqpNodeBootstrap;
+import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 
 /**
  * Starts up an AMQP Java SE hash node via command line arguments
  * 
  * @author Ray Gauss II
  */
-public class JavaSeAmqpContentHashNodeBootstrap extends AbstractSimpleAmqpNodeBootstrap<JavaSeContentHashNodeWorker>
+public class JavaSeAmqpContentHashNodeBootstrap 
+        extends AbstractSimpleAmqpNodeBootstrap<JavaSeContentHashNodeWorker, BaseContentHashNode>
 {
-    
     /**
      * @param args
      */
@@ -40,16 +40,27 @@ public class JavaSeAmqpContentHashNodeBootstrap extends AbstractSimpleAmqpNodeBo
     }
 
     @Override
-    protected MessageConsumer getMessageConsumer()
+    protected BaseContentHashNode createNode(JavaSeContentHashNodeWorker worker)
     {
-        JavaSeContentHashNodeWorker worker = createWorker();
+        BaseContentHashNode node = new BaseContentHashNode();
+        node.setWorker(worker);
+        return node;
+    }
+
+    @Override
+    protected void initWorker(JavaSeContentHashNodeWorker worker)
+    {
         worker.setContentReferenceHandler(
                 createFileContentReferenceHandler(AbstractSimpleAmqpNodeBootstrap.PROP_WORKER_DIR_SOURCE));
-        
-        BaseContentHashNode node = new BaseContentHashNode();
-        node.setWorker(createWorker());
-        
-        return node;
+    }
+
+    @Override
+    protected void initNode(BaseContentHashNode node, AmqpDirectEndpoint endpoint)
+    {
+        if (node != null)
+        {
+            node.setMessageProducer(endpoint);
+        }
     }
     
 }

@@ -2,14 +2,15 @@ package org.gytheio.content.transform;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
-import org.gytheio.messaging.MessageConsumer;
+import org.gytheio.content.node.AbstractSimpleAmqpNodeBootstrap;
+import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 
 /**
  * Boostrap for transformer nodes.
  *
  */
-public class TransformNodeBootstrap extends AbstractSimpleAmqpNodeBootstrap<AbstractContentTransformerWorker>
+public class TransformNodeBootstrap 
+        extends AbstractSimpleAmqpNodeBootstrap<AbstractContentTransformerWorker, BaseContentTransformerNode>
 {
     /**
      * Logger for this class
@@ -28,20 +29,31 @@ public class TransformNodeBootstrap extends AbstractSimpleAmqpNodeBootstrap<Abst
     }
 
     @Override
-    protected MessageConsumer getMessageConsumer()
+    protected BaseContentTransformerNode createNode(AbstractContentTransformerWorker worker)
     {
-        AbstractContentTransformerWorker worker = createWorker();
+        BaseContentTransformerNode node = new BaseContentTransformerNode();
+        node.setWorker(worker);
+        return node;
+    }
+
+    @Override
+    protected void initWorker(AbstractContentTransformerWorker worker)
+    {
         worker.setSourceContentReferenceHandler(
                 createFileContentReferenceHandler(PROP_WORKER_DIR_SOURCE));
         worker.setTargetContentReferenceHandler(
                 createFileContentReferenceHandler(PROP_WORKER_DIR_TARGET));
         worker.init();
         logger.debug("Initialized " + worker.toString());
-        
-        BaseContentTransformerNode node = new BaseContentTransformerNode();
-        node.setWorker(worker);
-        
-        return node;
+    }
+
+    @Override
+    protected void initNode(BaseContentTransformerNode node, AmqpDirectEndpoint endpoint)
+    {
+        if (node != null)
+        {
+            node.setMessageProducer(endpoint);
+        }
     }
     
 }

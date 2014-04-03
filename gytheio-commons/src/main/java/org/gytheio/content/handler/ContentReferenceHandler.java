@@ -60,13 +60,26 @@ public interface ContentReferenceHandler
     public File getFile(ContentReference contentReference) throws ContentIOException;
     
     /**
+     * Gets a file object for the given content reference and optionally validates
+     * the file through size or hash comparisons
+     * 
+     * @param contentReference
+     * @param waitForTransfer whether or not to check file size and wait for transfer completion
+     * @return a file object representation of the content reference
+     * @throws ContentIOException
+     * @throws InterruptedException
+     */
+    public File getFile(ContentReference contentReference, boolean waitForTransfer) throws ContentIOException, InterruptedException;
+    
+    /**
      * Writes the given source file into the given target content reference
      * 
      * @param sourceFile
      * @param targetContentReference
+     * @return the size copied
      * @throws ContentIOException
      */
-    public void putFile(File sourceFile, ContentReference targetContentReference) throws ContentIOException;
+    public long putFile(File sourceFile, ContentReference targetContentReference) throws ContentIOException;
     
     /**
      * Gets an input stream for the given content reference
@@ -82,9 +95,10 @@ public interface ContentReferenceHandler
      * 
      * @param sourceInputStream
      * @param targetContentReference
+     * @return the size copied
      * @throws ContentIOException
      */
-    public void putInputStream(InputStream sourceInputStream, ContentReference targetContentReference) throws ContentIOException;
+    public long putInputStream(InputStream sourceInputStream, ContentReference targetContentReference) throws ContentIOException;
     
     /**
      * Deletes the given content reference
