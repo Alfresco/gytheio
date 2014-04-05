@@ -19,13 +19,14 @@
 package org.gytheio.content.hash;
 
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.ContentWorker;
 
 /**
  * Defines the methods responsible for doing the work of hash computation of a content reference
  * 
  * @author Ray Gauss II
  */
-public interface ContentHashWorker
+public interface ContentHashWorker extends ContentWorker
 {
     public static final String HASH_ALGORITHM_MD5 = "MD5";
     public static final String HASH_ALGORITHM_SHA_256 = "SHA-256";

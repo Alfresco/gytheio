@@ -43,23 +43,26 @@
 
     <modules>
         <module>gytheio-commons</module>
-        <module>gytheio-messaging-commons</module>
         <module>gytheio-commons-s3</module>
-        <module>gytheio-health-commons</module>
-        <module>gytheio-transform-commons</module>
-        <module>gytheio-transform-messaging</module>
-        <module>gytheio-hash-commons</module>
-        <module>gytheio-hash-messaging</module>
+
+        <module>gytheio-messaging-commons</module>
         <module>gytheio-messaging-amqp-direct</module>
         <module>gytheio-messaging-camel</module>
-        <module>gytheio-simple-node-commons</module>
-        <module>gytheio-transform-node-commons</module>
+
+        <module>gytheio-health-commons</module>
+
+        <module>gytheio-transform-commons</module>
+        <module>gytheio-transform-messaging</module>
         <module>gytheio-transform-worker-ffmpeg</module>
         <module>gytheio-transform-worker-imagemagick</module>
-        <module>gytheio-transform-node-simple</module>
-        <module>gytheio-hash-node-commons</module>
+        <module>gytheio-transform-component</module>
+
+        <module>gytheio-hash-commons</module>
+        <module>gytheio-hash-messaging</module>
         <module>gytheio-hash-worker-javase</module>
-        <module>gytheio-hash-node-javase</module>
+        <module>gytheio-hash-component</module>
+
+        <module>gytheio-node-simple</module>
     </modules>
 
     <dependencies>

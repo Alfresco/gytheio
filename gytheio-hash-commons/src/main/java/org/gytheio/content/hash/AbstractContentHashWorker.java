@@ -21,8 +21,8 @@ package org.gytheio.content.hash;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+import org.gytheio.content.AbstractContentWorker;
 import org.gytheio.content.ContentReference;
-import org.gytheio.content.handler.ContentReferenceHandler;
 
 /**
  * Abstract hash node worker which uses a content reference handler to convert the 
@@ -30,22 +30,19 @@ import org.gytheio.content.handler.ContentReferenceHandler;
  * 
  * @author Ray Gauss II
  */
-public abstract class AbstractContentHashWorker implements ContentHashWorker
+public abstract class AbstractContentHashWorker extends AbstractContentWorker implements ContentHashWorker
 {
-    
-    protected ContentReferenceHandler contentReferenceHandler;
-    
-    public void setContentReferenceHandler(ContentReferenceHandler contentReferenceFileHandler)
-    {
-        this.contentReferenceHandler = contentReferenceFileHandler;
-    }
 
+    public void initialize()
+    {
+    }
+    
     public String generateHash(
             ContentReference source, 
             String hashAlgorithm) throws Exception
     {
         return generateHashInternal(
-                new FileInputStream(contentReferenceHandler.getFile(source)),
+                new FileInputStream(sourceContentReferenceHandler.getFile(source)),
                 hashAlgorithm);
     }
     
@@ -65,7 +62,7 @@ public abstract class AbstractContentHashWorker implements ContentHashWorker
     public String toString()
     {
         StringBuilder builder = new StringBuilder(this.getClass().getSimpleName() + "[");
-        builder.append("contentReferenceHandler: " + contentReferenceHandler.toString());
+        builder.append("contentReferenceHandler: " + sourceContentReferenceHandler.toString());
         builder.append("]");
         return builder.toString();
     }

@@ -20,6 +20,7 @@ package org.gytheio.content.transform;
 
 import java.io.File;
 
+import org.gytheio.content.AbstractContentWorker;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.transform.options.TransformationOptions;
@@ -30,22 +31,17 @@ import org.gytheio.content.transform.options.TransformationOptions;
  * 
  * @author Ray Gauss II
  */
-public abstract class AbstractContentTransformerWorker implements ContentTransformerWorker
+public abstract class AbstractContentTransformerWorker 
+        extends AbstractContentWorker implements ContentTransformerWorker
 {
-    protected ContentReferenceHandler sourceContentReferenceHandler;
     protected ContentReferenceHandler targetContentReferenceHandler;
-    
-    public void setSourceContentReferenceHandler(ContentReferenceHandler sourceContentReferenceHandler)
-    {
-        this.sourceContentReferenceHandler = sourceContentReferenceHandler;
-    }
     
     public void setTargetContentReferenceHandler(ContentReferenceHandler targetContentReferenceHandler)
     {
         this.targetContentReferenceHandler = targetContentReferenceHandler;
     }
 
-    public void init()
+    public void initialize()
     {
     }
 

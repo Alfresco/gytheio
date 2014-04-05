@@ -19,6 +19,7 @@
 package org.gytheio.content.transform;
 
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.ContentWorker;
 import org.gytheio.content.transform.options.TransformationOptions;
 
 /**
@@ -26,7 +27,7 @@ import org.gytheio.content.transform.options.TransformationOptions;
  * 
  * @author Ray Gauss II
  */
-public interface ContentTransformerWorker
+public interface ContentTransformerWorker extends ContentWorker
 {
     public void transform(
             ContentReference source, 

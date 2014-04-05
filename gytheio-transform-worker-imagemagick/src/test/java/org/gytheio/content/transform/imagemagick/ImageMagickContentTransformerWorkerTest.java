@@ -67,7 +67,7 @@ public class ImageMagickContentTransformerWorkerTest extends AbstractContentTran
                 contentReferenceHandler);
         ((ImageMagickContentTransformerWorker) transformerWorker).setTargetContentReferenceHandler(
                 contentReferenceHandler);
-        ((ImageMagickContentTransformerWorker) transformerWorker).init();
+        ((ImageMagickContentTransformerWorker) transformerWorker).initialize();
     }
     
     protected void transform(String sourceMimetype, String targetMimetype, TransformationOptions options) throws Exception
