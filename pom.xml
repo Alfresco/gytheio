@@ -63,6 +63,7 @@
         <module>gytheio-hash-component</module>
 
         <module>gytheio-node-simple</module>
+        <module>gytheio-node-dropwizard</module>
     </modules>
 
     <dependencies>
