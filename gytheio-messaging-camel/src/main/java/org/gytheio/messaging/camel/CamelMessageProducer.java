@@ -18,6 +18,9 @@
  */
 package org.gytheio.messaging.camel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.camel.ProducerTemplate;
 import org.gytheio.messaging.MessageProducer;
 import org.gytheio.messaging.MessagingException;
@@ -70,13 +73,34 @@ public class CamelMessageProducer implements MessageProducer
         }
     }
     
+    protected Map<String, Object> addHeaders(Map<String, Object> origHeaders)
+    {
+        if (origHeaders == null)
+        {
+            origHeaders = new HashMap<String, Object>();
+        }
+        // Hack for broken JMS to AMQP conversion
+        origHeaders.put(HEADER_JMS_AMQP_MESSAGE_FORMAT, HEADER_JMS_AMQP_MESSAGE_FORMAT_VALUE);
+        return origHeaders;
+    }
+    
     public void send(Object message)
     {
         try
         {
-            // Hack for broken JMS to AMQP conversion
-            producer.sendBodyAndHeader(endpoint, message, 
-                    HEADER_JMS_AMQP_MESSAGE_FORMAT, HEADER_JMS_AMQP_MESSAGE_FORMAT_VALUE);
+            producer.sendBodyAndHeaders(endpoint, message, addHeaders(null));
+        }
+        catch (Exception e)
+        {
+            throw new MessagingException(e);
+        }
+    }
+    
+    public void send(Object message, Map<String, Object> headers)
+    {
+        try
+        {
+            producer.sendBodyAndHeaders(endpoint, message, addHeaders(headers));
         }
         catch (Exception e)
         {
@@ -88,9 +112,19 @@ public class CamelMessageProducer implements MessageProducer
     {
         try
         {
-            // Hack for broken JMS to AMQP conversion
-            producer.sendBodyAndHeader(queueName, message, 
-                    HEADER_JMS_AMQP_MESSAGE_FORMAT, HEADER_JMS_AMQP_MESSAGE_FORMAT_VALUE);
+            producer.sendBodyAndHeaders(queueName, message, addHeaders(null));
+        }
+        catch (Exception e)
+        {
+            throw new MessagingException(e);
+        }
+    }
+    
+    public void send(Object message, String queueName, Map<String, Object> headers)
+    {
+        try
+        {
+            producer.sendBodyAndHeaders(queueName, message, addHeaders(headers));
         }
         catch (Exception e)
         {
