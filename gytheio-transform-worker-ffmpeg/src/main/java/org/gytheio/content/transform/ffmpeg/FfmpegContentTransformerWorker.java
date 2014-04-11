@@ -26,7 +26,8 @@ import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
 import org.alfresco.service.cmr.repository.TemporalSourceOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.gytheio.content.transform.AbstractContentTransformerWorker;
+import org.gytheio.content.ContentReference;
+import org.gytheio.content.transform.AbstractFileContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
 import org.gytheio.content.transform.options.ImageTransformationOptions;
 import org.gytheio.content.transform.options.TransformationOptions;
@@ -37,7 +38,7 @@ import org.gytheio.util.exec.RuntimeExec;
  * 
  * @author Ray Gauss II
  */
-public class FfmpegContentTransformerWorker extends AbstractContentTransformerWorker
+public class FfmpegContentTransformerWorker extends AbstractFileContentTransformerWorker
 {
     private static final Log logger = LogFactory.getLog(FfmpegContentTransformerWorker.class);
     
@@ -102,11 +103,14 @@ public class FfmpegContentTransformerWorker extends AbstractContentTransformerWo
     }
     
     protected void transformInternal(
-            File sourceFile, String sourceMimetype, 
-            File targetFile, String targetMimetype,
+            File sourceFile, ContentReference sourceRef, 
+            File targetFile, ContentReference targetRef,
             TransformationOptions options,
             ContentTransformerWorkerProgressReporter progressReporter) throws Exception
     {
+        String sourceMimetype = sourceRef.getMediaType();
+        String targetMimetype = targetRef.getMediaType();
+        
         Map<String, String> properties = new HashMap<String, String>(5);
         // set properties
         String commandOptions = "";

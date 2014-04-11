@@ -44,6 +44,7 @@
     <modules>
         <module>gytheio-commons</module>
         <module>gytheio-commons-s3</module>
+        <module>gytheio-commons-webdav</module>
 
         <module>gytheio-messaging-commons</module>
         <module>gytheio-messaging-amqp-direct</module>

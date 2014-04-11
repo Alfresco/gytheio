@@ -20,7 +20,6 @@ package org.gytheio.content.transform.imagemagick;
 
 import static junit.framework.Assert.*;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,9 +96,7 @@ public class ImageMagickContentTransformerWorkerTest extends AbstractContentTran
             // do the transformation
             transformerWorker.transform(sourceReference, targetReference, options, progressReporter);
             
-            File targetFile = contentReferenceHandler.getFile(targetReference);
-            
-            assertTrue(targetFile.length() > 10);
+            assertTrue(targetReference.getSize() > 10);
         }
     }
     

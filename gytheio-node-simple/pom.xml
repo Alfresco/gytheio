@@ -21,7 +21,12 @@
             <artifactId>gytheio-messaging-amqp-direct</artifactId>
             <version>${project.version}</version>
         </dependency>
-                <dependency>
+        <dependency>
+            <groupId>org.gytheio</groupId>
+            <artifactId>gytheio-commons-webdav</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.gytheio</groupId>
             <artifactId>gytheio-transform-component</artifactId>
             <version>${project.version}</version>

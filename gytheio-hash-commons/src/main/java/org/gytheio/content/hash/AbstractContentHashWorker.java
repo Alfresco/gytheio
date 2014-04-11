@@ -18,7 +18,6 @@
  */
 package org.gytheio.content.hash;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.gytheio.content.AbstractContentWorker;
@@ -33,16 +32,18 @@ import org.gytheio.content.ContentReference;
 public abstract class AbstractContentHashWorker extends AbstractContentWorker implements ContentHashWorker
 {
 
+    @Override
     public void initialize()
     {
     }
     
+    @Override
     public String generateHash(
             ContentReference source, 
             String hashAlgorithm) throws Exception
     {
         return generateHashInternal(
-                new FileInputStream(sourceContentReferenceHandler.getFile(source)),
+                sourceContentReferenceHandler.getInputStream(source, true),
                 hashAlgorithm);
     }
     

@@ -3,6 +3,7 @@ package org.gytheio.content.node;
 import java.util.Properties;
 
 import org.gytheio.content.AbstractComponent;
+import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.hash.AbstractContentHashWorker;
 import org.gytheio.content.hash.BaseContentHashComponent;
 
@@ -23,8 +24,9 @@ public class HashComponentBootstrapFromProperties<W extends AbstractContentHashW
     
     protected void initWorker()
     {
-        worker.setSourceContentReferenceHandler(
-                createFileContentReferenceHandler(PROP_WORKER_DIR_SOURCE));
+        ContentReferenceHandler sourceHandler = createContentReferenceHandler(
+                PROP_WORKER_CONTENT_REF_HANDLER_SOURCE_PREFIX);
+        worker.setSourceContentReferenceHandler(sourceHandler);
         worker.initialize();
     }
 
