@@ -18,6 +18,8 @@
  */
 package org.gytheio.content.hash;
 
+import java.util.List;
+
 import org.gytheio.content.AbstractContentRequest;
 import org.gytheio.content.ContentReference;
 import org.gytheio.messaging.Request;
@@ -36,10 +38,10 @@ public class HashRequest extends AbstractContentRequest implements Request<HashR
         super();
     }
     
-    public HashRequest(ContentReference sourceContentReference, String hashAlgorithm)
+    public HashRequest(List<ContentReference> sourceContentReferences, String hashAlgorithm)
     {
         super();
-        setSourceContentReference(sourceContentReference);
+        setSourceContentReferences(sourceContentReferences);
         this.hashAlgorithm = hashAlgorithm;
     }
 

@@ -18,9 +18,12 @@
  */
 package org.gytheio.content.hash;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.AbstractComponent;
+import org.gytheio.content.ContentReference;
 import org.gytheio.content.hash.HashReply;
 import org.gytheio.content.hash.HashRequest;
 import org.gytheio.messaging.MessageProducer;
@@ -45,12 +48,12 @@ public class BaseContentHashComponent extends AbstractComponent<ContentHashWorke
         try
         {
             
-            String value = worker.generateHash(
-                    request.getSourceContentReference(), 
+            Map<ContentReference, String> values = worker.generateHashes(
+                    request.getSourceContentReferences(), 
                     request.getHashAlgorithm());
             
             HashReply reply = new HashReply(request);
-            reply.setHexValue(value);
+            reply.setHexEncodedValues(values);
             
             if (logger.isDebugEnabled())
             {

@@ -18,6 +18,9 @@
  */
 package org.gytheio.content.hash;
 
+import java.util.Map;
+
+import org.gytheio.content.ContentReference;
 import org.gytheio.messaging.Reply;
 
 /**
@@ -29,7 +32,7 @@ public class HashReply implements Reply
 {
     
     private String requestId;
-    private String hexValue;
+    private Map<ContentReference, String> hexValues;
     
     public HashReply() {
         super();
@@ -62,23 +65,23 @@ public class HashReply implements Reply
     }
 
     /**
-     * Gets the value of the content hash
+     * Gets the map of content hash values
      * 
-     * @return the hash value
+     * @return the map of hash values
      */
-    public String getHexValue()
+    public Map<ContentReference, String> getHexEncodedValues()
     {
-        return hexValue;
+        return hexValues;
     }
 
     /**
-     * Sets the value of the content hash
+     * Sets the map of content hash values
      * 
-     * @param value
+     * @param the map of hashValues
      */
-    public void setHexValue(String hexValue)
+    public void setHexEncodedValues(Map<ContentReference, String> hexValues)
     {
-        this.hexValue = hexValue;
+        this.hexValues = hexValues;
     }
 
 }

@@ -18,17 +18,19 @@
  */
 package org.gytheio.content;
 
+import java.util.List;
+
 import org.gytheio.content.ContentReference;
 import org.gytheio.messaging.AbstractRequest;
 
 /**
- * Represents a request for content transformation from source to target with transformation options
+ * Represents a request for some operation on content sources.
  * 
  * @author Ray Gauss II
  */
 public abstract class AbstractContentRequest extends AbstractRequest
 {
-    private ContentReference sourceContentReference;
+    private List<ContentReference> sourceContentReferences;
     
     public AbstractContentRequest()
     {
@@ -36,23 +38,23 @@ public abstract class AbstractContentRequest extends AbstractRequest
     }
 
     /**
-     * Gets the source content reference object
+     * Gets the source content reference objects
      * 
-     * @return source content reference
+     * @return source content references
      */
-    public ContentReference getSourceContentReference()
+    public List<ContentReference> getSourceContentReferences()
     {
-        return sourceContentReference;
+        return sourceContentReferences;
     }
 
     /**
-     * Sets the source content reference object
+     * Sets the source content reference objects
      * 
      * @param sourceContentReference
      */
-    public void setSourceContentReference(ContentReference sourceContentReference)
+    public void setSourceContentReferences(List<ContentReference> sourceContentReferences)
     {
-        this.sourceContentReference = sourceContentReference;
+        this.sourceContentReferences = sourceContentReferences;
     }
 
 }

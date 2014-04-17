@@ -18,6 +18,8 @@
  */
 package org.gytheio.content.transform;
 
+import java.util.List;
+
 import org.gytheio.content.ContentReference;
 import org.gytheio.messaging.Reply;
 
@@ -32,7 +34,7 @@ public class TransformationReply implements Reply
     public static final String STATUS_ERROR = "error";
     
     private String requestId;
-    private ContentReference targetContentReference;
+    private List<ContentReference> targetContentReferences;
     private String status;
     private String jobId;
     private Float progress;
@@ -46,7 +48,7 @@ public class TransformationReply implements Reply
     {
         super();
         this.requestId = request.getRequestId();
-        this.targetContentReference = request.getTargetContentReference();
+        this.targetContentReferences = request.getTargetContentReferences();
     }
 
     /**
@@ -70,29 +72,29 @@ public class TransformationReply implements Reply
     }
 
     /**
-     * Gets the target content reference object.
+     * Gets the target content reference objects.
      * <p>
-     * This is usually the same as the content reference provided in the original
+     * This is usually the same as the content references provided in the original
      * transformation request.
      * 
-     * @return the target content reference
+     * @return the target content references
      */
-    public ContentReference getTargetContentReference()
+    public List<ContentReference> getTargetContentReferences()
     {
-        return targetContentReference;
+        return targetContentReferences;
     }
 
     /**
-     * Sets the target content reference object.
+     * Sets the target content reference objects.
      * <p>
-     * This is usually the same as the content reference provided in the original
+     * This is usually the same as the content references provided in the original
      * transformation request.
      * 
-     * @param targetContentReference
+     * @param targetContentReferences
      */
-    public void setTargetContentReference(ContentReference targetContentReference)
+    public void setTargetContentReferences(List<ContentReference> targetContentReferences)
     {
-        this.targetContentReference = targetContentReference;
+        this.targetContentReferences = targetContentReferences;
     }
 
     /**
