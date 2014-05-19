@@ -28,7 +28,7 @@ are available.
 
 Of course, you can produce messages by other means, plugin a different messaging system and routing, or even use node workers locally and forgo messaging altogether.
 
-![Example architecture of a simple image transform node](https://github.com/Alfresco/gytheio/raw/master/doc/resources/images/gytheio-architecture-simple-transform-node.png "Example architecture of a simple image transform node")
+![Example architecture of a simple image transform node](doc/resources/images/gytheio-architecture-simple-transform-node.png "Example architecture of a simple image transform node")
 
 
 Project Layout
