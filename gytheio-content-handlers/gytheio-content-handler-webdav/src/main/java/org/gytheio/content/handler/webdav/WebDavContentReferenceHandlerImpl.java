@@ -22,9 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.alfresco.service.cmr.repository.ContentIOException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.handler.AbstractUrlContentReferenceHandler;
 

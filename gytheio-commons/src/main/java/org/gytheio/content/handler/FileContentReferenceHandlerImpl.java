@@ -32,7 +32,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.alfresco.service.cmr.repository.ContentIOException;
+import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.file.FileProvider;
 import org.gytheio.content.file.FileProviderImpl;
@@ -40,7 +40,7 @@ import org.gytheio.content.file.FileProviderImpl;
 /**
  * Java {@link File} content reference handler implementation.
  * <p>
- * Content reference creation is delegated to {@link TempFileProvider}.
+ * Content reference creation is delegated to {@link FileProvider}.
  * 
  * @author Ray Gauss II
  */

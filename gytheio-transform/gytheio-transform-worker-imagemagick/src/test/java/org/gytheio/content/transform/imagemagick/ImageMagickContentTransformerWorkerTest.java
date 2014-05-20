@@ -30,6 +30,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.file.FileProvider;
+import org.gytheio.content.file.FileProviderImpl;
 import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
@@ -57,7 +58,7 @@ public class ImageMagickContentTransformerWorkerTest extends AbstractContentTran
     
     @Before
     public void setUp() throws Exception {
-        FileProvider fileProvider = new TempFileProvider();
+        FileProvider fileProvider = new FileProviderImpl(TempFileProvider.getTempDir().getPath());
         contentReferenceHandler = new FileContentReferenceHandlerImpl();
         ((FileContentReferenceHandlerImpl) contentReferenceHandler).setFileProvider(fileProvider);
         progressReporter = new LoggingProgressReporterImpl();

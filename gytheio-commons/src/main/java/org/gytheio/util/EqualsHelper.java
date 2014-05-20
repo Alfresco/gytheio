@@ -25,11 +25,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.gytheio.api.StableApi;
+
 /**
  * Utility class providing helper methods for various types of <code>equals</code> functionality
  * 
  * @author Derek Hulley
  */
+@StableApi
 public class EqualsHelper
 {
     /**

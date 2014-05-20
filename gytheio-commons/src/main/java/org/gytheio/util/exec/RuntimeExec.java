@@ -39,6 +39,7 @@ import java.util.TimerTask;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gytheio.error.GytheioRuntimeException;
 
 /**
  * This acts as a session similar to the <code>java.lang.Process</code>, but
@@ -253,7 +254,7 @@ public class RuntimeExec
         // check
         if (command == null)
         {
-            throw new RuntimeException(
+            throw new GytheioRuntimeException(
                     "No command found for OS " + serverOs + " or '" + KEY_OS_DEFAULT + "': \n" +
                     "   commands: " + commandsByOS);
         }
@@ -370,7 +371,58 @@ public class RuntimeExec
         }
         this.processProperties = processPropList.toArray(new String[processPropList.size()]);
     }
-
+    
+    /**
+     * Adds a property to existed processProperties. 
+     * Property should not be null or empty.
+     * If property with the same value already exists then no change is made.
+     * If property exists with a different value then old value is replaced with the new one. 
+     * @param name - property name
+     * @param value - property value 
+     */
+    public void setProcessProperty(String name, String value)
+    {
+        boolean set = false;
+        
+        if (name == null || value == null) 
+            return;
+        
+        name = name.trim();
+        value = value.trim();
+        
+        if (name.isEmpty() || value.isEmpty()) 
+            return; 
+        
+        String property = name + "=" + value;
+             
+        for (String prop : this.processProperties)
+        {
+            if (prop.equals(property))
+            {    
+                set = true;
+                break;
+            }    
+            
+            if (prop.startsWith(name))
+            {
+                String oldValue = prop.split("=")[1];  
+                prop.replace(oldValue, value);
+                set = true;
+            }
+        }
+        
+        if (!set)
+        {
+          String[] existedProperties = this.processProperties;
+          int epl = existedProperties.length; 
+          String[] newProperties = Arrays.copyOf(existedProperties, epl + 1);
+          newProperties[epl] = property;
+          this.processProperties = newProperties;      
+          set = true;
+        }           
+    }
+    
+    
     /**
      * Set the runtime location from which the command is executed.
      * <p>
@@ -418,7 +470,7 @@ public class RuntimeExec
             }
             catch (NumberFormatException e)
             {
-                throw new RuntimeException(
+                throw new GytheioRuntimeException(
                         "Property 'errorCodes' must be comma-separated list of integers: " + errCodesStr);
             }
         }
@@ -468,7 +520,7 @@ public class RuntimeExec
         // check that the command has been set
         if (command == null)
         {
-            throw new RuntimeException("Runtime command has not been set: \n" + this);
+            throw new GytheioRuntimeException("Runtime command has not been set: \n" + this);
         }
         
         // create the properties
@@ -515,10 +567,7 @@ public class RuntimeExec
             String execErr = e.getMessage();
             int exitValue = defaultFailureExitValue;
             ExecutionResult result = new ExecutionResult(null, commandToExecute, errCodes, exitValue, execOut, execErr);
-            if (logger.isDebugEnabled())
-            {
-                logger.debug(result);
-            }
+            logFullEnvironmentDump(result);
             return result;
         }
 
@@ -561,26 +610,51 @@ public class RuntimeExec
         ExecutionResult result = new ExecutionResult(process, commandToExecute, errCodes, exitValue, execOut, execErr);
 
         // done
-        if (logger.isTraceEnabled() && processProperties != null)
+        logFullEnvironmentDump(result);
+        return result;
+    }
+
+    /**
+     * Dump the full environment in debug mode
+     */
+    private void logFullEnvironmentDump(ExecutionResult result)
+    {
+        if (logger.isTraceEnabled())
         {
             StringBuilder sb = new StringBuilder();
-            sb.append(result).append("\n   env: ");
-            for (int i=0; i<processProperties.length; i++)
+            sb.append(result);
+
+            // Environment variables modified by Alfresco
+            if (processProperties != null && processProperties.length > 0)
             {
-                String property = processProperties[i];
-                if (i > 0)
+                sb.append("\n   modified environment: ");
+                for (int i=0; i<processProperties.length; i++)
                 {
+                    String property = processProperties[i];
                     sb.append("\n        ");
+                    sb.append(property);
                 }
-                sb.append(property);
             }
+
+            // Dump the full environment
+            sb.append("\n   existing environment: ");
+            Map<String, String> envVariables = System.getenv();
+            for (Map.Entry<String, String> entry : envVariables.entrySet())
+            {
+                String name = entry.getKey();
+                String value = entry.getValue();
+                sb.append("\n        ");
+                sb.append(name + "=" + value);
+            }
+
             logger.trace(sb);
         }
         else if (logger.isDebugEnabled())
         {
             logger.debug(result);
         }
-        return result;
+        
+        // close output stream (connected to input stream of native subprocess) 
     }
 
     /**
@@ -865,7 +939,7 @@ public class RuntimeExec
             }
             catch (IOException e)
             {
-                throw new RuntimeException("Unable to read stream", e);
+                throw new GytheioRuntimeException("Unable to read stream", e);
             }
             finally
             {

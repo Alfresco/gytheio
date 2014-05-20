@@ -17,7 +17,7 @@ import org.gytheio.content.dropwizard.configuration.NodeConfiguration;
 import org.gytheio.content.dropwizard.resources.NodeResource;
 import org.gytheio.content.hash.AbstractContentHashWorker;
 import org.gytheio.content.transform.AbstractContentTransformerWorker;
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 
 import io.dropwizard.Application;
@@ -90,7 +90,7 @@ public class NodeApplication extends Application<NodeConfiguration>
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
         {
-            throw new AlfrescoRuntimeException("Could not load worker class: " + e.getMessage(), e);
+            throw new GytheioRuntimeException("Could not load worker class: " + e.getMessage(), e);
         }
     }
     

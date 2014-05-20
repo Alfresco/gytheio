@@ -8,7 +8,7 @@ import java.util.Properties;
 import org.gytheio.content.ContentWorker;
 import org.gytheio.content.hash.AbstractContentHashWorker;
 import org.gytheio.content.transform.AbstractContentTransformerWorker;
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 
 /**
  * Boostrap class which loads a properties file from the path
@@ -58,7 +58,7 @@ public class SimpleAmqpNodeBootstrap
         }
         catch (IOException e)
         {
-            throw new AlfrescoRuntimeException("Could not load required " + propertiesFilePath);
+            throw new GytheioRuntimeException("Could not load required " + propertiesFilePath);
         }
         finally
         {
@@ -93,7 +93,7 @@ public class SimpleAmqpNodeBootstrap
         }
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException e)
         {
-            throw new AlfrescoRuntimeException("Could not load class", e);
+            throw new GytheioRuntimeException("Could not load class", e);
         }
     }
     

@@ -2,7 +2,7 @@ package org.gytheio.content.handler;
 
 import java.io.File;
 
-import org.alfresco.service.cmr.repository.ContentIOException;
+import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
 
 /**

@@ -3,6 +3,7 @@ package org.gytheio.content.handler;
 import org.apache.commons.lang.StringUtils;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.file.FileProvider;
+import org.gytheio.content.file.FileProviderImpl;
 import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
@@ -18,7 +19,8 @@ public class FileContentReferenceHandlerImplTest
     @Before
     public void setUp()
     {
-        FileProvider fileProvider = new TempFileProvider();
+        FileProvider fileProvider = new FileProviderImpl(
+                TempFileProvider.getTempDir().getPath());
         handler = new FileContentReferenceHandlerImpl();
         ((FileContentReferenceHandlerImpl) handler).setFileProvider(fileProvider);
     }

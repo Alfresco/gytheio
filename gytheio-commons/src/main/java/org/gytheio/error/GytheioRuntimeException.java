@@ -18,17 +18,21 @@
  */
 package org.gytheio.error;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.concurrent.atomic.AtomicInteger;
 
-//import org.springframework.extensions.surf.util.I18NUtil;
+import org.gytheio.api.StableApi;
+import org.gytheio.util.I18NUtil;
 
 /**
  * I18n'ed runtime exception thrown by Alfresco code.
  * 
  * @author gavinc
  */
-public class AlfrescoRuntimeException extends RuntimeException
+@StableApi
+public class GytheioRuntimeException extends RuntimeException
 {
     /**
      * Serial version UUID
@@ -41,17 +45,17 @@ public class AlfrescoRuntimeException extends RuntimeException
     /**
      * Helper factory method making use of variable argument numbers
      */
-    public static AlfrescoRuntimeException create(String msgId, Object ...objects)
+    public static GytheioRuntimeException create(String msgId, Object ...objects)
     {
-        return new AlfrescoRuntimeException(msgId, objects);
+        return new GytheioRuntimeException(msgId, objects);
     }
 
     /**
      * Helper factory method making use of variable argument numbers
      */
-    public static AlfrescoRuntimeException create(Throwable cause, String msgId, Object ...objects)
+    public static GytheioRuntimeException create(Throwable cause, String msgId, Object ...objects)
     {
-        return new AlfrescoRuntimeException(msgId, objects, cause);
+        return new GytheioRuntimeException(msgId, objects, cause);
     }
     
     /**
@@ -67,7 +71,7 @@ public class AlfrescoRuntimeException extends RuntimeException
             return (RuntimeException) e;
         }
         // Convert it
-        return AlfrescoRuntimeException.create(e, msgId, objects);
+        return GytheioRuntimeException.create(e, msgId, objects);
     }
     
     /**
@@ -75,7 +79,7 @@ public class AlfrescoRuntimeException extends RuntimeException
      * 
      * @param msgId     the message id
      */
-    public AlfrescoRuntimeException(String msgId)
+    public GytheioRuntimeException(String msgId)
     {
         super(resolveMessage(msgId, null));
         this.msgId = msgId;
@@ -87,7 +91,7 @@ public class AlfrescoRuntimeException extends RuntimeException
      * @param msgId         the message id
      * @param msgParams     the message parameters
      */
-    public AlfrescoRuntimeException(String msgId, Object[] msgParams)
+    public GytheioRuntimeException(String msgId, Object[] msgParams)
     {
         super(resolveMessage(msgId, msgParams));
         this.msgId = msgId;
@@ -100,7 +104,7 @@ public class AlfrescoRuntimeException extends RuntimeException
      * @param msgId     the message id
      * @param cause     the exception cause
      */
-    public AlfrescoRuntimeException(String msgId, Throwable cause)
+    public GytheioRuntimeException(String msgId, Throwable cause)
     {
         super(resolveMessage(msgId, null), cause);
         this.msgId = msgId;
@@ -113,7 +117,7 @@ public class AlfrescoRuntimeException extends RuntimeException
      * @param msgParams     the message parameters
      * @param cause         the exception cause
      */
-    public AlfrescoRuntimeException(String msgId, Object[] msgParams, Throwable cause)
+    public GytheioRuntimeException(String msgId, Object[] msgParams, Throwable cause)
     {
         super(resolveMessage(msgId, msgParams), cause);
         this.msgId = msgId;
@@ -148,14 +152,13 @@ public class AlfrescoRuntimeException extends RuntimeException
      */
     private static String resolveMessage(String messageId, Object[] params)
     {
-//        String message = I18NUtil.getMessage(messageId, params);
-//        if (message == null)
-//        {
-//            // If a localised string cannot be found then return the messageId
-//            message = messageId;
-//        }
-//        return buildErrorLogNumber(message);
-        return buildErrorLogNumber(messageId);
+        String message = I18NUtil.getMessage(messageId, params);
+        if (message == null)
+        {
+            // If a localised string cannot be found then return the messageId
+            message = messageId;
+        }
+        return buildErrorLogNumber(message);
     }
     
     /**
@@ -174,10 +177,12 @@ public class AlfrescoRuntimeException extends RuntimeException
             message= "";
         }
         
-        Date today = new Date();
+        Date todayDate = new Date();
         StringBuilder buf = new StringBuilder(message.length() + 10);
-        padInt(buf, today.getMonth(), 2);
-        padInt(buf, today.getDate(), 2);
+        Calendar today = new GregorianCalendar();
+        today.setTime(todayDate);
+        padInt(buf, today.get(Calendar.MONTH), 2);
+        padInt(buf, today.get(Calendar.DAY_OF_MONTH), 2);
         padInt(buf, errorCounter.getAndIncrement(), 4);
         buf.append(' ');
         buf.append(message);

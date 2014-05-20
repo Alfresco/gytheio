@@ -15,6 +15,7 @@
     <modules>
         <module>gytheio-content-handler-s3</module>
         <module>gytheio-content-handler-webdav</module>
+        <module>gytheio-content-handler-tempfile</module>
     </modules>
 
 </project>

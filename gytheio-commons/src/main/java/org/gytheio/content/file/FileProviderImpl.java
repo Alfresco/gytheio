@@ -37,6 +37,16 @@ public class FileProviderImpl implements FileProvider
     private String directoryPath;
     private boolean createDirectory = false;
     private File directory;
+    
+    public FileProviderImpl()
+    {
+        
+    }
+    
+    public FileProviderImpl(String directoryPath)
+    {
+        this.directoryPath = directoryPath;
+    }
 
     public void setDirectoryPath(String directoryPath)
     {

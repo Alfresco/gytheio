@@ -7,7 +7,7 @@ import org.gytheio.content.dropwizard.health.HashHealthCheck;
 import org.gytheio.content.hash.AbstractContentHashWorker;
 import org.gytheio.content.hash.BaseContentHashComponent;
 import org.gytheio.content.hash.ContentHashWorker;
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 
 import com.codahale.metrics.health.HealthCheck;
@@ -37,7 +37,7 @@ public class HashComponentBootstrapFromConfirguration
     {
         if (!(worker instanceof AbstractContentHashWorker))
         {
-            throw new AlfrescoRuntimeException(
+            throw new GytheioRuntimeException(
                     "Only " + AbstractContentHashWorker.class.getSimpleName() + " supported");
         }
         ((AbstractContentHashWorker) worker).setSourceContentReferenceHandler(

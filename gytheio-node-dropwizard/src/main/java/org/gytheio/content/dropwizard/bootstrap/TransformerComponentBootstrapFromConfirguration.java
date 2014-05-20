@@ -7,7 +7,7 @@ import org.gytheio.content.dropwizard.health.TransformerHealthCheck;
 import org.gytheio.content.transform.AbstractContentTransformerWorker;
 import org.gytheio.content.transform.BaseContentTransformerComponent;
 import org.gytheio.content.transform.ContentTransformerWorker;
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 
 import com.codahale.metrics.health.HealthCheck;
@@ -37,7 +37,7 @@ public class TransformerComponentBootstrapFromConfirguration
     {
         if (!(worker instanceof AbstractContentTransformerWorker))
         {
-            throw new AlfrescoRuntimeException(
+            throw new GytheioRuntimeException(
                     "Only " + AbstractContentTransformerWorker.class.getSimpleName() + " supported");
         }
         ((AbstractContentTransformerWorker) worker).setSourceContentReferenceHandler(

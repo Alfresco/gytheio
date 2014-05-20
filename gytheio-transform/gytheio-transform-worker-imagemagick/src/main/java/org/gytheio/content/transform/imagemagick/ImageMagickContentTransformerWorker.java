@@ -26,11 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
-import org.alfresco.service.cmr.repository.ContentIOException;
 import org.alfresco.service.cmr.repository.CropSourceOptions;
 import org.alfresco.service.cmr.repository.PagedSourceOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.AbstractFileContentTransformerWorker;
@@ -38,7 +38,7 @@ import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
 import org.gytheio.content.transform.options.ImageTransformationOptions;
 import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.content.transform.options.TransformationOptionsImpl;
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 import org.gytheio.util.exec.RuntimeExec;
 import org.gytheio.util.exec.RuntimeExec.ExecutionResult;
 
@@ -151,7 +151,7 @@ public class ImageMagickContentTransformerWorker extends AbstractFileContentTran
             InputStream imageStream = getClass().getClassLoader().getResourceAsStream(resourcePath);
             if (imageStream == null)
             {
-                throw new AlfrescoRuntimeException("Sample image not found: " + resourcePath);
+                throw new GytheioRuntimeException("Sample image not found: " + resourcePath);
             }
             // dump to a temp target reference (we may only be able to write to the target handler)
             ContentReference sourceReference = targetContentReferenceHandler.createContentReference(
@@ -470,7 +470,7 @@ public class ImageMagickContentTransformerWorker extends AbstractFileContentTran
                     {
                         if (isSingleSourcePageRangeRequired(sourceMimetype, targetMimetype))
                         {
-                            throw new AlfrescoRuntimeException(
+                            throw new GytheioRuntimeException(
                                     "A single page is required for targets of type " + targetMimetype);
                         }
                         return "[" + (pagedSourceOptions.getStartPageNumber() - 1) + 

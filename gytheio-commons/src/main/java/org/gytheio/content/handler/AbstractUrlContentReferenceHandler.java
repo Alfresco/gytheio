@@ -1,6 +1,6 @@
 package org.gytheio.content.handler;
 
-import org.alfresco.service.cmr.repository.ContentIOException;
+import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
 
 /**

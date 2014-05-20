@@ -29,6 +29,7 @@ import static junit.framework.Assert.*;
 import org.alfresco.service.cmr.repository.TemporalSourceOptions;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.file.FileProvider;
+import org.gytheio.content.file.FileProviderImpl;
 import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
@@ -53,7 +54,7 @@ public class FfmpegContentTransformerWorkerTest
     
     @Before
     public void setUp() throws Exception {
-        FileProvider fileProvider = new TempFileProvider();
+        FileProvider fileProvider = new FileProviderImpl(TempFileProvider.getTempDir().getPath());
         ContentReferenceHandler contentReferenceHandler = new FileContentReferenceHandlerImpl();
         ((FileContentReferenceHandlerImpl) contentReferenceHandler).setFileProvider(fileProvider);
         transformerWorker = new FfmpegContentTransformerWorker();

@@ -8,11 +8,10 @@ import java.util.Properties;
 import org.gytheio.content.AbstractComponent;
 import org.gytheio.content.ContentWorker;
 import org.gytheio.content.file.FileProviderImpl;
-import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.gytheio.content.handler.webdav.WebDavContentReferenceHandlerImpl;
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 import org.gytheio.messaging.amqp.AmqpNodeBootstrapUtils;
 
@@ -110,20 +109,6 @@ public abstract class AbstractComponentBootstrapFromProperties<W extends Content
         fileContentReferenceHandler.setFileProvider(fileProvider);
         return fileContentReferenceHandler;
     }
-    
-    /**
-     * Constructs a {@link FileContentReferenceHandlerImpl} using a {@link TempFileProvider}.
-     * 
-     * @return the ContentReferenceHandler
-     */
-    protected ContentReferenceHandler createTempFileContentReferenceHandler()
-    {
-        TempFileProvider fileProvider = new TempFileProvider();
-        FileContentReferenceHandlerImpl fileContentReferenceHandler = 
-                new FileContentReferenceHandlerImpl();
-        fileContentReferenceHandler.setFileProvider(fileProvider);
-        return fileContentReferenceHandler;
-    }
 
     protected abstract AbstractComponent<W> createComponent();
     
@@ -140,7 +125,7 @@ public abstract class AbstractComponentBootstrapFromProperties<W extends Content
                 AmqpNodeBootstrapUtils.createEndpoint(component, properties);
         if (endpoint == null)
         {
-            throw new AlfrescoRuntimeException("Could not create AMQP endpoint");
+            throw new GytheioRuntimeException("Could not create AMQP endpoint");
         }
         
         component.setMessageProducer(endpoint);

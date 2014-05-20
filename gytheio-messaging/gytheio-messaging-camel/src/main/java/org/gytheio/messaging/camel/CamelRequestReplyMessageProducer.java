@@ -30,7 +30,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
-import org.alfresco.service.cmr.repository.ContentIOException;
+import org.gytheio.content.ContentIOException;
 import org.gytheio.messaging.Reply;
 import org.gytheio.messaging.Request;
 import org.gytheio.messaging.RequestReplyMessageProducer;

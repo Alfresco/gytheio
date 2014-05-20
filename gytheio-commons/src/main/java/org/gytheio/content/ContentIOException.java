@@ -16,9 +16,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Alfresco. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.service.cmr.repository;
+package org.gytheio.content;
 
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 
 
 /**
@@ -29,7 +29,7 @@ import org.gytheio.error.AlfrescoRuntimeException;
  * 
  * @author Derek Hulley
  */
-public class ContentIOException extends AlfrescoRuntimeException
+public class ContentIOException extends GytheioRuntimeException
 {
     private static final long serialVersionUID = 3258130249983276087L;
     

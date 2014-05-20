@@ -8,7 +8,7 @@ import org.apache.tika.Tika;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
-import org.gytheio.error.AlfrescoRuntimeException;
+import org.gytheio.error.GytheioRuntimeException;
 
 public class FileMediaTypeServiceImpl implements FileMediaTypeService
 {
@@ -55,7 +55,7 @@ public class FileMediaTypeServiceImpl implements FileMediaTypeService
         }
         catch (MimeTypeException e)
         {
-            throw new AlfrescoRuntimeException("Could not get extension for mimetype", e);
+            throw new GytheioRuntimeException("Could not get extension for mimetype", e);
         }
         
         return null;
