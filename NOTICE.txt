@@ -1,0 +1,8 @@
+
+Note that `gytheio-commons/src/main/java/org/gytheio/util/I18NUtil.java` was taken
+from the spring surf project [1] and currently remains under the Apache License, Version 2.0
+which can be obtained at:
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+[1] http://www.springsurf.org/
