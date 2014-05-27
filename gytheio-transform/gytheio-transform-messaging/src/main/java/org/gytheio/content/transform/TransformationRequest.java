@@ -33,6 +33,7 @@ import org.gytheio.messaging.Request;
 public class TransformationRequest extends AbstractContentRequest implements Request<TransformationReply>
 {
     private List<ContentReference> targetContentReferences;
+    private String targetMediaType;
     private TransformationOptions options;
     
     public TransformationRequest()
@@ -52,7 +53,9 @@ public class TransformationRequest extends AbstractContentRequest implements Req
     }
 
     /**
-     * Gets the target content reference objects
+     * Gets the target content reference objects.
+     * <p>
+     * Either a target content reference or target media type should be set, not both.
      * 
      * @return target content references
      */
@@ -62,13 +65,39 @@ public class TransformationRequest extends AbstractContentRequest implements Req
     }
 
     /**
-     * Sets the target content reference objects
+     * Sets the target content reference objects.
+     * <p>
+     * Either a target content reference or target media type should be set, not both.
      * 
      * @param targetContentReferences
      */
     public void setTargetContentReferences(List<ContentReference> targetContentReferences)
     {
         this.targetContentReferences = targetContentReferences;
+    }
+
+    /**
+     * Gets the target media type.
+     * <p>
+     * Either a target content reference or target media type should be set, not both.
+     * 
+     * @return the target media type
+     */
+    public String getTargetMediaType()
+    {
+        return targetMediaType;
+    }
+
+    /**
+     * Sets the target media type.
+     * <p>
+     * Either a target content reference or target media type should be set, not both.
+     * 
+     * @param targetMediaType
+     */
+    public void setTargetMediaType(String targetMediaType)
+    {
+        this.targetMediaType = targetMediaType;
     }
 
     /**

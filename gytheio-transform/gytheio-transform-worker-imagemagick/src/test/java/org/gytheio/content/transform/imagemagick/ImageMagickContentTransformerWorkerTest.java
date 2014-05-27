@@ -71,77 +71,154 @@ public class ImageMagickContentTransformerWorkerTest extends AbstractContentTran
         ((ImageMagickContentTransformerWorker) transformerWorker).initialize();
     }
     
-    protected void transform(String sourceMimetype, String targetMimetype, TransformationOptions options) throws Exception
+    protected List<ContentReference> transform(
+            String sourceMimetype, 
+            String targetMimetype, 
+            TransformationOptions options,
+            String filename,
+            boolean testCreatesTargetReference) throws Exception
     {
-        String[] quickFiles = getQuickFilenames(sourceMimetype);
-        for (String quickFile : quickFiles)
+        String sourceExtension = filename.substring(filename.lastIndexOf('.')+1);
+        String targetExtension = mediaTypeService.getExtension(targetMimetype);
+        
+        // is there a test file for this conversion?
+        ContentReference sourceReference = 
+                AbstractContentTransformerWorkerTest.getNamedQuickTestFileReference(
+                        filename, sourceMimetype);
+        if (sourceReference == null)
         {
-            String sourceExtension = quickFile.substring(quickFile.lastIndexOf('.')+1);
-            String targetExtension = mediaTypeService.getExtension(targetMimetype);
-            
-            // is there a test file for this conversion?
-            ContentReference sourceReference = 
-                    AbstractContentTransformerWorkerTest.getNamedQuickTestFileReference(quickFile, sourceMimetype);
-            if (sourceReference == null)
-            {
-                continue;  // no test file available for that extension
-            }
-            
-            String callingMethodName = Thread.currentThread().getStackTrace()[2].getMethodName();
-            
+            return null;  // no test file available for that extension
+        }
+        
+        String callingMethodName = Thread.currentThread().getStackTrace()[2].getMethodName();
+        
+        List<ContentReference> targetReferences = null;
+        
+        if (testCreatesTargetReference)
+        {
             // make a writer for the target file
             String targetFileName = getClass().getSimpleName() + "_" + callingMethodName + "_" + 
             sourceExtension + "." + targetExtension;
-            ContentReference targetReference = 
+            ContentReference createdTargetReference = 
                     contentReferenceHandler.createContentReference(targetFileName, targetMimetype);
+            List<ContentReference> createdTargetReferences = Arrays.asList(createdTargetReference);
             
             // do the transformation
-            transformerWorker.transform(
+            targetReferences = transformerWorker.transform(
                     Arrays.asList(sourceReference), 
-                    Arrays.asList(targetReference),
+                    createdTargetReferences,
                     options, progressReporter);
-            
-            assertTrue(targetReference.getSize() > 10);
         }
+        else
+        {
+            // do the transformation
+            targetReferences = transformerWorker.transform(
+                    Arrays.asList(sourceReference), 
+                    targetMimetype,
+                    options, progressReporter);
+        }
+        
+        if (targetReferences != null)
+        {
+            for (ContentReference targetReference : targetReferences)
+            {
+                assertTrue(targetReference.getUri() + 
+                        " size too small ", targetReference.getSize() > 10);
+            }
+        }
+        return targetReferences;
+    }
+    
+    protected List<ContentReference> transform(
+            String sourceMimetype, 
+            String targetMimetype, 
+            TransformationOptions options,
+            boolean testsCreatesTargetReferences) throws Exception
+    {
+        List<ContentReference> targetReferences = new ArrayList<ContentReference>();
+        String[] quickFiles = getQuickFilenames(sourceMimetype);
+        for (String quickFile : quickFiles)
+        {
+            List<ContentReference> quickTargetReferences = transform(
+                    sourceMimetype, targetMimetype, options, quickFile, testsCreatesTargetReferences);
+            if (quickTargetReferences != null)
+            {
+                targetReferences.addAll(quickTargetReferences);
+            }
+        }
+        return targetReferences;
     }
     
     @Test
-    public void testPageSourceOptions() throws Exception
+    public void testEmptyPageSourceOptions() throws Exception
     {
         // Test empty source options
         ImageTransformationOptions options = new ImageTransformationOptions();
-        this.transform(
+        List<ContentReference> targetReferences = this.transform(
                 FileMediaType.PDF.getMediaType(), 
                 FileMediaType.IMAGE_PNG.getMediaType(), 
-                options);
-        
+                options,
+                true);
+        assertTrue(targetReferences.get(0).getSize() > 10);
+    }
+    
+    @Test
+    public void testWorkerMultiTargetCreation() throws Exception
+    {
+        // Test empty source options
+        ImageTransformationOptions options = new ImageTransformationOptions();
+        List<ContentReference> targetReferences = this.transform(
+                FileMediaType.PDF.getMediaType(), 
+                FileMediaType.IMAGE_PNG.getMediaType(), 
+                options,
+                "quick.pdf",
+                false);
+        assertEquals(2, targetReferences.size());
+        assertTrue(targetReferences.get(0).getSize() > 10);
+    }
+    
+    @Test
+    public void testFirstPageSourceOptions() throws Exception
+    {
         // Test first page
-        options = new ImageTransformationOptions();
+        ImageTransformationOptions options = new ImageTransformationOptions();
         List<TransformationSourceOptions> sourceOptionsList = new ArrayList<TransformationSourceOptions>();
         sourceOptionsList.add(PagedSourceOptions.getPage1Instance());
         options.setSourceOptionsList(sourceOptionsList);
-        this.transform(
+        List<ContentReference> targetReferences = this.transform(
                 FileMediaType.PDF.getMediaType(),
                 FileMediaType.IMAGE_PNG.getMediaType(), 
-                options);
-        
+                options,
+                true);
+        assertTrue(targetReferences.get(0).getSize() > 10);
+    }
+    
+    @Test
+    public void testSecondPageSourceOptions() throws Exception
+    {
         // Test second page
-        options = new ImageTransformationOptions();
-        sourceOptionsList = new ArrayList<TransformationSourceOptions>();
+        ImageTransformationOptions options = new ImageTransformationOptions();
+        List<TransformationSourceOptions> sourceOptionsList = new ArrayList<TransformationSourceOptions>();
         PagedSourceOptions sourceOptions = new PagedSourceOptions();
         sourceOptions.setStartPageNumber(2);
         sourceOptions.setEndPageNumber(2);
         sourceOptionsList.add(sourceOptions);
         options.setSourceOptionsList(sourceOptionsList);
-        this.transform(
+        List<ContentReference> targetReferences = this.transform(
                 FileMediaType.PDF.getMediaType(), 
                 FileMediaType.IMAGE_PNG.getMediaType(), 
-                options);
-        
+                options,
+                true);
+        assertTrue(targetReferences.get(0).getSize() > 10);
+    }
+    
+    @Test
+    public void testRangePageSourceOptions() throws Exception
+    {
         // Test page range invalid for target type
-        options = new ImageTransformationOptions();
-        sourceOptionsList = new ArrayList<TransformationSourceOptions>();
-        sourceOptions = new PagedSourceOptions();
+        ImageTransformationOptions options = new ImageTransformationOptions();
+        List<TransformationSourceOptions> sourceOptionsList = new ArrayList<TransformationSourceOptions>();
+        PagedSourceOptions sourceOptions = new PagedSourceOptions();
         sourceOptions.setStartPageNumber(1);
         sourceOptions.setEndPageNumber(2);
         sourceOptionsList.add(sourceOptions);
@@ -149,19 +226,24 @@ public class ImageMagickContentTransformerWorkerTest extends AbstractContentTran
         try {
             this.transform(
                     FileMediaType.PDF.getMediaType(), 
-                    FileMediaType.IMAGE_PNG.getMediaType(), 
-                    options);
+                    FileMediaType.APPLICATION_PHOTOSHOP.getMediaType(), 
+                    options,
+                    true);
             fail("An exception regarding an invalid page range should have been thrown");
         }
         catch (Exception e)
         {
             // failure expected
         }
-        
+    }
+    
+    @Test
+    public void testOutOfRangePageSourceOptions() throws Exception
+    {
         // Test page out of range
-        options = new ImageTransformationOptions();
-        sourceOptionsList = new ArrayList<TransformationSourceOptions>();
-        sourceOptions = new PagedSourceOptions();
+        ImageTransformationOptions options = new ImageTransformationOptions();
+        List<TransformationSourceOptions> sourceOptionsList = new ArrayList<TransformationSourceOptions>();
+        PagedSourceOptions sourceOptions = new PagedSourceOptions();
         sourceOptions.setStartPageNumber(3);
         sourceOptions.setEndPageNumber(3);
         sourceOptionsList.add(sourceOptions);
@@ -170,7 +252,8 @@ public class ImageMagickContentTransformerWorkerTest extends AbstractContentTran
             this.transform(
                     FileMediaType.PDF.getMediaType(), 
                     FileMediaType.IMAGE_PNG.getMediaType(), 
-                    options);
+                    options,
+                    true);
             fail("An exception regarding an invalid page range should have been thrown");
         }
         catch (Exception e)

@@ -20,12 +20,15 @@ package org.gytheio.content.transform;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.FileContentReferenceHandler;
@@ -35,16 +38,19 @@ import org.gytheio.content.transform.options.TransformationOptions;
 public abstract class AbstractFileContentTransformerWorker extends AbstractContentTransformerWorker
 {
 
-    public List<ContentReference> transform(
-            List<ContentReference> sources, 
-            List<ContentReference> targets,
-            TransformationOptions options,
-            ContentTransformerWorkerProgressReporter progressReporter) throws Exception
+    /**
+     * Creates source pairs from the given source content references
+     * 
+     * @param sources
+     * @return the source pairs
+     * @throws ContentIOException
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    protected List<FileContentReferencePair> getSourcePairs(List<ContentReference> sources) 
+            throws ContentIOException, InterruptedException, IOException
     {
-        boolean isTempTargetUsed = true;
         List<FileContentReferencePair> sourcePairs = null;
-        List<FileContentReferencePair> targetPairs = null;
-        
         if (sources != null)
         {
             sourcePairs = new ArrayList<>(sources.size());
@@ -70,27 +76,63 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
                 }
             }
         }
+        return sourcePairs;
+    }
+    
+    /**
+     * Creates target pairs from the given target content references
+     * 
+     * @param targets
+     * @return the target pairs
+     * @throws ContentIOException
+     * @throws InterruptedException
+     * @throws IOException
+     */
+    protected List<FileContentReferencePair> getTargetPairs(List<ContentReference> targets) 
+            throws ContentIOException, InterruptedException, IOException
+    {
+        List<FileContentReferencePair> targetPairs = null;
         if (targets != null)
         {
             targetPairs = new ArrayList<FileContentReferencePair>(targets.size());
-            if (targetContentReferenceHandler instanceof FileContentReferenceHandler)
+            
+            for (ContentReference target : targets)
             {
-                isTempTargetUsed = false;
-                for (ContentReference target : targets)
+                File targetFile;
+                if (targetContentReferenceHandler instanceof FileContentReferenceHandler)
                 {
-                    File targetFile = ((FileContentReferenceHandler) targetContentReferenceHandler).getFile(target, false);
-                    targetPairs.add(new FileContentReferencePair(targetFile, target));
+                    targetFile = ((FileContentReferenceHandler) targetContentReferenceHandler).getFile(
+                            target, false);
                 }
-            }
-            else
-            {
-                for (ContentReference target : targets)
+                else
                 {
-                    File targetFile = createTempFile(target);
-                    targetPairs.add(new FileContentReferencePair(targetFile, target));
+                    targetFile = createTempFile(target);
                 }
+                targetPairs.add(new FileContentReferencePair(targetFile, target));
             }
         }
+        return targetPairs;
+    }
+    
+    /**
+     * Determines if the target content references must be managed via local temp file copies
+     * or can be managed directly.
+     * 
+     * @return whether or not temp target files are used
+     */
+    protected boolean isTempTargetUsed()
+    {
+        return !(targetContentReferenceHandler instanceof FileContentReferenceHandler);
+    }
+    
+    public List<ContentReference> transform(
+            List<ContentReference> sources, 
+            List<ContentReference> targets,
+            TransformationOptions options,
+            ContentTransformerWorkerProgressReporter progressReporter) throws Exception
+    {
+        List<FileContentReferencePair> sourcePairs = getSourcePairs(sources);
+        List<FileContentReferencePair> targetPairs = getTargetPairs(targets);
         
         List<File> resultFiles = transformInternal(
                 sourcePairs, 
@@ -102,13 +144,6 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
         {
             return null;
         }
-        // We're assuming the final results are the same size and in the same order as the targets if present
-        if (targets != null && targets.size() != resultFiles.size())
-        {
-            throw new IllegalStateException(
-                    "The number of actual target files (" + resultFiles.size() + ") " +
-                    "did not match the number of expected targets (" + targets.size() + ")");
-        }
         
         List<ContentReference> results = new ArrayList<ContentReference>(resultFiles.size());
         
@@ -117,7 +152,7 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
             File resultFile = resultFiles.get(i);
             String resultMediaType = FileMediaType.SERVICE.getMediaTypeByName(resultFile);
             ContentReference target = null;
-            if (isTempTargetUsed)
+            if (isTempTargetUsed())
             {
                 if (targets != null)
                 {
@@ -133,12 +168,21 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
             }
             else
             {
-                target = targets.get(i);
+                target = new ContentReference(
+                        resultFile.toURI().toString(), resultMediaType, resultFile.length());
             }
             target.setSize(resultFile.length());
             results.add(target);
         }
         return results;
+    }
+    
+    @Override
+    public List<ContentReference> transform(List<ContentReference> sources, String targetMediaType,
+            TransformationOptions options, ContentTransformerWorkerProgressReporter progressReporter) throws Exception
+    {
+        ContentReference targetContentReference = createTargetContentReference(targetMediaType);
+        return transform(sources, Arrays.asList(targetContentReference), options, progressReporter);
     }
     
     protected File createTempFile(ContentReference contentReference)
@@ -165,6 +209,20 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
             List<FileContentReferencePair> targets, 
             TransformationOptions options,
             ContentTransformerWorkerProgressReporter progressReporter) throws Exception;
+    
+    /**
+     * Creates a target content references using the targetContentReferenceHandler
+     * 
+     * @param mediaType
+     * @return the target content reference
+     */
+    protected ContentReference createTargetContentReference(String mediaType)
+    {
+        String filename = this.getClass().getSimpleName() + "-target-" + 
+                UUID.randomUUID().toString() + "." + FileMediaType.SERVICE.getExtension(mediaType);
+        
+        return targetContentReferenceHandler.createContentReference(filename, mediaType);
+    }
 
     /**
      * Wrapper for a content reference and a {@link File}, useful

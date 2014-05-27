@@ -17,6 +17,13 @@
             <artifactId>gytheio-transform-commons</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.gytheio</groupId>
+            <artifactId>gytheio-transform-commons</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
