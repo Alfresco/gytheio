@@ -83,20 +83,5 @@ public class ContentWorkResult
     {
         this.details = details;
     }
-    
-    /**
-     * Convenience method for getting a specific result detail.
-     * 
-     * @param detailKey
-     * @return the result detail
-     */
-    public Object getDetail(String detailKey)
-    {
-        if (details == null)
-        {
-            return null;
-        }
-        return details.get(detailKey);
-    }
 
 }

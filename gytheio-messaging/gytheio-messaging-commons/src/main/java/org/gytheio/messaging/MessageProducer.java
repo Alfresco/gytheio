@@ -37,7 +37,10 @@ public interface MessageProducer
     public void send(Object message) throws MessagingException;
     
     /**
-     * Send the given POJO message to the default queue for the producer with the given headers
+     * Send the given POJO message to the default queue for the producer with the given headers.
+     * <p>
+     * If the underlying messaging implementation does not support headers natively
+     * an alternative method of encoding them as part of the body can be used.
      * 
      * @param message
      * @param headers
@@ -55,7 +58,10 @@ public interface MessageProducer
     public void send(Object message, String queueName) throws MessagingException;
     
     /**
-     * Send the given POJO message to the given queue with the given headers
+     * Send the given POJO message to the given queue with the given headers.
+     * <p>
+     * If the underlying messaging implementation does not support headers natively
+     * an alternative method of encoding them as part of the body can be used.
      * 
      * @param message
      * @param queueName
