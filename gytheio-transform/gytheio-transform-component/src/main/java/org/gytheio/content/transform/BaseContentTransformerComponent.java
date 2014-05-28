@@ -18,9 +18,12 @@
  */
 package org.gytheio.content.transform;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.AbstractComponent;
+import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.transform.TransformationReply;
 import org.gytheio.content.transform.TransformationRequest;
 import org.gytheio.messaging.MessageProducer;
@@ -45,13 +48,13 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
         {
             progressReporter.onTransformationStarted();
             
-            worker.transform(
+            List<ContentWorkResult> results = worker.transform(
                     request.getSourceContentReferences(), 
                     request.getTargetContentReferences(), 
                     request.getOptions(),
                     progressReporter);
             
-            progressReporter.onTransformationComplete();
+            progressReporter.onTransformationComplete(results);
         }
         catch (Exception e)
         {
@@ -106,7 +109,7 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
             messageProducer.send(reply, request.getReplyTo());
         }
         
-        public void onTransformationComplete()
+        public void onTransformationComplete(List<ContentWorkResult> results)
         {
             if (logger.isDebugEnabled())
             {
@@ -115,6 +118,7 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
             }
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_COMPLETE);
+            reply.setResults(results);
             
             messageProducer.send(reply, request.getReplyTo());
         }

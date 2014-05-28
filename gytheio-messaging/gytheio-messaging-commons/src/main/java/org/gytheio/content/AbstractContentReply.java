@@ -16,39 +16,40 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.gytheio.content.transform;
+package org.gytheio.content;
 
 import java.util.List;
 
-import org.gytheio.content.ContentWorkResult;
+import org.gytheio.messaging.AbstractReply;
+import org.gytheio.messaging.Request;
 
 /**
- * Defines methods for reporting progress on a content transformation.
- * <p>
- * Implementations might send replies via messaging system or just log
- * progress.
+ * Base implementation of a content reply
  * 
  * @author Ray Gauss II
  */
-public interface ContentTransformerWorkerProgressReporter
+public abstract class AbstractContentReply extends AbstractReply implements ContentReply
 {
-    /**
-     * Called when the transformation has been started
-     */
-    public void onTransformationStarted();
+    private List<ContentWorkResult> results;
+
+    public AbstractContentReply()
+    {
+        super();
+    }
+
+    public AbstractContentReply(Request<?> request)
+    {
+        super(request);
+    }
     
-    /**
-     * Optionally called when some amount of progress has been made on
-     * the transformation
-     * 
-     * @param progress
-     */
-    public void onTransformationProgress(float progress);
+    public List<ContentWorkResult> getResults()
+    {
+        return results;
+    }
+
+    public void setResults(List<ContentWorkResult> results)
+    {
+        this.results = results;
+    }
     
-    /**
-     * Called when the transformation has completed
-     * 
-     * @param results
-     */
-    public void onTransformationComplete(List<ContentWorkResult> results);
 }

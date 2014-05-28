@@ -21,6 +21,7 @@ package org.gytheio.content.transform;
 import java.util.List;
 
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.ContentWorker;
 import org.gytheio.content.transform.options.TransformationOptions;
 
@@ -50,7 +51,7 @@ public interface ContentTransformerWorker extends ContentWorker
      * @return the final target references
      * @throws Exception
      */
-    public List<ContentReference> transform(
+    public List<ContentWorkResult> transform(
             List<ContentReference> sources, 
             List<ContentReference> targets,
             TransformationOptions options,

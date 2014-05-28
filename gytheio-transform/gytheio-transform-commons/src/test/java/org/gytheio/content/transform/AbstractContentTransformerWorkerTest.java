@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.mediatype.FileMediaTypeService;
 import org.gytheio.content.mediatype.FileMediaTypeServiceImpl;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
@@ -142,7 +144,7 @@ public abstract class AbstractContentTransformerWorkerTest
             }
         }
         
-        public void onTransformationComplete()
+        public void onTransformationComplete(List<ContentWorkResult> results)
         {
             if (logger.isDebugEnabled())
             {

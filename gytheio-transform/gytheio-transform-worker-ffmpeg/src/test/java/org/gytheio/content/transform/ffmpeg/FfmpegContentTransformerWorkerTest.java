@@ -23,11 +23,13 @@ import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
 import static junit.framework.Assert.*;
 
 import org.alfresco.service.cmr.repository.TemporalSourceOptions;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.file.FileProvider;
 import org.gytheio.content.file.FileProviderImpl;
 import org.gytheio.content.file.TempFileProvider;
@@ -122,7 +124,7 @@ public class FfmpegContentTransformerWorkerTest
             }
         }
         
-        public void onTransformationComplete()
+        public void onTransformationComplete(List<ContentWorkResult> results)
         {
             if (logger.isDebugEnabled())
             {

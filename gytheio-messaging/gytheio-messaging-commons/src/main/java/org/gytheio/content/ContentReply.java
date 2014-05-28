@@ -16,27 +16,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.gytheio.content.hash;
+package org.gytheio.content;
 
-import org.gytheio.content.AbstractContentReply;
-import org.gytheio.messaging.Request;
+import java.util.List;
 
-/**
- * Represents a reply from a content hasher on the status of a hash request.
- * 
- * @author Ray Gauss II
- */
-public class HashReply extends AbstractContentReply
+import org.gytheio.messaging.Reply;
+
+public interface ContentReply extends Reply
 {
 
-    public HashReply()
-    {
-        super();
-    }
-
-    public HashReply(Request<?> request)
-    {
-        super(request);
-    }
-    
+    /**
+     * Gets the results of the content operation.
+     * 
+     * @return the results
+     */
+    public List<ContentWorkResult> getResults();
 }
