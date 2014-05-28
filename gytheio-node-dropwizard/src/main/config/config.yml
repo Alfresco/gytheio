@@ -20,7 +20,7 @@ components:
     requestQueue: alfresco.transform.request.video
     replyQueue: alfresco.transform.reply.video
   - name: hash
-    workerClass: org.gytheio.content.hash.javase.JavaSeContentHashNodeWorker
+    workerClass: org.gytheio.content.hash.javase.JavaSeContentHashWorker
     enabled: true
     requestQueue: alfresco.hash.request
     replyQueue: alfresco.hash.reply

@@ -26,8 +26,6 @@ import java.util.List;
 
 import org.alfresco.service.cmr.repository.PagedSourceOptions;
 import org.alfresco.service.cmr.repository.TransformationSourceOptions;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.file.FileProvider;
@@ -51,8 +49,6 @@ import org.junit.Test;
  */
 public class ImageMagickContentTransformerWorkerTest extends AbstractContentTransformerWorkerTest
 {
-    private static final Log logger = LogFactory.getLog(ImageMagickContentTransformerWorkerTest.class);
-
     private ContentTransformerWorker transformerWorker;
     private ContentReferenceHandler contentReferenceHandler;
     private ContentTransformerWorkerProgressReporter progressReporter;
