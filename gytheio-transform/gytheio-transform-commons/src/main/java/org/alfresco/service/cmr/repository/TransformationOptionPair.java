@@ -19,8 +19,11 @@
 package org.alfresco.service.cmr.repository;
 
 //import java.io.IOException;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Map;
+
+import org.gytheio.content.transform.TransformerDebug;
 
 //import org.alfresco.repo.content.transform.TransformerDebug;
 
@@ -43,31 +46,31 @@ public class TransformationOptionPair implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-//    /**
-//     * Action to take place for a given pair of values. 
-//     */
-//    public enum Action
-//    {
-//        THROW_EXCEPTION
-//        {
-//            public void throwIOExceptionIfRequired(String message, TransformerDebug transformerDebug) throws IOException
-//            {
-//                throw transformerDebug.setCause(new IOException(message));
-//            }
-//        },
-//        RETURN_EOF
-//        {
-//            public void throwIOExceptionIfRequired(String message, TransformerDebug transformerDebug) throws IOException
-//            {
-//                if (transformerDebug.isEnabled())
-//                {
-//                    transformerDebug.debug(message + " Returning EOF");
-//                }
-//            }
-//        };
-//
-//        public abstract void throwIOExceptionIfRequired(String message, TransformerDebug transformerDebug) throws IOException;
-//    };
+    /**
+     * Action to take place for a given pair of values. 
+     */
+    public enum Action
+    {
+        THROW_EXCEPTION
+        {
+            public void throwIOExceptionIfRequired(String message, TransformerDebug transformerDebug) throws IOException
+            {
+                throw transformerDebug.setCause(new IOException(message));
+            }
+        },
+        RETURN_EOF
+        {
+            public void throwIOExceptionIfRequired(String message, TransformerDebug transformerDebug) throws IOException
+            {
+                if (transformerDebug.isEnabled())
+                {
+                    transformerDebug.debug(message + " Returning EOF");
+                }
+            }
+        };
+
+        public abstract void throwIOExceptionIfRequired(String message, TransformerDebug transformerDebug) throws IOException;
+    };
 
     private long max = -1;
     private long limit = -1;
@@ -127,13 +130,13 @@ public class TransformationOptionPair implements Serializable
         return getValue() != 0;
     }
     
-//    public Action getAction()
-//    {
-//        return
-//            (getMax() >= 0) ? Action.THROW_EXCEPTION :
-//            (getLimit() >= 0) ? Action.RETURN_EOF
-//                        : null;
-//    }
+    public Action getAction()
+    {
+        return
+            (getMax() >= 0) ? Action.THROW_EXCEPTION :
+            (getLimit() >= 0) ? Action.RETURN_EOF
+                        : null;
+    }
 
     /**
      * Defaults values that are set in this pair into the

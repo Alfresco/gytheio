@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * ComponentUnavailableAction which terminates the JVM with the specified exit code, not to be used lightly.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class ComponentUnavailableActionTerminate implements ComponentUnavailableAction
 {

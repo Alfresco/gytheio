@@ -33,7 +33,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * ComponentUnavailableAction which iterates over a list of specified actions.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class CompositeComponentUnavailableAction implements ComponentUnavailableAction
 {

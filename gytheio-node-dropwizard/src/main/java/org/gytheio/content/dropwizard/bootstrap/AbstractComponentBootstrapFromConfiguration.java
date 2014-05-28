@@ -41,6 +41,8 @@ import com.codahale.metrics.health.HealthCheck;
  * Base bootstrap which creates a component, configures it with a worker, and creates
  * an endpoint for sending and receiving messages
  *
+ * @author Ray Gauss II
+ *
  * @param <C> the component type
  * @param <W> the worker type
  */

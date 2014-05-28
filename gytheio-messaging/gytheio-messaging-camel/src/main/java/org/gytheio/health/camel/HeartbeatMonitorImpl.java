@@ -29,7 +29,7 @@ import org.gytheio.health.HeartbeatMonitor;
  * HeartbeatMonitor implementation which uses Camel to route {@link Heartbeat}
  * messages.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class HeartbeatMonitorImpl implements HeartbeatMonitor
 {

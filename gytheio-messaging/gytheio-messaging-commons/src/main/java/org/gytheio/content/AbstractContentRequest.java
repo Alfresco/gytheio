@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+w * Copyright (C) 2005-2014 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *

@@ -25,6 +25,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.gytheio.content.dropwizard.views.NodeView;
 
+/**
+ * Status resource placeholder
+ * 
+ * @author Ray Gauss II
+ */
 @Path("/status")
 @Produces(MediaType.TEXT_HTML)
 public class NodeResource

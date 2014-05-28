@@ -25,6 +25,8 @@ import org.apache.tika.mime.MimeTypeException;
 
 /**
  * Convenience enum for to more easily use media types with {@link FileMediaTypeServiceImpl}.
+ * 
+ * @author Ray Gauss II
  */
 public enum FileMediaType
 {

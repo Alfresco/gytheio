@@ -23,9 +23,17 @@ import java.io.File;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/**
+ * Tests that TempFileProvider's temp file dir can be overridden
+ * 
+ * @author Ray Gauss II
+ */
 public class OverridingTempFileProviderTest
 {
 
+    /**
+     * Tests that TempFileProvider's temp file dir can be overridden
+     */
     @Test
     public void testDir()
     {

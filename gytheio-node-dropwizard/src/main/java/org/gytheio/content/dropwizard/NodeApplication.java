@@ -45,7 +45,9 @@ import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 
 /**
- * Dropwizard Application implementation for a node
+ * Dropwizard application implementation for a node
+ * 
+ * @author Ray Gauss II
  */
 public class NodeApplication extends Application<NodeConfiguration>
 {

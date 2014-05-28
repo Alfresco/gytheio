@@ -29,12 +29,24 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.error.GytheioRuntimeException;
 
+
+/**
+ * A helper class that provides temporary files, providing a common point to clean
+ * them up.
+ * 
+ * <p>
+ * The contents of APPLICATION_TEMP_FILE_DIR [%java.io.tmpdir%/Gytheio] are managed by this 
+ * class.
+ * 
+ * @author derekh
+ * @author mrogers
+ */
 public class TempFileProvider
 {
     private static final int BUFFER_SIZE = 40 * 1024;
 
     /** 
-     * subdirectory in the temp directory where Alfresco temporary files will go 
+     * subdirectory in the temp directory where Gytheio temporary files will go 
      */
     public static final String APPLICATION_TEMP_FILE_DIR = "Gytheio";
     
@@ -77,18 +89,28 @@ public class TempFileProvider
         return systemTempDir;
     }
     
+    /**
+     * Gets the temp file directory
+     * 
+     * @return the temp file directory
+     */
     protected static String getApplicationTempFileDir()
     {
         return APPLICATION_TEMP_FILE_DIR;
     }
     
+    /**
+     * Gets the longer life file directory
+     * 
+     * @return the longer life file directory
+     */
     protected static String getApplicationLongLifeFileDir()
     {
         return APPLICATION_TEMP_FILE_DIR;
     }
     
     /**
-     * Get the Alfresco temp dir, by defaut %java.io.tempdir%/Alfresco.  
+     * Get the Gytheio temp dir, by defaut %java.io.tempdir%/Gytheio.  
      * Will create the temp dir on the fly if it does not already exist.
      * 
      * @return Returns a temporary directory, i.e. <code>isDir == true</code>
@@ -109,7 +131,7 @@ public class TempFileProvider
     public static File getTempDir(String dirName)
     {
         File systemTempDir = getSystemTempDir();
-        // append the Alfresco directory
+        // append the Gytheio directory
         File tempDir = new File(systemTempDir, dirName);
         // ensure that the temp directory exists
         if (tempDir.exists())
@@ -190,7 +212,7 @@ public class TempFileProvider
      * Create a temp file in the alfresco temp dir.
      * 
      * @return Returns a temp <code>File</code> that will be located in the
-     *         <b>Alfresco</b> subdirectory of the default temp directory
+     *         <b>Gytheio</b> subdirectory of the default temp directory
      * 
      * @see #APPLICATION_TEMP_FILE_DIR
      * @see File#createTempFile(java.lang.String, java.lang.String)

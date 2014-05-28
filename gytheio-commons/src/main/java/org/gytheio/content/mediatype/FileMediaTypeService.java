@@ -20,6 +20,11 @@ package org.gytheio.content.mediatype;
 
 import java.io.File;
 
+/**
+ * Defines a service for getting extensions for media types and vice versa.
+ * 
+ * @author Ray Gauss II
+ */
 public interface FileMediaTypeService
 {
     

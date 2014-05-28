@@ -21,7 +21,7 @@ package org.gytheio.messaging;
 import java.util.UUID;
 
 /**
- * Represents a request for content transformation from source to target with transformation options
+ * Represents a generic messaging request
  * 
  * @author Ray Gauss II
  */

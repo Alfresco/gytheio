@@ -26,6 +26,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Configuration POJO for a component
+ * 
+ * @author Ray Gauss II
  */
 public class ComponentConfiguration
 {

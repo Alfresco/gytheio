@@ -26,6 +26,7 @@ import com.codahale.metrics.health.HealthCheck;
 /**
  * Health check for a hash component
  *
+ * @author Ray Gauss II
  */
 public class HashHealthCheck extends HealthCheck
 {

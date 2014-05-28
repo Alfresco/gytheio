@@ -21,7 +21,7 @@ package org.gytheio.health;
 /**
  * Thrown when a dependent component such as a database or other service is unavailable.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class ComponentUnavailableException extends RuntimeException
 {

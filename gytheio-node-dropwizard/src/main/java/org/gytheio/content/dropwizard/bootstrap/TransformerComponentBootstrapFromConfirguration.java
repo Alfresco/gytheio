@@ -33,6 +33,7 @@ import com.codahale.metrics.health.HealthCheck;
 /**
  * Bootstraps a transformer component
  *
+ * @author Ray Gauss II
  */
 public class TransformerComponentBootstrapFromConfirguration
         extends AbstractComponentBootstrapFromConfiguration<BaseContentTransformerComponent, ContentTransformerWorker>

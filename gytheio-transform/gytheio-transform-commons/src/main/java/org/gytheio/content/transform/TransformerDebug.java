@@ -18,33 +18,24 @@
  */
 package org.gytheio.content.transform;
 
-public class ContentTransformationException extends Exception
+import org.alfresco.service.cmr.repository.TransformationOptionPair;
+
+/**
+ * Generates logging for transformers.
+ * <p>
+ * Currently contains the minimum contract required by {@link TransformationOptionPair}.
+ * 
+ * @author Alan Davis
+ * @author Ray Gauss II
+ *
+ */
+public interface TransformerDebug
 {
-    private static final long serialVersionUID = -5334480453136472986L;
-
-    public ContentTransformationException()
-    {
-    }
-
-    public ContentTransformationException(String message)
-    {
-        super(message);
-    }
-
-    public ContentTransformationException(Throwable cause)
-    {
-        super(cause);
-    }
-
-    public ContentTransformationException(String message, Throwable cause)
-    {
-        super(message, cause);
-    }
-
-    public ContentTransformationException(String message, Throwable cause, boolean enableSuppression,
-            boolean writableStackTrace)
-    {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
-
+    public boolean isEnabled();
+    
+    public <T extends Throwable> T setCause(T t);
+    
+    public void debug(String message);
+    
+    public void debug(String message, Throwable t);
 }

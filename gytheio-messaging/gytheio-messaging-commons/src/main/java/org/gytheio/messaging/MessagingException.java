@@ -20,6 +20,11 @@ package org.gytheio.messaging;
 
 import org.gytheio.error.GytheioRuntimeException;
 
+/**
+ * Exception thrown when a message is unable to be processed.
+ * 
+ * @author rgauss
+ */
 public class MessagingException extends GytheioRuntimeException
 {
     private static final long serialVersionUID = 8192266871339806688L;

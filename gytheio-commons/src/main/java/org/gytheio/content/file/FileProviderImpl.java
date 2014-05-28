@@ -25,10 +25,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
- * A helper class that provides files
+ * FileProvider implementation which is configured with a directoryPath in which
+ * files should be created
  * 
  * @author derekh
  * @author mrogers
+ * @author Ray Gauss II
  */
 public class FileProviderImpl implements FileProvider
 {
@@ -97,7 +99,6 @@ public class FileProviderImpl implements FileProvider
      * @return Returns a temp <code>File</code> that will be located in the
      *         configured directory
      * 
-     * @see #ALFRESCO_TEMP_FILE_DIR
      * @see File#createTempFile(java.lang.String, java.lang.String)
      */
     public File createFile(String prefix, String suffix)
@@ -110,7 +111,6 @@ public class FileProviderImpl implements FileProvider
      * @return Returns a <code>File</code> that will be located in the
      *         given directory
      * 
-     * @see #ALFRESCO_TEMP_FILE_DIR
      * @see File#createTempFile(java.lang.String, java.lang.String)
      */
     protected File createFile(String prefix, String suffix, File directory)

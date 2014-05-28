@@ -35,7 +35,8 @@ import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
 /**
  * @see org.alfresco.repo.content.transform.ffmpeg.FfmpegContentTransformerWorker
  * 
- * @author Derek Hulley, Ray Gauss II
+ * @author Derek Hulley
+ * @author Ray Gauss II
  */
 public abstract class AbstractContentTransformerWorkerTest
 {

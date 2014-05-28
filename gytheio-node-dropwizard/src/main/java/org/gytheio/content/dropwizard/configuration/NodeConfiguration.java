@@ -31,6 +31,8 @@ import io.dropwizard.Configuration;
 
 /**
  * Configuration for the Gytheio node
+ * 
+ * @author Ray Gauss II
  */
 public class NodeConfiguration extends Configuration
 {

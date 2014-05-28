@@ -25,6 +25,8 @@ import org.gytheio.messaging.Reply;
 
 /**
  * Represents a reply from a content transformer on the status of a transformation request.
+ * 
+ * @author Ray Gauss II
  */
 public class TransformationReply implements Reply
 {

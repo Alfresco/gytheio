@@ -32,6 +32,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.AbstractFileContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
@@ -98,6 +99,8 @@ public class ImageMagickContentTransformerWorker extends AbstractFileContentTran
      */
     public void setExecuter(RuntimeExec executer)
     {
+        executer.setProcessProperty(
+                "MAGICK_TMPDIR", TempFileProvider.getTempDir().getAbsolutePath());
         this.executer = executer;
     }
     

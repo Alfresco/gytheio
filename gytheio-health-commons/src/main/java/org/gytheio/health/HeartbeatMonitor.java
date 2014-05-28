@@ -22,7 +22,7 @@ package org.gytheio.health;
  * Defines an object responsible for listening for the heartbeat.
  * Implementations may utilize a {@link HeartbeatDao} to persist the data.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public interface HeartbeatMonitor
 {

@@ -23,6 +23,8 @@ import org.gytheio.messaging.MessageProducer;
 /**
  * Base implementation of a component with content worker and messageProducer fields.
  *
+ * @author Ray Gauss II
+ *
  * @param <W>
  */
 public abstract class AbstractComponent<W extends ContentWorker> implements Component

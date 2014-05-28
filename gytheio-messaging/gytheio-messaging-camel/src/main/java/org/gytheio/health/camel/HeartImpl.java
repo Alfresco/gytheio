@@ -26,7 +26,7 @@ import org.gytheio.messaging.MessageProducer;
  * Heart implementation which uses a Gytheio {@link MessageProducer} to
  * send a {@link Heartbeat} message.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class HeartImpl implements Heart
 {

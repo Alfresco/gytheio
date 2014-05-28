@@ -18,6 +18,7 @@
  */
 package org.gytheio.content;
 
+import org.gytheio.api.StableApi;
 import org.gytheio.error.GytheioRuntimeException;
 
 
@@ -29,6 +30,7 @@ import org.gytheio.error.GytheioRuntimeException;
  * 
  * @author Derek Hulley
  */
+@StableApi
 public class ContentIOException extends GytheioRuntimeException
 {
     private static final long serialVersionUID = 3258130249983276087L;

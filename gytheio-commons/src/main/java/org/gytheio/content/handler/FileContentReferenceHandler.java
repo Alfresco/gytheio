@@ -25,6 +25,8 @@ import org.gytheio.content.ContentReference;
 
 /**
  * Adds file handling to the ContentReferenceHandler interface.
+ * 
+ * @author Ray Gauss II
  */
 public interface FileContentReferenceHandler extends ContentReferenceHandler
 {

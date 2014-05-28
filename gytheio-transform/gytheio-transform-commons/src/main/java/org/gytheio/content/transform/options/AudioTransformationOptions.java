@@ -22,7 +22,6 @@ package org.gytheio.content.transform.options;
  * Options relating to audio transformations
  * 
  * @author Ray Gauss II
- *
  */
 public class AudioTransformationOptions extends TransformationOptionsImpl
 {

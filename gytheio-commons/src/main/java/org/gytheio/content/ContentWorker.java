@@ -21,6 +21,8 @@ package org.gytheio.content;
 /**
  * Defines a low-level worker that performs some action on content, i.e. performing
  * a transformation, extracting metadata, computing a hash, etc.
+ * 
+ * @author Ray Gauss II
  */
 public interface ContentWorker
 {

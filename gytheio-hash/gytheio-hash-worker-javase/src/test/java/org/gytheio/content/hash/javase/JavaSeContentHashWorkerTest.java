@@ -26,10 +26,16 @@ import java.util.Map;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.gytheio.content.hash.ContentHashWorker;
-import org.gytheio.content.hash.javase.JavaSeContentHashNodeWorker;
+import org.gytheio.content.hash.javase.JavaSeContentHashWorker;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Test of the Java SE content hash worker
+ * 
+ * @see {@link JavaSeContentHashWorker}
+ * @author Ray Gauss II
+ */
 public class JavaSeContentHashWorkerTest
 {
     
@@ -42,8 +48,8 @@ public class JavaSeContentHashWorkerTest
     
     @Before
     public void setUp() throws Exception {
-        worker = new JavaSeContentHashNodeWorker();
-        ((JavaSeContentHashNodeWorker) worker).setSourceContentReferenceHandler(
+        worker = new JavaSeContentHashWorker();
+        ((JavaSeContentHashWorker) worker).setSourceContentReferenceHandler(
                 new FileContentReferenceHandlerImpl());
     }
     

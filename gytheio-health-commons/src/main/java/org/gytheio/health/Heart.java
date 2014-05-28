@@ -22,7 +22,7 @@ package org.gytheio.health;
  * Defines the object responsible for producing {@link Heartbeat}s
  * which let components monitor health of other components in the system.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public interface Heart
 {

@@ -21,7 +21,7 @@ package org.gytheio.health;
 /**
  * Defines actions to be taken when a service's dependent component is unavailable.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public interface ComponentUnavailableAction
 {

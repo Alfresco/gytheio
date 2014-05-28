@@ -24,6 +24,7 @@ import java.io.File;
  * Defines methods to create files.  Implementations might include leverage Java's temporary
  * file components, explicit user-defined directories, etc.
  *
+ * @author Ray Gauss II
  */
 public interface FileProvider
 {

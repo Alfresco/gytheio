@@ -24,7 +24,6 @@ import org.gytheio.content.AbstractComponent;
 import org.gytheio.content.transform.TransformationReply;
 import org.gytheio.content.transform.TransformationRequest;
 import org.gytheio.messaging.MessageProducer;
-import org.gytheio.messaging.MessagingException;
 
 /**
  * A base implementation of a transform node which receives messages, uses a {@link ContentTransformerWorker}
@@ -79,7 +78,7 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
             this.request = request;
         }
         
-        public void onTransformationStarted() throws ContentTransformationException
+        public void onTransformationStarted()
         {
             if (logger.isDebugEnabled())
             {
@@ -89,17 +88,11 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
             TransformationReply reply = 
                     new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
-            try
-            {
-                messageProducer.send(reply, request.getReplyTo());
-            }
-            catch (MessagingException e)
-            {
-                throw new ContentTransformationException(e);
-            }
+            
+            messageProducer.send(reply, request.getReplyTo());
         }
         
-        public void onTransformationProgress(float progress) throws ContentTransformationException
+        public void onTransformationProgress(float progress)
         {
             if (logger.isDebugEnabled())
             {
@@ -109,17 +102,11 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
             reply.setProgress(progress);
-            try
-            {
-                messageProducer.send(reply, request.getReplyTo());
-            }
-            catch (MessagingException e)
-            {
-                throw new ContentTransformationException(e);
-            }
+            
+            messageProducer.send(reply, request.getReplyTo());
         }
         
-        public void onTransformationComplete() throws ContentTransformationException
+        public void onTransformationComplete()
         {
             if (logger.isDebugEnabled())
             {
@@ -128,14 +115,8 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
             }
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_COMPLETE);
-            try
-            {
-                messageProducer.send(reply, request.getReplyTo());
-            }
-            catch (MessagingException e)
-            {
-                throw new ContentTransformationException(e);
-            }
+            
+            messageProducer.send(reply, request.getReplyTo());
         }
     }
 

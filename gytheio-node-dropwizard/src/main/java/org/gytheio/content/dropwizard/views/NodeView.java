@@ -20,6 +20,11 @@ package org.gytheio.content.dropwizard.views;
 
 import io.dropwizard.views.View;
 
+/**
+ * Status view placeholder
+ * 
+ * @author Ray Gauss II
+ */
 public class NodeView extends View
 {
     private static final String TEMPLATE = "status.mustache";

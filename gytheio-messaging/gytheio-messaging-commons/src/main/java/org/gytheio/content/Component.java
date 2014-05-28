@@ -23,6 +23,8 @@ import org.gytheio.messaging.MessageConsumer;
 /**
  * Defines a component which is a consumer of request for content action messages,
  * delegates that work to a worker, and sends a reply with the results.
+ * 
+ * @author Ray Gauss II
  */
 public interface Component extends MessageConsumer
 {

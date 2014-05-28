@@ -25,6 +25,8 @@ import org.gytheio.messaging.MessageConsumer;
 
 /**
  * Consumer of {@link BenchmarkMessage}s which maintains a count of messages received.
+ * 
+ * @author Ray Gauss II
  */
 public class BenchmarkConsumer implements MessageConsumer
 {

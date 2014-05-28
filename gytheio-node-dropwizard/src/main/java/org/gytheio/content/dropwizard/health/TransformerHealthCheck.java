@@ -25,6 +25,8 @@ import com.codahale.metrics.health.HealthCheck;
 
 /**
  * Transformer health check
+ * 
+ * @author Ray Gauss II
  */
 public class TransformerHealthCheck extends HealthCheck
 {

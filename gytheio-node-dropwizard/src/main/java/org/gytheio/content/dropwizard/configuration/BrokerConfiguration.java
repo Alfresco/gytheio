@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Configuration POJO for a messaging broker
+ * 
+ * @author Ray Gauss II
  */
 public class BrokerConfiguration
 {

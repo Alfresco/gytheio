@@ -18,8 +18,6 @@
  */
 package org.gytheio.content.transform;
 
-import org.gytheio.content.transform.ContentTransformationException;
-
 /**
  * Defines methods for reporting progress on a content transformation.
  * <p>
@@ -32,24 +30,19 @@ public interface ContentTransformerWorkerProgressReporter
 {
     /**
      * Called when the transformation has been started
-     * 
-     * @throws ContentTransformationException
      */
-    public void onTransformationStarted() throws ContentTransformationException;
+    public void onTransformationStarted();
     
     /**
      * Optionally called when some amount of progress has been made on
      * the transformation
      * 
      * @param progress
-     * @throws ContentTransformationException
      */
-    public void onTransformationProgress(float progress) throws ContentTransformationException;
+    public void onTransformationProgress(float progress);
     
     /**
      * Called when the transformation has completed
-     * 
-     * @throws ContentTransformationException
      */
-    public void onTransformationComplete() throws ContentTransformationException;
+    public void onTransformationComplete();
 }

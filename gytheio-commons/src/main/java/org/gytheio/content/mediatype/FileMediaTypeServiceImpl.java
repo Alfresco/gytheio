@@ -28,6 +28,12 @@ import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.gytheio.error.GytheioRuntimeException;
 
+/**
+ * Implementation of FileMediaTypeService which delegates to Apache Tika
+ * to do the actual work.
+ * 
+ * @author Ray Gauss II
+ */
 public class FileMediaTypeServiceImpl implements FileMediaTypeService
 {
 

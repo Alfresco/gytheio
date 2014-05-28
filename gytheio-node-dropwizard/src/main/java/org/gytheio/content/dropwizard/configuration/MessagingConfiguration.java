@@ -24,6 +24,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Configuration for messaging
+ * 
+ * @author Ray Gauss II
  */
 public class MessagingConfiguration
 {

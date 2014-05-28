@@ -18,6 +18,12 @@
  */
 package org.gytheio.content.hash;
 
+/**
+ * Thrown when an implementation can not perform the requested hashing due
+ * to configuration or environment.
+ * 
+ * @author Ray Gauss II
+ */
 public class ContentHashException extends Exception
 {
     private static final long serialVersionUID = -5334480453136472986L;

@@ -22,7 +22,7 @@ package org.gytheio.health;
  * Defines the persistence of a heartbeat.  Implementations might
  * be a log or database
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public interface HeartbeatDao
 {

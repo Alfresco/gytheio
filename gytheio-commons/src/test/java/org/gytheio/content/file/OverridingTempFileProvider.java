@@ -18,6 +18,11 @@
  */
 package org.gytheio.content.file;
 
+/**
+ * Class which overrides TempFileProvider's temp file dir for testing
+ * 
+ * @author Ray Gauss II
+ */
 public class OverridingTempFileProvider extends TempFileProvider
 {
     public static final String OVERRIDE_TEMP_FILE_DIR = "GytheioTest";

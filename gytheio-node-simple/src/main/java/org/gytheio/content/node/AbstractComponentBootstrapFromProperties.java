@@ -33,6 +33,14 @@ import org.gytheio.error.GytheioRuntimeException;
 import org.gytheio.messaging.amqp.AmqpDirectEndpoint;
 import org.gytheio.messaging.amqp.AmqpNodeBootstrapUtils;
 
+/**
+ * Base bootstrap which creates a component, configures it with a worker, and creates
+ * an endpoint for sending and receiving messages
+ * 
+ * @author Ray Gauss II
+ *
+ * @param <W>
+ */
 public abstract class AbstractComponentBootstrapFromProperties<W extends ContentWorker>
 {
     private static final Log logger = LogFactory.getLog(AbstractComponentBootstrapFromProperties.class);

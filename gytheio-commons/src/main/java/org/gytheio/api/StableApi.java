@@ -37,6 +37,7 @@ import java.lang.annotation.Target;
  * i.e. 1.x -> 2.0.
  * 
  * @author Greg Melahn
+ * @author Ray Gauss II
  *
  */
 @Target( {ElementType.TYPE,ElementType.METHOD} )

@@ -33,6 +33,7 @@ import com.codahale.metrics.health.HealthCheck;
 /**
  * Bootraps a hash component
  *
+ * @author Ray Gauss II
  */
 public class HashComponentBootstrapFromConfirguration
         extends AbstractComponentBootstrapFromConfiguration<BaseContentHashComponent, ContentHashWorker>

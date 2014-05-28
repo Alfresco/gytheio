@@ -23,6 +23,8 @@ import org.gytheio.content.handler.ContentReferenceHandler;
 /**
  * Base implementation of a content worker with a <code>sourceContentReferenceHandler</code>
  * field.
+ * 
+ * @author Ray Gauss II
  */
 public abstract class AbstractContentWorker implements ContentWorker
 {

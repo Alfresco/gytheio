@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * A utility class for helping to bootstrap AMQP nodes from command line arguments
  * 
- * @author Ray GAuss II
+ * @author Ray Gauss II
  */
 public class AmqpNodeBootstrapUtils
 {

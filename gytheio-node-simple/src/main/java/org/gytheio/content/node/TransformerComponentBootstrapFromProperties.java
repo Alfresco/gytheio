@@ -25,6 +25,13 @@ import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.transform.AbstractContentTransformerWorker;
 import org.gytheio.content.transform.BaseContentTransformerComponent;
 
+/**
+ * Bootstraps a transformer component
+ * 
+ * @author Ray Gauss II
+ *
+ * @param <W>
+ */
 public class TransformerComponentBootstrapFromProperties<W extends AbstractContentTransformerWorker> extends 
         AbstractComponentBootstrapFromProperties<W>
 {

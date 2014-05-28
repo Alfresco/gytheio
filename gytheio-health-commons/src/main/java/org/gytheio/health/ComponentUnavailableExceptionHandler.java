@@ -27,7 +27,7 @@ import org.apache.commons.logging.LogFactory;
  * Determines the {@link ComponentUnavailableAction} to execute when a 
  * {@link ComponentUnavailableException} is thrown
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class ComponentUnavailableExceptionHandler
 {

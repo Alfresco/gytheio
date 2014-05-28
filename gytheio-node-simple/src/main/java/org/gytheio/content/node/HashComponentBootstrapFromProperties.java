@@ -25,6 +25,13 @@ import org.gytheio.content.handler.ContentReferenceHandler;
 import org.gytheio.content.hash.AbstractContentHashWorker;
 import org.gytheio.content.hash.BaseContentHashComponent;
 
+/**
+ * Bootraps a hash component
+ * 
+ * @author Ray Gauss II
+ *
+ * @param <W>
+ */
 public class HashComponentBootstrapFromProperties<W extends AbstractContentHashWorker> extends 
         AbstractComponentBootstrapFromProperties<W>
 {

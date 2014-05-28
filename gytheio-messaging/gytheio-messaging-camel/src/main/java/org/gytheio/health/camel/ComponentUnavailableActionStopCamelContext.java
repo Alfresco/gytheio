@@ -26,7 +26,7 @@ import org.gytheio.health.ComponentUnavailableAction;
 /**
  * ComponentUnavailableAction which stops a given Camel context.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class ComponentUnavailableActionStopCamelContext implements ComponentUnavailableAction
 {

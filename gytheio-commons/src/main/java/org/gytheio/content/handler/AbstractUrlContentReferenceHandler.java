@@ -23,6 +23,8 @@ import org.gytheio.content.ContentReference;
 
 /**
  * A base ContentReferenceHandler implementation with convenience methods for dealing with URLs.
+ * 
+ * @author Ray Gauss II
  */
 public abstract class AbstractUrlContentReferenceHandler implements ContentReferenceHandler
 {

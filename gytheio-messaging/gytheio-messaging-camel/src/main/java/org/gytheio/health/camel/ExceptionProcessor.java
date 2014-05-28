@@ -25,6 +25,8 @@ import org.gytheio.health.ComponentUnavailableExceptionHandler;
 /**
  * Camel Processor and standard bean which provide methods to pass the exception
  * to the specified handler.
+ * 
+ * @author Ray Gauss II
  */
 public class ExceptionProcessor implements Processor
 {

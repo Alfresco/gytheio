@@ -25,6 +25,8 @@ import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 /**
  * A convenience FileContentReferenceHandlerImpl extension which creates a file
  * provider with a directory path of the {@link CleaningTempFileProvider}'s temp dir.
+ * 
+ * @author Ray Gauss II
  */
 public class TempFileContentReferenceHandlerImpl extends FileContentReferenceHandlerImpl
 {

@@ -22,7 +22,7 @@ package org.gytheio.health;
  * An object describing a properly behaving resource at a particular
  * point in time.
  * 
- * @author rgauss
+ * @author Ray Gauss II
  */
 public class Heartbeat
 {
