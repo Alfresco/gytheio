@@ -41,6 +41,7 @@ public abstract class AbstractContentTransformerWorker
 
     public void initialize()
     {
+        super.initialize();
     }
     
     protected String getExtension(ContentReference contentReference)

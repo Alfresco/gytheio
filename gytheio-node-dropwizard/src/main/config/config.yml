@@ -1,12 +1,39 @@
 
-sourceDirectory: /Users/rgauss/Desktop
-targetDirectory: /Users/rgauss/Desktop
-
 messaging:
     broker:
         url: tcp://localhost:5672
         # username: guest
         # password: password
+
+contentReferenceHandlers:
+    source:
+        contentReferenceHandlerClass: org.gytheio.content.handler.FileContentReferenceHandlerImpl
+        directoryPath: /tmp/gytheio
+    target:
+        contentReferenceHandlerClass: org.gytheio.content.handler.FileContentReferenceHandlerImpl
+        directoryPath: /tmp/gytheio
+#    source:
+#        contentReferenceHandlerClass: org.gytheio.content.handler.webdav.WebDavContentReferenceHandlerImpl
+#        remoteBaseUrl: http://localhost:8888/tmp
+#        username: gytheio
+#        password: gytheio
+#    target:
+#        contentReferenceHandlerClass: org.gytheio.content.handler.webdav.WebDavContentReferenceHandlerImpl
+#        remoteBaseUrl: http://localhost:8888/tmp
+#        username: gytheio
+#        password: gytheio
+#    source:
+#        contentReferenceHandlerClass: org.gytheio.content.handler.s3.S3ContentReferenceHandlerImpl
+#        s3AccessKey: <key>
+#        s3SecretKey: <secret>
+#        s3BucketName: gytheio
+#        s3BucketRegion: US_EAST_1
+#    target:
+#        contentReferenceHandlerClass: org.gytheio.content.handler.s3.S3ContentReferenceHandlerImpl
+#        s3AccessKey: <key>
+#        s3SecretKey: <secret>
+#        s3BucketName: gytheio
+#        s3BucketRegion: US_EAST_1
 
 components:
   - name: imagemagick

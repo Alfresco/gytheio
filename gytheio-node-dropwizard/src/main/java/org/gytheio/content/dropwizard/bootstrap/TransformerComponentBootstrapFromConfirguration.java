@@ -44,8 +44,6 @@ public class TransformerComponentBootstrapFromConfirguration
         super(nodeConfig, environment, worker);
     }
 
-    protected static final String PROP_WORKER_DIR_TARGET = "gytheio.worker.dir.target";
-    
     @Override
     protected BaseContentTransformerComponent createComponent()
     {
@@ -60,9 +58,9 @@ public class TransformerComponentBootstrapFromConfirguration
                     "Only " + AbstractContentTransformerWorker.class.getSimpleName() + " supported");
         }
         ((AbstractContentTransformerWorker) worker).setSourceContentReferenceHandler(
-                createFileContentReferenceHandler(nodeConfig.getSourceDirectory()));
+                createContentReferenceHandler(nodeConfig.getContentReferenceHandlersConfig().getSource()));
         ((AbstractContentTransformerWorker) worker).setTargetContentReferenceHandler(
-                createFileContentReferenceHandler(nodeConfig.getTargetDirectory()));
+                createContentReferenceHandler(nodeConfig.getContentReferenceHandlersConfig().getTarget()));
         ((AbstractContentTransformerWorker) worker).initialize();
     }
 

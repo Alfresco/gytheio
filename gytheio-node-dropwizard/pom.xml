@@ -33,6 +33,16 @@
         </dependency>
         <dependency>
             <groupId>org.gytheio</groupId>
+            <artifactId>gytheio-content-handler-webdav</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.gytheio</groupId>
+            <artifactId>gytheio-content-handler-s3</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.gytheio</groupId>
             <artifactId>gytheio-transform-component</artifactId>
             <version>${project.version}</version>
         </dependency>

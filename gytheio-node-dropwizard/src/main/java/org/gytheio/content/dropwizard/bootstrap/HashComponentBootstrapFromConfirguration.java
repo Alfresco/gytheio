@@ -44,8 +44,6 @@ public class HashComponentBootstrapFromConfirguration
         super(nodeConfig, environment, worker);
     }
 
-    protected static final String PROP_WORKER_DIR_TARGET = "gytheio.worker.dir.target";
-    
     @Override
     protected BaseContentHashComponent createComponent()
     {
@@ -60,7 +58,7 @@ public class HashComponentBootstrapFromConfirguration
                     "Only " + AbstractContentHashWorker.class.getSimpleName() + " supported");
         }
         ((AbstractContentHashWorker) worker).setSourceContentReferenceHandler(
-                createFileContentReferenceHandler(nodeConfig.getSourceDirectory()));
+                createContentReferenceHandler(nodeConfig.getContentReferenceHandlersConfig().getSource()));
         ((AbstractContentHashWorker) worker).initialize();
     }
 

@@ -18,8 +18,12 @@
  */
 package org.gytheio.content.transform;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,6 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.gytheio.content.ContentIOException;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.ContentWorkResult;
@@ -35,6 +40,7 @@ import org.gytheio.content.file.TempFileProvider;
 import org.gytheio.content.handler.FileContentReferenceHandler;
 import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.options.TransformationOptions;
+import org.gytheio.error.GytheioRuntimeException;
 
 /**
  * Extension of AbstractContentTransformerWorker for dealing with file
@@ -44,6 +50,7 @@ import org.gytheio.content.transform.options.TransformationOptions;
  */
 public abstract class AbstractFileContentTransformerWorker extends AbstractContentTransformerWorker
 {
+    private static final Log logger = LogFactory.getLog(AbstractFileContentTransformerWorker.class);
 
     /**
      * Creates source pairs from the given source content references
@@ -236,6 +243,72 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
         
         return targetContentReferenceHandler.createContentReference(filename, mediaType);
     }
+    
+    /**
+     * Tests that the worker is configured and working as expected.
+     * 
+     * @param sourcePath
+     * @param targetMediaType
+     * @param options
+     * @throws Exception
+     */
+    protected void initializationTest(
+            String sourcePath,
+            String targetMediaType,
+            TransformationOptions options) throws Exception
+    {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(sourcePath);
+        if (inputStream == null)
+        {
+            throw new GytheioRuntimeException("Test file not found: " + sourcePath);
+        }
+        
+        String sourceExtension = "." + sourcePath.split("\\.")[sourcePath.split("\\.").length-1];
+        
+        // Create temp source file
+        File sourceFile = TempFileProvider.createTempFile(
+                this.getClass().getSimpleName() + "_init_source_", sourceExtension);
+        String sourceMediaType = FileMediaType.SERVICE.getMediaTypeByName(sourceFile);
+        
+        IOUtils.copy(inputStream, new FileOutputStream(sourceFile));
+        ContentReference sourceContentReference = new ContentReference(
+                sourceFile.toURI().toString(), 
+                sourceMediaType, 
+                sourceFile.length());
+        FileContentReferencePair sourcePair = 
+                new FileContentReferencePair(sourceFile, sourceContentReference);
+        
+        // create the output file
+        String targetExtension = "." + FileMediaType.SERVICE.getExtension(targetMediaType);
+        File targetFile = TempFileProvider.createTempFile(
+                this.getClass().getSimpleName() + "_init_target_", targetExtension);
+        ContentReference targetContentReference = new ContentReference(
+                targetFile.toURI().toString(), 
+                targetMediaType);
+        FileContentReferencePair targetPair =
+                new FileContentReferencePair(targetFile, targetContentReference);
+        
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Initialization test conversion from " + sourceFile + " to " + targetFile);
+        }
+        // execute it
+        transformInternal(
+                Arrays.asList(sourcePair), 
+                Arrays.asList(targetPair), 
+                options,
+                null);
+
+        // check that the file exists
+        if (!targetFile.exists() || targetFile.length() == 0)
+        {
+            throw new GytheioRuntimeException("Conversion failed: \n" + "   from: " + sourceFile
+                + "\n" + "   to: " + targetFile);
+        }
+        // we can be sure that it works
+        setIsAvailable(true);
+    }
+    
 
     /**
      * Wrapper for a content reference and a {@link File}, useful

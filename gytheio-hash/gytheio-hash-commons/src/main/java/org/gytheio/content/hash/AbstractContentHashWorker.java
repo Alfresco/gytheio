@@ -41,6 +41,11 @@ public abstract class AbstractContentHashWorker extends AbstractContentWorker im
     @Override
     public void initialize()
     {
+        super.initialize();
+        if (sourceContentReferenceHandler != null && sourceContentReferenceHandler.isAvailable())
+        {
+            setIsAvailable(true);
+        }
     }
     
     @Override
