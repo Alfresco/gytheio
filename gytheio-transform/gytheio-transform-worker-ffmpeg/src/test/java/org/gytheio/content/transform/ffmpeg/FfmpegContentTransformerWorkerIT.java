@@ -48,7 +48,7 @@ import org.junit.Test;
  * 
  * @author Derek Hulley, Ray Gauss II
  */
-public class FfmpegContentTransformerWorkerTest extends AbstractContentTransformerWorkerTest
+public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformerWorkerTest
 {
 
     private ContentTransformerWorker transformerWorker;

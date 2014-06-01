@@ -48,7 +48,7 @@ import org.junit.Test;
  * 
  * @author Derek Hulley, Ray Gauss II
  */
-public class ImageMagickContentTransformerWorkerTest extends AbstractContentTransformerWorkerTest
+public class ImageMagickContentTransformerWorkerIT extends AbstractContentTransformerWorkerTest
 {
     private ContentTransformerWorker transformerWorker;
     private ContentReferenceHandler contentReferenceHandler;
