@@ -16,6 +16,7 @@
         <module>gytheio-messaging-commons</module>
         <module>gytheio-messaging-amqp-direct</module>
         <module>gytheio-messaging-camel</module>
+        <module>gytheio-messaging-benchmark</module>
     </modules>
 
 </project>
