@@ -25,6 +25,8 @@ import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.options.AbstractTransformationSourceOptions;
 import org.gytheio.error.GytheioRuntimeException;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Time-based content conversion options to specify an offset and duration.
  * Useful for audio and video.
@@ -138,6 +140,7 @@ public class TemporalSourceOptions extends AbstractTransformationSourceOptions
     }
     
     @Override
+    @JsonIgnore
     public TransformationSourceOptionsSerializer getSerializer()
     {
         return TemporalSourceOptions.createSerializerInstance();

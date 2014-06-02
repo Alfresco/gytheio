@@ -26,6 +26,8 @@ import java.util.Map;
 import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.options.AbstractTransformationSourceOptions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * Paged content conversion options to specify a page number range.
  * <p>
@@ -151,7 +153,8 @@ public class PagedSourceOptions extends AbstractTransformationSourceOptions
         return sourceOptions;
     }
     
-//    @Override
+    @Override
+    @JsonIgnore
     public TransformationSourceOptionsSerializer getSerializer()
     {
         return PagedSourceOptions.createSerializerInstance();

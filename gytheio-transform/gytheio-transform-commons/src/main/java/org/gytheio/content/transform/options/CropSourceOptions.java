@@ -23,6 +23,8 @@ import java.util.Map;
 
 import org.gytheio.content.mediatype.FileMediaType;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * DTO used to store options for ImageMagick cropping.
  * 
@@ -180,6 +182,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
     }
     
     @Override
+    @JsonIgnore
     public TransformationSourceOptionsSerializer getSerializer()
     {
         return CropSourceOptions.createSerializerInstance();
