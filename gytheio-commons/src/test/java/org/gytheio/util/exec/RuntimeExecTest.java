@@ -28,7 +28,7 @@ import org.gytheio.util.exec.RuntimeExec.ExecutionResult;
 import junit.framework.TestCase;
 
 /**
- * @see org.alfresco.util.exec.RuntimeExec
+ * @see {@link RuntimeExec}
  * 
  * @author Derek Hulley
  */

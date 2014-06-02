@@ -24,14 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
-import org.alfresco.service.cmr.repository.TemporalSourceOptions;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.AbstractRuntimeExecContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
+import org.gytheio.content.transform.options.ImageResizeOptions;
 import org.gytheio.content.transform.options.ImageTransformationOptions;
+import org.gytheio.content.transform.options.TemporalSourceOptions;
 import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.content.transform.options.VideoTransformationOptions;
 import org.gytheio.error.GytheioRuntimeException;

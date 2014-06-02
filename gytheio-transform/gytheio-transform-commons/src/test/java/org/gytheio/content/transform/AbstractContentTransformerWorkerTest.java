@@ -35,7 +35,7 @@ import org.gytheio.content.mediatype.FileMediaTypeServiceImpl;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
 
 /**
- * @see org.alfresco.repo.content.transform.ffmpeg.FfmpegContentTransformerWorker
+ * Base content transformer worker class
  * 
  * @author Derek Hulley
  * @author Ray Gauss II

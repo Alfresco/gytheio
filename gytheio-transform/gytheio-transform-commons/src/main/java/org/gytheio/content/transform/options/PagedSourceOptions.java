@@ -16,15 +16,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.service.cmr.repository;
+package org.gytheio.content.transform.options;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.alfresco.service.cmr.repository.AbstractTransformationSourceOptions;
 import org.gytheio.content.mediatype.FileMediaType;
+import org.gytheio.content.transform.options.AbstractTransformationSourceOptions;
 
 /**
  * Paged content conversion options to specify a page number range.
@@ -76,7 +76,7 @@ public class PagedSourceOptions extends AbstractTransformationSourceOptions
     public PagedSourceOptions()
     {
         super();
-        setApplicableMimetypes(PagedSourceOptions.getDefaultApplicableMimetypes());
+        setApplicableMediaTypes(PagedSourceOptions.getDefaultApplicableMimetypes());
     }
     
     /**

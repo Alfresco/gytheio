@@ -18,7 +18,6 @@
  */
 package org.gytheio.content.transform.options;
 
-import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
 
 /**
  * Image transformation options

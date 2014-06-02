@@ -24,8 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.alfresco.service.cmr.repository.PagedSourceOptions;
-import org.alfresco.service.cmr.repository.TransformationSourceOptions;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.file.FileProvider;
@@ -38,15 +36,18 @@ import org.gytheio.content.transform.AbstractContentTransformerWorkerTest;
 import org.gytheio.content.transform.ContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
 import org.gytheio.content.transform.options.ImageTransformationOptions;
+import org.gytheio.content.transform.options.PagedSourceOptions;
 import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.content.transform.options.TransformationOptionsImpl;
+import org.gytheio.content.transform.options.TransformationSourceOptions;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @see org.alfresco.repo.content.transform.ffmpeg.FfmpegContentTransformerWorker
+ * @see {@link ImageMagickContentTransformerWorker}
  * 
- * @author Derek Hulley, Ray Gauss II
+ * @author Derek Hulley
+ * @author Ray Gauss II
  */
 public class ImageMagickContentTransformerWorkerIT extends AbstractContentTransformerWorkerTest
 {

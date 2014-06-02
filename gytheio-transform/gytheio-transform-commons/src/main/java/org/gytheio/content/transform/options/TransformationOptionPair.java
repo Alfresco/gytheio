@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.service.cmr.repository;
+package org.gytheio.content.transform.options;
 
 //import java.io.IOException;
 import java.io.IOException;
@@ -24,8 +24,6 @@ import java.io.Serializable;
 import java.util.Map;
 
 import org.gytheio.content.transform.TransformerDebug;
-
-//import org.alfresco.repo.content.transform.TransformerDebug;
 
 /**
  * A pair of transformation options that specify

@@ -24,7 +24,6 @@ import java.util.List;
 
 import static junit.framework.Assert.*;
 
-import org.alfresco.service.cmr.repository.TemporalSourceOptions;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.file.FileProvider;
@@ -37,6 +36,7 @@ import org.gytheio.content.transform.AbstractContentTransformerWorkerTest;
 import org.gytheio.content.transform.ContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
 import org.gytheio.content.transform.ffmpeg.FfmpegContentTransformerWorker;
+import org.gytheio.content.transform.options.TemporalSourceOptions;
 import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.content.transform.options.TransformationOptionsImpl;
 import org.junit.Before;
@@ -44,9 +44,10 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * @see org.alfresco.repo.content.transform.ffmpeg.FfmpegContentTransformerWorker
+ * @see {@link FfmpegContentTransformerWorker}
  * 
- * @author Derek Hulley, Ray Gauss II
+ * @author Derek Hulley
+ * @author Ray Gauss II
  */
 public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformerWorkerTest
 {

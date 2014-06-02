@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.service.cmr.repository;
+package org.gytheio.content.transform.options;
 
 import java.io.Serializable;
 import java.util.List;
@@ -35,20 +35,20 @@ public interface TransformationSourceOptions
 {
     
     /**
-     * Gets the list of applicable mimetypes
+     * Gets the list of applicable media types (mimetypes)
      * 
-     * @return the applicable mimetypes
+     * @return the applicable media types
      */
-    public List<String> getApplicableMimetypes();
+    public List<String> getApplicableMediaTypes();
 
     /**
      * Gets whether or not these transformation source options apply for the
-     * given mimetype
+     * given media type (mimetype)
      * 
-     * @param mimetype the mimetype of the source
+     * @param mediaType the media type of the source
      * @return if these transformation source options apply
      */
-    public boolean isApplicableForMimetype(String mimetype);
+    public boolean isApplicableForMediaType(String mediaType);
     
     /**
      * Creates a new <code>TransformationSourceOptions</code> object from this

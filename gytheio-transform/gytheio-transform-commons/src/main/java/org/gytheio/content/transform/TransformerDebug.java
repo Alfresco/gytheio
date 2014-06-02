@@ -18,7 +18,7 @@
  */
 package org.gytheio.content.transform;
 
-import org.alfresco.service.cmr.repository.TransformationOptionPair;
+import org.gytheio.content.transform.options.TransformationOptionPair;
 
 /**
  * Generates logging for transformers.

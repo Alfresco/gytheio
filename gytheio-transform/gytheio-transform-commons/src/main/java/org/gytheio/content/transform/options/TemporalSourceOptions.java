@@ -16,13 +16,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.service.cmr.repository;
+package org.gytheio.content.transform.options;
 
 import java.io.Serializable;
 import java.util.Map;
 
-import org.alfresco.service.cmr.repository.AbstractTransformationSourceOptions;
 import org.gytheio.content.mediatype.FileMediaType;
+import org.gytheio.content.transform.options.AbstractTransformationSourceOptions;
 import org.gytheio.error.GytheioRuntimeException;
 
 /**
@@ -50,12 +50,12 @@ public class TemporalSourceOptions extends AbstractTransformationSourceOptions
     private String duration;
     
     @Override
-    public boolean isApplicableForMimetype(String sourceMimetype)
+    public boolean isApplicableForMediaType(String sourceMimetype)
     {
         return ((sourceMimetype != null && 
                 sourceMimetype.startsWith(FileMediaType.PREFIX_VIDEO) || 
                 sourceMimetype.startsWith(FileMediaType.PREFIX_AUDIO)) ||
-                super.isApplicableForMimetype(sourceMimetype));
+                super.isApplicableForMediaType(sourceMimetype));
     }
     
     /**

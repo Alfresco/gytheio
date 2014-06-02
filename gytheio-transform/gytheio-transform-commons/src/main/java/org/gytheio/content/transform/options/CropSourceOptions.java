@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.alfresco.service.cmr.repository;
+package org.gytheio.content.transform.options;
 
 import java.io.Serializable;
 import java.util.Map;
@@ -38,11 +38,11 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
     private String gravity = null;
     
     @Override
-    public boolean isApplicableForMimetype(String sourceMimetype)
+    public boolean isApplicableForMediaType(String sourceMimetype)
     {
         return ((sourceMimetype != null && 
                 sourceMimetype.startsWith(FileMediaType.PREFIX_IMAGE)) ||
-                super.isApplicableForMimetype(sourceMimetype));
+                super.isApplicableForMediaType(sourceMimetype));
     }
 
     /**

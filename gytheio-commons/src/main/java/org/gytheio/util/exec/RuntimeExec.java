@@ -102,7 +102,7 @@ public class RuntimeExec
     private static final String DIRECTIVE_SPLIT = "SPLIT:";
 
     private static Log logger = LogFactory.getLog(RuntimeExec.class);
-    private static Log transformerDebugLogger = LogFactory.getLog("org.alfresco.repo.content.transform.TransformerDebug");
+    private static Log transformerDebugLogger = LogFactory.getLog("org.gytheio.content.transform.TransformerDebug");
 
     private String[] command;
     private Charset charset;

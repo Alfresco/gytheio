@@ -24,11 +24,11 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 
-import org.alfresco.repo.content.transform.magick.ImageResizeOptions;
-import org.alfresco.service.cmr.repository.PagedSourceOptions;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.transform.TransformationRequest;
+import org.gytheio.content.transform.options.ImageResizeOptions;
 import org.gytheio.content.transform.options.ImageTransformationOptions;
+import org.gytheio.content.transform.options.PagedSourceOptions;
 import org.gytheio.messaging.jackson.ObjectMapperFactory;
 import org.junit.Before;
 import org.junit.Test;
