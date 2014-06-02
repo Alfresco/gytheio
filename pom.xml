@@ -102,11 +102,6 @@
             <id>alfresco-internal-snapshots</id>
             <url>${maven.distributionManagement.snapshot.url}</url>
         </snapshotRepository>
-        <site>
-            <id>alfresco-site</id>
-            <name>Alfresco Maven site</name>
-            <url>http://localhost/</url>
-        </site>
     </distributionManagement>
 
     <build>
