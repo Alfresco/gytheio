@@ -59,7 +59,7 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
         catch (Exception e)
         {
             logger.error(e.getMessage(), e);
-            // TODO send error reply
+            progressReporter.onTransformationError(e.getMessage());
         }
     }
     
@@ -119,6 +119,16 @@ public class BaseContentTransformerComponent extends AbstractComponent<ContentTr
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_COMPLETE);
             reply.setResults(results);
+            
+            messageProducer.send(reply, request.getReplyTo());
+        }
+
+        @Override
+        public void onTransformationError(String errorMessage)
+        {
+            TransformationReply reply = new TransformationReply(request);
+            reply.setStatus(TransformationReply.STATUS_ERROR);
+            reply.setStatusDetail(errorMessage);
             
             messageProducer.send(reply, request.getReplyTo());
         }
