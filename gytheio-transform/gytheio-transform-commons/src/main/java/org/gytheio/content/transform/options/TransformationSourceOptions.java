@@ -31,7 +31,7 @@ import java.util.Map;
  * 
  * @author Ray Gauss II
  */
-public interface TransformationSourceOptions
+public interface TransformationSourceOptions extends Serializable
 {
     
     /**

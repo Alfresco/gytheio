@@ -18,12 +18,14 @@
  */
 package org.gytheio.content.transform.options;
 
+import java.io.Serializable;
+
 /**
  * Image resize options
  * 
  * @author Roy Wetherall
  */
-public class ImageResizeOptions
+public class ImageResizeOptions implements Serializable
 {
     /** The width */
     private int width = -1;

@@ -76,7 +76,6 @@ public class ImageTransformationOptions extends TransformationOptionsImpl
     {
         return resizeOptions;
     }
-    
 
     /**
      * @return Will the image be automatically oriented(rotated) based on the EXIF "Orientation" data.

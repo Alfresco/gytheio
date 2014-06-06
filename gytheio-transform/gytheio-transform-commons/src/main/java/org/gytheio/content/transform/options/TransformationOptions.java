@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Roy Wetherall
  * @author Ray Gauss II
  */
-public interface TransformationOptions
+public interface TransformationOptions extends Serializable
 {
     
     /**
