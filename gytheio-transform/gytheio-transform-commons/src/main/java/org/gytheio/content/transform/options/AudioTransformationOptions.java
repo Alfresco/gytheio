@@ -25,7 +25,8 @@ package org.gytheio.content.transform.options;
  */
 public class AudioTransformationOptions extends TransformationOptionsImpl
 {
-
+    private static final long serialVersionUID = -8948846326897849904L;
+    
     public static final String AUDIO_CODEC_AAC = "aac";
     public static final String AUDIO_CODEC_MP3 = "mp3";
     public static final String AUDIO_CODEC_VORBIS = "vorbis";
