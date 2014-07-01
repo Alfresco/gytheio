@@ -18,6 +18,9 @@
  */
 package org.gytheio.content.transform.ffmpeg;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -39,6 +42,8 @@ import org.gytheio.util.exec.RuntimeExec.InputStreamReaderThreadFactory;
  */
 public class FfmpegInputStreamReaderThreadFactory extends InputStreamReaderThreadFactory
 {
+    private static final Log logger = LogFactory.getLog(FfmpegInputStreamReaderThreadFactory.class);
+
     private static final long PROGRESS_REPORT_FREQUENCY_MS = 2000;
     protected static final Pattern DURATION_PATTERN = Pattern.compile("(?<=Duration: )[^,]*");
     protected static final Pattern TIME_PATTERN = Pattern.compile("(?<=time=)[\\d:.]*");
@@ -134,9 +139,21 @@ public class FfmpegInputStreamReaderThreadFactory extends InputStreamReaderThrea
                 long now = (new Date()).getTime();
                 if ((now - lastReportTime) > PROGRESS_REPORT_FREQUENCY_MS)
                 {
-                    double progressTotalSecs = getTotalSeconds(match);
-                    float progress = new Double(progressTotalSecs / durationTotalSecs).floatValue();
-                    progressReporter.onTransformationProgress(progress);
+                    if (match.equals(""))
+                    {
+                        // we're probably done
+                        break;
+                    }
+                    try
+                    {
+                        double progressTotalSecs = getTotalSeconds(match);
+                        float progress = new Double(progressTotalSecs / durationTotalSecs).floatValue();
+                        progressReporter.onTransformationProgress(progress);
+                    }
+                    catch (Exception e)
+                    {
+                        logger.info("could not report progress: " + e.getMessage());
+                    }
                     lastReportTime = (new Date()).getTime();
                 }
             }

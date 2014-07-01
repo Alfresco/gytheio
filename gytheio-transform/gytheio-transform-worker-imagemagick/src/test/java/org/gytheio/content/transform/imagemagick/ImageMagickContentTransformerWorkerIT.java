@@ -18,6 +18,9 @@
  */
 package org.gytheio.content.transform.imagemagick;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import static junit.framework.Assert.*;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.AbstractContentTransformerWorkerTest;
 import org.gytheio.content.transform.ContentTransformerWorker;
 import org.gytheio.content.transform.ContentTransformerWorkerProgressReporter;
+import org.gytheio.content.transform.LoggingProgressReporterImpl;
 import org.gytheio.content.transform.options.ImageTransformationOptions;
 import org.gytheio.content.transform.options.PagedSourceOptions;
 import org.gytheio.content.transform.options.TransformationOptions;
@@ -51,6 +55,8 @@ import org.junit.Test;
  */
 public class ImageMagickContentTransformerWorkerIT extends AbstractContentTransformerWorkerTest
 {
+    private static final Log logger = LogFactory.getLog(ImageMagickContentTransformerWorkerIT.class);
+
     private ContentTransformerWorker transformerWorker;
     private ContentReferenceHandler contentReferenceHandler;
     private ContentTransformerWorkerProgressReporter progressReporter;
@@ -60,7 +66,7 @@ public class ImageMagickContentTransformerWorkerIT extends AbstractContentTransf
         FileProvider fileProvider = new FileProviderImpl(TempFileProvider.getTempDir().getPath());
         contentReferenceHandler = new FileContentReferenceHandlerImpl();
         ((FileContentReferenceHandlerImpl) contentReferenceHandler).setFileProvider(fileProvider);
-        progressReporter = new LoggingProgressReporterImpl();
+        progressReporter = new LoggingProgressReporterImpl(logger);
         
         transformerWorker = new ImageMagickContentTransformerWorker();
         ((ImageMagickContentTransformerWorker) transformerWorker).setSourceContentReferenceHandler(
