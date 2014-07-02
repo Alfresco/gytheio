@@ -18,6 +18,8 @@
  */
 package org.gytheio.content.dropwizard.bootstrap;
 
+import java.util.concurrent.Executors;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -167,6 +169,8 @@ public abstract class
         
         component = createComponent();
         component.setWorker(worker);
+        // TODO allow more config
+        component.setExecutorService(Executors.newCachedThreadPool());
         
         BrokerConfiguration brokerConfig = nodeConfig.getMessagingConfig().getBroker();
         
