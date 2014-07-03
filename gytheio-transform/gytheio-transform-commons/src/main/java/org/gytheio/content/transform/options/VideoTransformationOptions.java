@@ -68,6 +68,7 @@ public class VideoTransformationOptions extends AudioTransformationOptions
      * 
      * @return the target video codec
      */
+    @ToStringProperty
     public String getTargetVideoCodec()
     {
         return targetVideoCodec;
@@ -89,6 +90,7 @@ public class VideoTransformationOptions extends AudioTransformationOptions
      * 
      * @return the target video codec profile
      */
+    @ToStringProperty
     public String getTargetVideoCodecProfile()
     {
         return targetVideoCodecProfile;
@@ -109,6 +111,7 @@ public class VideoTransformationOptions extends AudioTransformationOptions
      * 
      * @return the target video bitrate
      */
+    @ToStringProperty
     public Long getTargetVideoBitrate()
     {
         return targetVideoBitrate;
@@ -129,6 +132,7 @@ public class VideoTransformationOptions extends AudioTransformationOptions
      * 
      * @return the target video frame rate
      */
+    @ToStringProperty
     public Float getTargetVideoFrameRate()
     {
         return targetVideoFrameRate;
@@ -142,6 +146,21 @@ public class VideoTransformationOptions extends AudioTransformationOptions
     public void setTargetVideoFrameRate(Float targetVideoFrameRate)
     {
         this.targetVideoFrameRate = targetVideoFrameRate;
+    }
+    
+    @Override
+    public String toString()
+    {
+        StringBuilder output = new StringBuilder();
+        output.append(TO_STR_OBJ_START);
+        output.append("\"").append("resizeOptions").append("\"").append(TO_STR_KEY_VAL).
+            append(TO_STR_OBJ_START).append(toString(getResizeOptions())).append(TO_STR_OBJ_END);
+        output.append(TO_STR_DEL);
+        output.append(toString(this));
+        output.append(TO_STR_DEL);
+        output.append(toStringSourceOptions());
+        output.append(TO_STR_OBJ_END);
+        return output.toString();
     }
 
 }

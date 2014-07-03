@@ -67,6 +67,7 @@ public class TemporalSourceOptions extends AbstractTransformationSourceOptions
      * 
      * @return the offset
      */
+    @ToStringProperty
     public String getOffset()
     {
         return offset;
@@ -90,6 +91,7 @@ public class TemporalSourceOptions extends AbstractTransformationSourceOptions
      * 
      * @return
      */
+    @ToStringProperty
     public String getDuration()
     {
         return duration;
@@ -193,6 +195,5 @@ public class TemporalSourceOptions extends AbstractTransformationSourceOptions
             parameters.put(PARAM_SOURCE_TIME_DURATION, temporalSourceOptions.getDuration());
         }
     }
-
-
+    
 }

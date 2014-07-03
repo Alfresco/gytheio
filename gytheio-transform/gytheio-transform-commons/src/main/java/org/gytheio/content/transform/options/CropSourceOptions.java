@@ -56,6 +56,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
      * 
      * @return the height
      */
+    @ToStringProperty
     public int getHeight()
     {
         return this.height;
@@ -80,6 +81,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
      * 
      * @return the width
      */
+    @ToStringProperty
     public int getWidth()
     {
         return this.width;
@@ -104,6 +106,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
      * 
      * @return the xOffset
      */
+    @ToStringProperty
     public int getXOffset()
     {
         return this.xOffset;
@@ -128,6 +131,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
      * 
      * @return the yOffset
      */
+    @ToStringProperty
     public int getYOffset()
     {
         return this.yOffset;
@@ -148,6 +152,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
     /**
      * @return the isPercentageCrop
      */
+    @ToStringProperty
     public boolean isPercentageCrop()
     {
         return this.isPercentageCrop;
@@ -178,6 +183,7 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
      * 
      * @return the gravity
      */
+    @ToStringProperty
     public String getGravity()
     {
         return this.gravity;
@@ -198,17 +204,6 @@ public class CropSourceOptions extends AbstractTransformationSourceOptions
     public static TransformationSourceOptionsSerializer createSerializerInstance()
     {
         return (new CropSourceOptions()).new CropSourceOptionsSerializer();
-    }
-    
-    @Override
-    public String toString()
-    {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CropSourceOptions [height=").append(this.height).append(", width=").append(this.width)
-                    .append(", xOffset=").append(this.xOffset).append(", yOffset=").append(this.yOffset)
-                    .append(", isPercentageCrop=").append(this.isPercentageCrop).append(", gravity=")
-                    .append(this.gravity).append("]");
-        return builder.toString();
     }
     
     /**

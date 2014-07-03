@@ -64,6 +64,7 @@ public class ImageResizeOptions implements Serializable
         this.width = width;
     }
     
+    @ToStringProperty
     public int getWidth()
     {
         return width;
@@ -74,6 +75,7 @@ public class ImageResizeOptions implements Serializable
         this.height = height;
     }
     
+    @ToStringProperty
     public int getHeight()
     {
         return height;
@@ -84,6 +86,7 @@ public class ImageResizeOptions implements Serializable
         this.maintainAspectRatio = maintainAspectRatio;
     }
     
+    @ToStringProperty
     public boolean isMaintainAspectRatio()
     {
         return maintainAspectRatio;
@@ -94,6 +97,7 @@ public class ImageResizeOptions implements Serializable
         this.percentResize = percentResize;
     }
     
+    @ToStringProperty
     public boolean isPercentResize()
     {
         return percentResize;
@@ -104,6 +108,7 @@ public class ImageResizeOptions implements Serializable
         this.resizeToThumbnail = resizeToThumbnail;
     }
     
+    @ToStringProperty
     public boolean isResizeToThumbnail()
     {
         return resizeToThumbnail;
@@ -114,6 +119,7 @@ public class ImageResizeOptions implements Serializable
         this.allowEnlargement = allowEnlargement;
     }
     
+    @ToStringProperty
     public boolean getAllowEnlargement()
     {
         return allowEnlargement;
@@ -122,12 +128,7 @@ public class ImageResizeOptions implements Serializable
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder();
-        builder.append("ImageResizeOptions [width=").append(this.width).append(", height=").append(this.height)
-                    .append(", maintainAspectRatio=").append(this.maintainAspectRatio).append(", percentResize=")
-                    .append(this.percentResize).append(", resizeToThumbnail=").append(this.resizeToThumbnail)
-                    .append(", allowEnlargement=").append(this.allowEnlargement).append("]");
-        return builder.toString();
+        return TransformationOptionsImpl.toString(this);
     }
     
 }
