@@ -667,7 +667,8 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
         {
             commandOptions = commandOptions.trim() + CMD_OPT_DELIMITER + 
                     getCmdOptVideoCodec() + CMD_OPT_DELIMITER + getFfmpegVideoCodec(videoCodec);
-            if (!isVersion1() && videoCodec.equals(VideoTransformationOptions.VIDEO_CODEC_H264))
+            if (!isVersion1() && videoCodec.equals(VideoTransformationOptions.VIDEO_CODEC_H264) ||
+                    targetMediaType.equals(FileMediaType.VIDEO_M4V.getMediaType()))
             {
                 commandOptions = commandOptions.trim() + CMD_OPT_DELIMITER + 
                         CMD_OPT_VIDEO_PRESET + CMD_OPT_DELIMITER + DEFAULT_VIDEO_PRESET;
@@ -683,7 +684,7 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
             return null;
         }
         if (AudioTransformationOptions.AUDIO_CODEC_AAC.equals(gytheioAudioCodec) ||
-                targetMediaType.equals(FileMediaType.VIDEO_M4V))
+                targetMediaType.equals(FileMediaType.VIDEO_M4V.getMediaType()))
         {
             if (versionDetailsString.contains("libfdk-aac"))
             {
