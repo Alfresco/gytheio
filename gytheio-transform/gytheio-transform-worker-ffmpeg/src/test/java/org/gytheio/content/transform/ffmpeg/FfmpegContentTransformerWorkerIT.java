@@ -82,7 +82,7 @@ public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformer
         ((FfmpegContentTransformerWorker) transformerWorker).setTargetContentReferenceHandler(
                 contentReferenceHandler);
         ((FfmpegContentTransformerWorker) transformerWorker).initialize();
-        isFfmpegVersion1 = ((FfmpegContentTransformerWorker) transformerWorker).isVersion1();
+        isFfmpegVersion1 = ((FfmpegContentTransformerWorker) transformerWorker).isVersion1orGreater();
         
         testProgressReporter = new StringListProgressReporter();
         
@@ -94,7 +94,11 @@ public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformer
     @Test
     public void testVersion() throws Exception
     {
-        assertTrue(transformerWorker.getVersionString().contains("Gytheio FFmpeg Content Transformer Worker"));
+        String versionMatch = "Gytheio FFmpeg \\([\\w\\.\\-]+\\) Content Transformer Worker.*";
+        assertTrue(
+                "\n\n\tExpected to match: " + versionMatch +
+                "\n\tActual: " + transformerWorker.getVersionString(),
+                transformerWorker.getVersionString().matches(versionMatch));
         assertTrue(transformerWorker.getVersionDetailsString().contains("ffmpeg version") ||
                 transformerWorker.getVersionDetailsString().contains("FFmpeg version 0"));
     }
@@ -161,7 +165,7 @@ public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformer
     protected List<String> getStreamDetails(String details)
     {
         List<String> streams = new ArrayList<String>();
-        String[] lines = details.split("\\n");
+        String[] lines = details.split(System.getProperty("line.separator"));
         for (String line : lines)
         {
             if (line.matches(".*Stream .*"))
@@ -181,7 +185,7 @@ public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformer
             {
                 matched = true;
             }
-            message = message + "\n" + stream;
+            message = message + " ---- " + stream;
         }
         assertTrue(message, matched);
     }
