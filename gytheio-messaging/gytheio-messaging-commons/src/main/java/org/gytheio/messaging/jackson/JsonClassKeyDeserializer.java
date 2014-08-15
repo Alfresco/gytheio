@@ -27,8 +27,7 @@ import com.fasterxml.jackson.databind.KeyDeserializer;
 public class JsonClassKeyDeserializer extends KeyDeserializer
 {
 
-    @Override
-    public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException,
+    public static Object deserializeKeyToClass(String key) throws IOException,
             JsonProcessingException
     {
         if (!key.startsWith("class "))
@@ -38,12 +37,19 @@ public class JsonClassKeyDeserializer extends KeyDeserializer
         String classname = key.replaceFirst("class ", "");
         try
         {
-            return this.getClass().getClassLoader().loadClass(classname);
+            return JsonClassKeyDeserializer.class.getClassLoader().loadClass(classname);
         }
         catch (ClassNotFoundException e)
         {
             throw new IllegalArgumentException(e);
         }
+    }
+    
+    @Override
+    public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException,
+            JsonProcessingException
+    {
+        return deserializeKeyToClass(key);
     }
 
 }
