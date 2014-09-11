@@ -630,6 +630,10 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
         {
             return null;
         }
+        if (VideoTransformationOptions.VIDEO_CODEC_PASSTHROUGH.equals(gytheioVideoCodec))
+        {
+            return "copy";
+        }
         if (VideoTransformationOptions.VIDEO_CODEC_H264.equals(gytheioVideoCodec))
         {
             return "libx264";
@@ -729,6 +733,10 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
         if (versionDetailsString == null)
         {
             return null;
+        }
+        if (AudioTransformationOptions.AUDIO_CODEC_PASSTHROUGH.equals(gytheioAudioCodec))
+        {
+            return "copy";
         }
         if (AudioTransformationOptions.AUDIO_CODEC_AAC.equals(gytheioAudioCodec) ||
                 targetMediaType.equals(FileMediaType.VIDEO_M4V.getMediaType()))
