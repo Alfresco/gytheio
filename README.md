@@ -95,7 +95,6 @@ Nodes
 -----
 
 * `gytheio-node-simple`
-* `gytheio-node-dropwizard`
 
 Bootstraps components above to form executable nodes.
 

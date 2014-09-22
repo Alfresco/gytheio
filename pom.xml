@@ -51,7 +51,6 @@
         <module>gytheio-transform</module>
         <module>gytheio-hash</module>
         <module>gytheio-node-simple</module>
-        <module>gytheio-node-dropwizard</module>
     </modules>
 
     <dependencies>
