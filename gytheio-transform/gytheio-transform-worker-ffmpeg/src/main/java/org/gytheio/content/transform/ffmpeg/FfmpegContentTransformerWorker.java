@@ -796,7 +796,8 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
             return "copy";
         }
         if (AudioTransformationOptions.AUDIO_CODEC_AAC.equals(gytheioAudioCodec) ||
-                targetMediaType.equals(FileMediaType.VIDEO_M4V.getMediaType()))
+                targetMediaType.equals(FileMediaType.VIDEO_M4V.getMediaType()) ||
+                (gytheioAudioCodec == null && targetMediaType.equals(FileMediaType.VIDEO_MP4.getMediaType())))
         {
             if (versionDetailsString.contains("libfdk-aac"))
             {
