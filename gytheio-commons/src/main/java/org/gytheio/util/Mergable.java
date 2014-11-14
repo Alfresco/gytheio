@@ -16,20 +16,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.gytheio.content.transform.options;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+package org.gytheio.util;
 
 /**
- * Annotation to indicate that a method should be included in toString
+ * Defines that a class can be merged with the overriding values from another
+ * object of the same type.
+ * 
+ * @author Ray Gauss II
  *
+ * @param <T>
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface ToStringProperty
+public interface Mergable<T>
 {
+
+    /**
+     * Merge the non-null field values from the given override object
+     * 
+     * @param override
+     */
+    public void merge(T override);
 
 }

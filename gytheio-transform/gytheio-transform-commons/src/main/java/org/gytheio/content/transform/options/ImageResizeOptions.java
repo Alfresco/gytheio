@@ -20,6 +20,9 @@ package org.gytheio.content.transform.options;
 
 import java.io.Serializable;
 
+import org.gytheio.util.BeanUtils;
+import org.gytheio.util.ToStringProperty;
+
 /**
  * Image resize options
  * 
@@ -128,7 +131,7 @@ public class ImageResizeOptions implements Serializable
     @Override
     public String toString()
     {
-        return TransformationOptionsImpl.toString(this);
+        return BeanUtils.toString(this);
     }
     
 }

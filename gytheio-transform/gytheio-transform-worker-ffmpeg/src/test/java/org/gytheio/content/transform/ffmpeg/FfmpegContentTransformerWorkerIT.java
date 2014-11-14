@@ -43,11 +43,9 @@ import org.gytheio.content.transform.ffmpeg.FfmpegContentTransformerWorker;
 import org.gytheio.content.transform.options.AudioTransformationOptions;
 import org.gytheio.content.transform.options.ImageResizeOptions;
 import org.gytheio.content.transform.options.TemporalSourceOptions;
-import org.gytheio.content.transform.options.TransformationOptions;
 import org.gytheio.content.transform.options.TransformationOptionsImpl;
 import org.gytheio.content.transform.options.VideoTransformationOptions;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -64,7 +62,9 @@ public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformer
     protected static final String TEST_RESOURCE_MEDIATYPE = "video/mpeg";
     protected static final String TEST_RESOURCE_1080_CLASSPATH = "/quick/quick-1080.mov";
     protected static final String TEST_RESOURCE_1080_MEDIATYPE = "video/quicktime";
-
+    protected static final String TEST_RESOURCE_STORYBOARD_CLASSPATH = "/quick/countdown-leader.mp4";
+    protected static final String TEST_RESOURCE_STORYBOARD_MEDIATYPE = "video/mp4";
+    
     private ContentTransformerWorker transformerWorker;
     private boolean isFfmpegVersion1;
     private StringListProgressReporter testProgressReporter;
@@ -371,16 +371,24 @@ public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformer
     }
     
     @Test
-    @Ignore
     public void testStoryboardThumbnails() throws Exception
     {
-        TransformationOptions options = new TransformationOptionsImpl();
+        File storyboardTestFile = new File(this.getClass().getResource(TEST_RESOURCE_STORYBOARD_CLASSPATH).toURI());
+        ContentReference storyboardTestSource = new ContentReference(
+                storyboardTestFile.toURI().toString(), TEST_RESOURCE_STORYBOARD_MEDIATYPE, storyboardTestFile.length());
+        TemporalSourceOptions temporalSourceOptions = new TemporalSourceOptions();
+        temporalSourceOptions.setElementIntervalSeconds(1);
+        VideoTransformationOptions options = new VideoTransformationOptions();
+        options.addSourceOptions(temporalSourceOptions);
         List<ContentWorkResult> results = transformerWorker.transform(
-                Arrays.asList(source), 
+                Arrays.asList(storyboardTestSource), 
                 FileMediaType.IMAGE_JPEG.getMediaType(), 
                 options, 
                 testProgressReporter);
-        assertEquals(4, results.size());
+        assertEquals(
+                TEST_RESOURCE_STORYBOARD_CLASSPATH + 
+                " is just over 11 secs, should have 12 thumbnails", 
+                12, results.size());
         for (ContentWorkResult result : results)
         {
             assertTrue("Target file size is zero", result.getContentReference().getSize() > 0);

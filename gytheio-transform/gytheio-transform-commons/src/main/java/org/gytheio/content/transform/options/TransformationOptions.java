@@ -22,6 +22,8 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 
+import org.gytheio.util.Mergable;
+
 /**
  * Interface defining values of options that are passed to content transformers.  These options 
  * are used during the transformation process to provide context or parameter values.
@@ -29,7 +31,7 @@ import java.util.Map;
  * @author Roy Wetherall
  * @author Ray Gauss II
  */
-public interface TransformationOptions extends Serializable
+public interface TransformationOptions extends Serializable, Mergable<TransformationOptions>
 {
     
     /**

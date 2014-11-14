@@ -25,6 +25,8 @@ import java.util.Map;
 
 import org.gytheio.content.mediatype.FileMediaType;
 import org.gytheio.content.transform.options.AbstractTransformationSourceOptions;
+import org.gytheio.util.CloneField;
+import org.gytheio.util.ToStringProperty;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -53,6 +55,16 @@ public class PagedSourceOptions extends AbstractTransformationSourceOptions
     /** The end of the page range in the source document */
     private Integer endPageNumber;
     
+    public PagedSourceOptions()
+    {
+        super();
+    }
+    
+    public PagedSourceOptions(PagedSourceOptions options)
+    {
+        super(options);
+    }
+    
     protected static List<String> getDefaultApplicableMimetypes()
     {
         List<String> defaults = new ArrayList<String>(17);
@@ -77,18 +89,13 @@ public class PagedSourceOptions extends AbstractTransformationSourceOptions
         return defaults;
     }
     
-    public PagedSourceOptions()
-    {
-        super();
-        setApplicableMediaTypes(PagedSourceOptions.getDefaultApplicableMimetypes());
-    }
-    
     /**
      * Gets the page number to start from in the source document
      * 
      * @return the start page number
      */
     @ToStringProperty
+    @CloneField
     public Integer getStartPageNumber()
     {
         return startPageNumber;
@@ -110,6 +117,7 @@ public class PagedSourceOptions extends AbstractTransformationSourceOptions
      * @return the start page number
      */
     @ToStringProperty
+    @CloneField
     public Integer getEndPageNumber()
     {
         return endPageNumber;
@@ -125,26 +133,6 @@ public class PagedSourceOptions extends AbstractTransformationSourceOptions
         this.endPageNumber = endPageNumber;
     }
 
-    @Override
-    public TransformationSourceOptions mergedOptions(TransformationSourceOptions overridingOptions)
-    {
-        if (overridingOptions instanceof PagedSourceOptions)
-        {
-            PagedSourceOptions mergedOptions = (PagedSourceOptions) super.mergedOptions(overridingOptions);
-
-            if (((PagedSourceOptions) overridingOptions).getStartPageNumber() != null)
-            {
-                mergedOptions.setStartPageNumber(((PagedSourceOptions) overridingOptions).getStartPageNumber());
-            }
-            if (((PagedSourceOptions) overridingOptions).getEndPageNumber() != null)
-            {
-                mergedOptions.setEndPageNumber(((PagedSourceOptions) overridingOptions).getEndPageNumber());
-            }
-            return mergedOptions;
-        }
-        return null;
-    }
-    
     /**
      * Gets paged source options which specify just the first page.
      * 
