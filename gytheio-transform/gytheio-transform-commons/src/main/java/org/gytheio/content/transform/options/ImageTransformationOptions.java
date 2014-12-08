@@ -43,6 +43,7 @@ public class ImageTransformationOptions extends TransformationOptionsImpl
     private ImageResizeOptions resizeOptions;
     
     private boolean autoOrient = true;
+    private Float rotationDegrees;
     
     public ImageTransformationOptions()
     {
@@ -134,6 +135,26 @@ public class ImageTransformationOptions extends TransformationOptionsImpl
         this.autoOrient = autoOrient;
     }
     
+    /**
+     * Gets the rotation in degrees to rotate the image about its center
+     * 
+     * @return the rotation degrees
+     */
+    public Float getRotationDegrees()
+    {
+        return rotationDegrees;
+    }
+
+    /**
+     * Sets the rotation in degrees to rotate the image about its center
+     * 
+     * @param rotationDegrees
+     */
+    public void setRotationDegrees(Float rotationDegrees)
+    {
+        this.rotationDegrees = rotationDegrees;
+    }
+
     @Override
     public String toString()
     {
