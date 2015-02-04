@@ -16,11 +16,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.gytheio.health;
+package org.gytheio.health.heartbeat;
 
 /**
  * Defines the persistence of a heartbeat.  Implementations might
- * be a log or database
+ * be a log, database, or in-memory queue.
  * 
  * @author Ray Gauss II
  */

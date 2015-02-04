@@ -16,19 +16,23 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Gytheio. If not, see <http://www.gnu.org/licenses/>.
  */
-package org.gytheio.health;
+package org.gytheio.health.heartbeat;
 
 /**
- * Defines the object responsible for producing {@link Heartbeat}s
- * which let components monitor health of other components in the system.
+ * Defines an object responsible for listening for the heartbeat.
+ * Implementations may utilize a {@link HeartbeatDao} to persist the data.
  * 
  * @author Ray Gauss II
  */
-public interface Heart
+public interface HeartbeatMonitor
 {
+
     /**
-     * Produces a {@link Heartbeat} for health monitoring
+     * Called when a {@link Heartbeat} message is routed to the
+     * monitor.
+     * 
+     * @param message
      */
-    public void beat();
+    public void onReceive(Object message);
     
 }

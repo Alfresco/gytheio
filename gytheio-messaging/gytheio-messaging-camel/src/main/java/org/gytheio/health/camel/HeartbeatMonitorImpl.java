@@ -21,9 +21,9 @@ package org.gytheio.health.camel;
 import org.apache.camel.Handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.gytheio.health.Heartbeat;
-import org.gytheio.health.HeartbeatDao;
-import org.gytheio.health.HeartbeatMonitor;
+import org.gytheio.health.heartbeat.Heartbeat;
+import org.gytheio.health.heartbeat.HeartbeatDao;
+import org.gytheio.health.heartbeat.HeartbeatMonitor;
 
 /**
  * HeartbeatMonitor implementation which uses Camel to route {@link Heartbeat}
@@ -53,9 +53,8 @@ public class HeartbeatMonitorImpl implements HeartbeatMonitor
     {
         if (!(message instanceof Heartbeat))
         {
-           logger.info("Heartbeat message expected but received: " + message.toString());
-           message = new Heartbeat("bogus: " + message.toString(), null);
-           //return;
+           logger.warn("Heartbeat message expected but received: " + message.toString());
+           return;
         }
         heartbeatDao.record((Heartbeat) message);
     }
