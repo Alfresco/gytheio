@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.gytheio.content.AbstractAsyncComponent;
+import org.gytheio.content.AbstractComponent;
 import org.gytheio.content.ContentWorkResult;
 import org.gytheio.content.transform.TransformationReply;
 import org.gytheio.content.transform.TransformationRequest;
@@ -35,7 +35,7 @@ import org.gytheio.messaging.MessageProducer;
  * @author Ray Gauss II
  */
 public class BaseContentTransformerComponent 
-    extends AbstractAsyncComponent<ContentTransformerWorker, TransformationRequest, TransformationReply>
+    extends AbstractComponent<ContentTransformerWorker>
 {
     private static final Log logger = LogFactory.getLog(BaseContentTransformerComponent.class);
     
@@ -53,9 +53,11 @@ public class BaseContentTransformerComponent
     {
         return lastRequest;
     }
-
-    protected void processRequest(TransformationRequest request)
+    
+    @Override
+    protected void onReceiveImpl(Object message)
     {
+        TransformationRequest request = (TransformationRequest) message;
         lastRequest = request;
         logger.info("Processing transformation request " + request.getRequestId());
         ContentTransformerWorkerProgressReporterImpl progressReporter =

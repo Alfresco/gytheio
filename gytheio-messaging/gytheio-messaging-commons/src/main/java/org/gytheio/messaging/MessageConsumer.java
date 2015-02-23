@@ -20,7 +20,7 @@ package org.gytheio.messaging;
 
 /**
  * Defines methods for handling messages.  A separate message listener is 
- * responsible for pulling messages of a queue and passing them to the consumer.
+ * responsible for pulling messages off a queue and passing them to the consumer.
  * 
  * @author Ray Gauss II
  */

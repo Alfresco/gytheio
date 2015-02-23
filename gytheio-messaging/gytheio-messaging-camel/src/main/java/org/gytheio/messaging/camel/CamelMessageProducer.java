@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.camel.ProducerTemplate;
+import org.apache.commons.lang.StringUtils;
 import org.gytheio.messaging.MessageProducer;
 import org.gytheio.messaging.MessagingException;
 
@@ -111,6 +112,10 @@ public class CamelMessageProducer implements MessageProducer
     
     public void send(Object message, String queueName)
     {
+        if (StringUtils.isEmpty(queueName))
+        {
+            queueName = endpoint;
+        }
         try
         {
             producer.sendBodyAndHeaders(queueName, message, addHeaders(null));
@@ -123,6 +128,10 @@ public class CamelMessageProducer implements MessageProducer
     
     public void send(Object message, String queueName, Map<String, Object> headers)
     {
+        if (StringUtils.isEmpty(queueName))
+        {
+            queueName = endpoint;
+        }
         try
         {
             producer.sendBodyAndHeaders(queueName, message, addHeaders(headers));
