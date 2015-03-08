@@ -95,6 +95,7 @@ public class FfmpegContentTransformerWorkerIT extends AbstractContentTransformer
     public void testVersion() throws Exception
     {
         String versionMatch = "Gytheio FFmpeg \\([\\w\\.\\-]+\\) Content Transformer Worker.*";
+        logger.debug("versionString=" + transformerWorker.getVersionString());
         assertTrue(
                 "\n\n\tExpected to match: " + versionMatch +
                 "\n\tActual: " + transformerWorker.getVersionString(),

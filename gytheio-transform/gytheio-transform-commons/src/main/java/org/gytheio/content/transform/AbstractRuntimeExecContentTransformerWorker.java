@@ -112,11 +112,15 @@ public abstract class AbstractRuntimeExecContentTransformerWorker extends Abstra
     @Override
     public void initialize()
     {
-        super.initialize();
+        loadProperties();
+
         initializeExecuter();
         initializeVersionDetailsExecuter();
-        initializeVersionDetailsString();
         initializeFileDetailsExecuter();
+        
+        initializeVersionString();
+        initializeVersionDetailsString();
+        
         initializationTest();
     }
     
