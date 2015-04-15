@@ -92,7 +92,8 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
     protected static final String DEFAULT_VIDEO_PRESET_PREFIX = "";
     protected static final String DEFAULT_VIDEO_PRESET_SUFFIX = ".ffpreset";
     
-    public static final String VAR_OPTIONS = "options";
+    public static final String VAR_SOURCE_OPTIONS = "sourceOptions";
+    public static final String VAR_TARGET_OPTIONS = "targetOptions";
 
     /** offset variable name */
     public static final String VAR_OFFSET = "offset";
@@ -124,9 +125,10 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
             commandsAndArguments.put(".*", new String[] { 
                 ffmpegExe,
                 "-y",
+                "SPLIT:${sourceOptions}",
                 "-i",
                 "${source}",
-                "SPLIT:${options}",
+                "SPLIT:${targetOptions}",
                 "${target}"
             });
             executer.setCommandsAndArguments(commandsAndArguments);
@@ -436,11 +438,14 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
     {
         Map<String, String> properties = new HashMap<String, String>(5);
         // set properties
-        String commandOptions = getCommandOptions(
+        String sourceCommandOptions = getSourceCommandOptions(
+                sourceFile, targetFile, sourceMimetype, targetMimetype, options);
+        String targetCommandOptions = getTargetCommandOptions(
                 sourceFile, targetFile, sourceMimetype, targetMimetype, options);
         
-        properties.put(VAR_OPTIONS, commandOptions.trim());
+        properties.put(VAR_SOURCE_OPTIONS, sourceCommandOptions.trim());
         properties.put(VAR_SOURCE, sourceFile.getAbsolutePath());
+        properties.put(VAR_TARGET_OPTIONS, targetCommandOptions.trim());
         properties.put(VAR_TARGET, targetFile.getAbsolutePath());
 
         long timeoutMs = options.getTimeoutMs();
@@ -469,7 +474,7 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
         }
     }
     
-    protected String getCommandOptions(
+    protected String getSourceCommandOptions(
             File sourceFile,
             File targetFile,
             String sourceMimetype,
@@ -482,6 +487,23 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
         if (sourceTemporalOptions != null && !sourceTemporalOptions.equals(""))
         {
             commandOptions = commandOptions + CMD_OPT_DELIMITER + sourceTemporalOptions;
+        }
+        return commandOptions;
+    }
+    
+    protected String getTargetCommandOptions(
+            File sourceFile,
+            File targetFile,
+            String sourceMimetype,
+            String targetMimetype,
+            TransformationOptions options) throws Exception
+    {
+        String commandOptions = "";
+
+        String targetTemporalOptions = getTargetTemporalCommandOptions(sourceMimetype, targetMimetype, options);
+        if (targetTemporalOptions != null && !targetTemporalOptions.equals(""))
+        {
+            commandOptions = commandOptions + CMD_OPT_DELIMITER + targetTemporalOptions;
         }
         
         String formatOptions = getFormatCommandOptions(sourceMimetype, targetMimetype);
@@ -519,9 +541,9 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
     
     protected String getFfmpegVersionNumber()
     {
-        if (logger.isDebugEnabled())
+        if (logger.isTraceEnabled())
         {
-            logger.debug("getFfmpegVersionNumber versionDetailsString=" + this.versionDetailsString);
+            logger.trace("getFfmpegVersionNumber versionDetailsString=" + this.versionDetailsString);
         }
         Pattern verisonNumPattern = 
                 Pattern.compile("(FFmpeg version |ffmpeg version )((\\w|\\.|\\-)+)(.*)");
@@ -943,7 +965,7 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
 
     /**
      * Gets the ffmpeg command string for the time-based video conversion transform options
-     * provided
+     * provided which apply to the source input
      * 
      * @param options time-based options
      * @return String the ffmpeg command options
@@ -956,6 +978,32 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
             temporalSourceOptions = options.getSourceOptions(TemporalSourceOptions.class);
         }
         String commandOptions = "";
+        
+        if (temporalSourceOptions != null && temporalSourceOptions.getOffset() != null)
+        {
+            commandOptions = commandOptions + 
+                    CMD_OPT_OFFSET + CMD_OPT_DELIMITER + temporalSourceOptions.getOffset() +
+                    CMD_OPT_DELIMITER;
+        }
+        return commandOptions.trim();
+    }
+    
+    /**
+     * Gets the ffmpeg command string for the time-based video conversion transform options
+     * provided which apply to the target output
+     * 
+     * @param options time-based options
+     * @return String the ffmpeg command options
+     */
+    protected String getTargetTemporalCommandOptions(String sourceMimetype, String targetMimetype, TransformationOptions options)
+    {
+        TemporalSourceOptions temporalSourceOptions = null;
+        if (options != null)
+        {
+            temporalSourceOptions = options.getSourceOptions(TemporalSourceOptions.class);
+        }
+        String commandOptions = "";
+        
         if (isSingleSourceFrameRangeRequired(sourceMimetype, targetMimetype, options))
         {
             commandOptions = commandOptions + CMD_OPT_PAIR_1_FRAME + CMD_OPT_DELIMITER;
@@ -968,12 +1016,6 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
                         CMD_OPT_DURATION + CMD_OPT_DELIMITER + temporalSourceOptions.getDuration() +
                         CMD_OPT_DELIMITER;
             }
-        }
-        if (temporalSourceOptions != null && temporalSourceOptions.getOffset() != null)
-        {
-            commandOptions = commandOptions + 
-                    CMD_OPT_OFFSET + CMD_OPT_DELIMITER + temporalSourceOptions.getOffset() +
-                    CMD_OPT_DELIMITER;
         }
         if (temporalSourceOptions != null && temporalSourceOptions.getElementIntervalSeconds() != null)
         {
