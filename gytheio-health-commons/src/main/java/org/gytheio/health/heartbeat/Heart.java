@@ -38,4 +38,12 @@ public interface Heart
      */
     public void stop();
     
+    /**
+     * Returns a single {@link Heartbeat} object without sending
+     * via messaging
+     * 
+     * @return the heartbeat object
+     */
+    public Heartbeat beat();
+    
 }

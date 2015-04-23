@@ -100,6 +100,13 @@ public abstract class AbstractHeartImpl implements Heart
         timer.cancel();
     }
     
+    @Override
+    public Heartbeat beat()
+    {
+        Map<String, String> details = gatherDetails();
+        return new Heartbeat(serviceType, serviceInstanceId, true, details);
+    }
+    
     /**
      * Gathers any useful health metrics for the details section of 
      * each heartbeat messages.
@@ -122,9 +129,7 @@ public abstract class AbstractHeartImpl implements Heart
         {
             try
             {
-                Map<String, String> details = gatherDetails();
-                Heartbeat heartbeat = 
-                        new Heartbeat(serviceType, serviceInstanceId, true, details);
+                Heartbeat heartbeat = beat();
                 send(heartbeat);
             }
             catch (Exception e)
