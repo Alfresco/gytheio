@@ -26,6 +26,8 @@ import org.apache.commons.lang.StringUtils;
 import org.gytheio.messaging.MessageProducer;
 import org.gytheio.messaging.MessagingException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * An Apache Camel implementation of a message producer
  * 
@@ -39,6 +41,7 @@ public class CamelMessageProducer implements MessageProducer
     
     protected ProducerTemplate producer;
     protected String endpoint;
+    protected ObjectMapper objectMapper;
 
     /**
      * The Camel producer template
@@ -60,7 +63,17 @@ public class CamelMessageProducer implements MessageProducer
     {
         this.endpoint = endpoint;
     }
-
+    
+    /**
+     * Optional object mapper to be used programatically in {@link #send(Object, String)}
+     * or {@link #send(Object, String, Map)} methods when an alternate endpoint is specified.
+     * 
+     * @param objectMapper
+     */
+    public void setObjectMapper(ObjectMapper objectMapper)
+    {
+        this.objectMapper = objectMapper;
+    }
 
     /**
      * Checks that the given endpoint is valid
@@ -112,12 +125,19 @@ public class CamelMessageProducer implements MessageProducer
     
     public void send(Object message, String queueName)
     {
-        if (StringUtils.isEmpty(queueName))
-        {
-            queueName = endpoint;
-        }
         try
         {
+            if (StringUtils.isEmpty(queueName))
+            {
+                queueName = endpoint;
+            }
+            else
+            {
+                if (objectMapper != null && !(message instanceof String))
+                {
+                    message = objectMapper.writeValueAsString(message);
+                }
+            }
             producer.sendBodyAndHeaders(queueName, message, addHeaders(null));
         }
         catch (Exception e)
@@ -128,12 +148,19 @@ public class CamelMessageProducer implements MessageProducer
     
     public void send(Object message, String queueName, Map<String, Object> headers)
     {
-        if (StringUtils.isEmpty(queueName))
-        {
-            queueName = endpoint;
-        }
         try
         {
+            if (StringUtils.isEmpty(queueName))
+            {
+                queueName = endpoint;
+            }
+            else
+            {
+                if (objectMapper != null && !(message instanceof String))
+                {
+                    message = objectMapper.writeValueAsString(message);
+                }
+            }
             producer.sendBodyAndHeaders(queueName, message, addHeaders(headers));
         }
         catch (Exception e)
