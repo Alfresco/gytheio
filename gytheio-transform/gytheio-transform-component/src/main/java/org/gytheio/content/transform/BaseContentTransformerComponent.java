@@ -76,8 +76,8 @@ public class BaseContentTransformerComponent
         }
         catch (Exception e)
         {
-            logger.error(e.getMessage(), e);
             progressReporter.onTransformationError(e.getMessage());
+            logger.error(e.getMessage(), e);
         }
     }
     
@@ -93,6 +93,7 @@ public class BaseContentTransformerComponent
     public class ContentTransformerWorkerProgressReporterImpl implements ContentTransformerWorkerProgressReporter
     {
         private TransformationRequest request;
+        private boolean isReportInProgressPermitted = false;
         
         public ContentTransformerWorkerProgressReporterImpl(TransformationRequest request)
         {
@@ -111,24 +112,40 @@ public class BaseContentTransformerComponent
             reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
             
             messageProducer.send(reply, request.getReplyTo());
+            
+            // We can now allow in-progress messages
+            isReportInProgressPermitted = true;
         }
         
         public void onTransformationProgress(float progress)
         {
             if (logger.isDebugEnabled())
             {
-                logger.debug(progress*100 + "% progress on transformation " +
-                        "requestId=" + request.getRequestId());
+                String logMessage = progress*100 + "% progress on transformation " +
+                        "requestId=" + request.getRequestId();
+                if (!isReportInProgressPermitted)
+                {
+                    logMessage = logMessage + " (in-progress not permitted in this state)";
+                }
+                logger.debug(logMessage);
             }
-            TransformationReply reply = new TransformationReply(request);
-            reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
-            reply.setProgress(progress);
             
-            messageProducer.send(reply, request.getReplyTo());
+            // Don't actually send a reply if in-progress reporting is not allowed in this state
+            if (isReportInProgressPermitted)
+            {
+                TransformationReply reply = new TransformationReply(request);
+                reply.setStatus(TransformationReply.STATUS_IN_PROGRESS);
+                reply.setProgress(progress);
+                
+                messageProducer.send(reply, request.getReplyTo());
+            }
         }
         
         public void onTransformationComplete(List<ContentWorkResult> results)
         {
+            // We don't want in-progress messages coming in after completion
+            isReportInProgressPermitted = false;
+            
             if (logger.isInfoEnabled())
             {
                 logger.info("Completed transformation " +
@@ -144,6 +161,9 @@ public class BaseContentTransformerComponent
         @Override
         public void onTransformationError(String errorMessage)
         {
+            // We don't want in-progress messages coming in after error
+            isReportInProgressPermitted = false;
+            
             TransformationReply reply = new TransformationReply(request);
             reply.setStatus(TransformationReply.STATUS_ERROR);
             reply.setStatusDetail(errorMessage);
