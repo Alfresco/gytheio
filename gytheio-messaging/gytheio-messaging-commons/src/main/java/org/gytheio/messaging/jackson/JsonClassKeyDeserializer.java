@@ -30,10 +30,7 @@ public class JsonClassKeyDeserializer extends KeyDeserializer
     public static Object deserializeKeyToClass(String key) throws IOException,
             JsonProcessingException
     {
-        if (!key.startsWith("class "))
-        {
-            throw new IllegalArgumentException("Invalid key format");
-        }
+        // Newer versions of Jackson don't contain the 'class ' prefix by default
         String classname = key.replaceFirst("class ", "");
         try
         {
