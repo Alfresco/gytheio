@@ -93,7 +93,8 @@
     
     <distributionManagement>
         <repository>
-            <id>alfresco-thirdparty</id>
+            <!-- TODO change to "alfresco-thirdparty" once .m2/settings.xml has been added to all fixed bamboo agents -->
+            <id>alfresco-internal</id>
             <url>${maven.distributionManagement.url}</url>
         </repository>
         <snapshotRepository>
