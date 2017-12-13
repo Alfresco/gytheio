@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -27,13 +27,9 @@ import com.fasterxml.jackson.databind.KeyDeserializer;
 public class JsonClassKeyDeserializer extends KeyDeserializer
 {
 
-    public static Object deserializeKeyToClass(String key) throws IOException,
-            JsonProcessingException
+    public static Object deserializeKeyToClass(String key) throws IOException
     {
-        if (!key.startsWith("class "))
-        {
-            throw new IllegalArgumentException("Invalid key format");
-        }
+        // Newer versions of Jackson don't contain the 'class ' prefix by default
         String classname = key.replaceFirst("class ", "");
         try
         {
@@ -46,8 +42,7 @@ public class JsonClassKeyDeserializer extends KeyDeserializer
     }
     
     @Override
-    public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException,
-            JsonProcessingException
+    public Object deserializeKey(String key, DeserializationContext ctxt) throws IOException
     {
         return deserializeKeyToClass(key);
     }
