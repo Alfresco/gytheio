@@ -35,11 +35,6 @@ import org.junit.Test;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.std.StdKeySerializer;
 
-/**
- * @author rgauss
- *
- */
-@SuppressWarnings("deprecation")
 public class JacksonDataFormatTest
 {
     private static final String EXPECTED_FIELD1_VALUE = "value1";
