@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -18,6 +18,8 @@
  */
 package org.gytheio.messaging.camel.dataformat;
 
+import java.util.HashMap;
+
 public class SimplePojo
 {
     public enum EnumValue { VALUE_1, VALUE_2 }
@@ -25,6 +27,8 @@ public class SimplePojo
     private String field1;
     private Integer field2;
     private EnumValue field3;
+    private HashMap<Class<?>, String> field4;
+    private HashMap<String, String> field5;
     
     public SimplePojo()
     {
@@ -61,5 +65,20 @@ public class SimplePojo
     {
         this.field3 = field3;
     }
-
+    public HashMap<Class<?>, String> getField4()
+    {
+        return field4;
+    }
+    public void setField4(HashMap<Class<?>, String> field4)
+    {
+        this.field4 = field4;
+    }
+    public HashMap<String, String> getField5()
+    {
+        return field5;
+    }
+    public void setField5(HashMap<String, String> field5)
+    {
+        this.field5 = field5;
+    }
 }

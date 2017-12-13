@@ -29,9 +29,11 @@ public class JsonClassKeyDeserializer extends KeyDeserializer
 
     public static Object deserializeKeyToClass(String key) throws IOException
     {
+        // Newer versions of Jackson don't contain the 'class ' prefix by default
+        String classname = key.replaceFirst("class ", "");
         try
         {
-            return JsonClassKeyDeserializer.class.getClassLoader().loadClass(key);
+            return JsonClassKeyDeserializer.class.getClassLoader().loadClass(classname);
         }
         catch (ClassNotFoundException e)
         {
