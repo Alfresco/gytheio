@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2017 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -90,7 +90,15 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         // Instantiate S3 Service and get or create necessary bucket.
         try
         {
-            s3 = new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
+        	// note: compatible with AWS SDK ~ 1.4.7 (in future, refactor to use AmazonS3ClientBuilder)
+        	if ((s3AccessKey == null) && (s3SecretKey == null))
+        	{
+        		s3 = new AmazonS3Client();
+        	}
+        	else 
+        	{
+        		s3 = new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
+        	}
             
             if (s3BucketRegion != null)
             {
@@ -184,17 +192,30 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             {
                 logger.debug("Checking existence of reference: " + s3Url);
             }
+
+            // note: compatible with AWS SDK ~ 1.4.7 (in future, refactor to use s3.doesObjectExist)
+
             // Get the object and retrieve the input stream
             S3Object object = s3.getObject(new GetObjectRequest(s3BucketName, getRelativePath(s3Url)));
             return object != null;
         }
         catch (AmazonServiceException e)
         {
+        	if (e.getStatusCode() == 404)
+        	{
+        		return false;
+        	}
             throw new ContentIOException("Failed to check existence of content: " + e.getMessage(), e);
         }
         catch (Throwable t)
         {
             // Otherwise don't really care why, just that it doesn't exist
+
+            if (logger.isWarnEnabled())
+            {
+                logger.warn("Ingoring failure to check existence of content: " + t.getMessage());
+            }
+
             return false;
         }
     }
@@ -237,12 +258,32 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         
         try
         {
+            Long contentLength = targetContentReference.getSize();
+            ObjectMetadata omd = new ObjectMetadata();
+            if (contentLength != null)
+            {
+                omd.setContentLength(contentLength);
+            }
+            
             s3.putObject(new PutObjectRequest(
-                    s3BucketName, remotePath, sourceInputStream, new ObjectMetadata()));
+                    s3BucketName, remotePath, sourceInputStream, omd));
+            
             ObjectMetadata metadata = s3.getObjectMetadata(
                     new GetObjectMetadataRequest(s3BucketName, remotePath));
-            return metadata.getContentLength();
-        } catch (AmazonClientException e)
+
+            long storedConentLength = metadata.getContentLength();
+            
+            if (logger.isWarnEnabled())
+            {
+                if ((contentLength != null) && (storedConentLength != contentLength))
+                {
+                    logger.warn("Metadata length differs - expected " + contentLength + ", actual "+ storedConentLength);
+                }
+            }
+            
+            return storedConentLength;
+        } 
+        catch (AmazonClientException e)
         {
             throw new ContentIOException("Failed to write content", e);
         }
