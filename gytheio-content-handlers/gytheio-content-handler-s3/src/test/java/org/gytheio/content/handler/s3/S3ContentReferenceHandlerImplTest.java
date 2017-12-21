@@ -58,10 +58,10 @@ public class S3ContentReferenceHandlerImplTest
     private static String s3SecretKey = null;
 
     private static String s3BucketName = "alf-gytheio-s3-test-"+UUID.randomUUID().toString();
-    
+
     // if null then use default region (for user)
     private static String s3BucketRegion = null;
-    
+
     // note: bucket must be empty
     private static boolean deleteTestBucket = true;
 
@@ -155,11 +155,14 @@ public class S3ContentReferenceHandlerImplTest
 
         // create the S3 object
         byte[] dataIn = uuid.getBytes();
+        int contentLen = dataIn.length;
         try 
         {
+        	reference.setSize((long)contentLen); // prevents AmazonS3Client warn
+
 	    	ByteArrayInputStream bais = new ByteArrayInputStream(dataIn);
 	        handler.putInputStream(bais, reference);
-	        
+
 	        bais.close();
         }
         catch (IOException ioe)
@@ -174,10 +177,10 @@ public class S3ContentReferenceHandlerImplTest
         {
 	        InputStream is = handler.getInputStream(reference, false);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			
+
 			int nRead;
-			byte[] dataOut = new byte[dataIn.length];
-	
+			byte[] dataOut = new byte[contentLen];
+
 			while ((nRead = is.read(dataOut, 0, dataOut.length)) != -1) 
 			{
 			    baos.write(dataOut, 0, nRead);
