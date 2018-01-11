@@ -762,7 +762,7 @@ public class FfmpegContentTransformerWorker extends AbstractRuntimeExecContentTr
         }
         if (VideoTransformationOptions.VIDEO_CODEC_WMV.equals(gytheioVideoCodec))
         {
-            return null;
+            return "msmpeg4";
         }
         return null;
     }
