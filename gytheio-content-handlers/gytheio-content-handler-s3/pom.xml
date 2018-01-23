@@ -50,6 +50,22 @@
             </exclusions>
         </dependency>
 
+        <!-- 
+          Required to run S3ContentReferenceHandlerImplTest (note: "test" scope) 
+        
+          Also, for reference, ACS Repo depends on:
+          * 4.2.N => HttpClient 4.1.1
+          * 5.0.N => HttpClient 4.5.1
+          * 5.1.N => HttpClient 4.5.1
+          * 5.2.N => HttpClient 4.5.2
+        -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.1.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 </project>
