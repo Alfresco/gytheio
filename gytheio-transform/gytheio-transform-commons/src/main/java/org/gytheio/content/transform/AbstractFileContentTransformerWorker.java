@@ -186,6 +186,7 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
                     target = targetContentReferenceHandler.createContentReference(
                             resultFile.getName(), resultMediaType);
                 }
+                target.setSize(resultFile.length());
                 FileInputStream targetInputStream = new FileInputStream(resultFile);
                 targetContentReferenceHandler.putInputStream(targetInputStream, target);
             }
