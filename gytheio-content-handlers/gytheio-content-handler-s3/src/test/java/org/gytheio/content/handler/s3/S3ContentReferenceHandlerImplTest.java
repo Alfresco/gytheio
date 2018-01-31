@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2017 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -19,6 +19,7 @@
 
 package org.gytheio.content.handler.s3;
 
+import com.amazonaws.ClientConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.gytheio.content.ContentReference;
 import org.junit.BeforeClass;
@@ -44,7 +45,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests the s3 content reference handler
  * 
- * @see {@link S3ContentReferenceHandler}
+ * @see {@link S3ContentReferenceHandlerImpl}
  */
 public class S3ContentReferenceHandlerImplTest
 {
@@ -145,7 +146,17 @@ public class S3ContentReferenceHandlerImplTest
 
     @Test
     public void testFileOps()
-    { 
+    {
+        int LOOP_COUNT = ClientConfiguration.DEFAULT_MAX_CONNECTIONS + 5; // MM-682
+        
+        for (int i = 0; i < LOOP_COUNT; i++)
+        {
+            testFileOpsImpl();
+        }
+    }
+    
+    private void testFileOpsImpl()
+    {
     	String uuid = UUID.randomUUID().toString();
         String fileName = "test-" + uuid + ".txt";
 
