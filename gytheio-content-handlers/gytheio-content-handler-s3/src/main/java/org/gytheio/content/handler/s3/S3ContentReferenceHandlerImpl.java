@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2017 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -18,6 +18,7 @@
  */
 package org.gytheio.content.handler.s3;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
@@ -184,6 +185,9 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         {
             return false;
         }
+
+        S3Object object = null;
+        
         try
         {
             String s3Url = getS3UrlFromHttpUrl(contentReference.getUri());
@@ -196,8 +200,8 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             // note: compatible with AWS SDK ~ 1.4.7 (in future, refactor to use s3.doesObjectExist)
 
             // Get the object and retrieve the input stream
-            S3Object object = s3.getObject(new GetObjectRequest(s3BucketName, getRelativePath(s3Url)));
-            return object != null;
+            object = s3.getObject(new GetObjectRequest(s3BucketName, getRelativePath(s3Url)));
+            return (object != null);
         }
         catch (AmazonServiceException e)
         {
@@ -213,10 +217,26 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
 
             if (logger.isWarnEnabled())
             {
-                logger.warn("Ingoring failure to check existence of content: " + t.getMessage());
+                logger.warn("Ignoring failure to check existence of content: " + t.getMessage());
             }
 
             return false;
+        }
+        finally
+        {
+            if (object != null)
+            {
+                try  {
+                    object.close();
+                }
+                catch (IOException ioe)
+                {
+                    if (logger.isWarnEnabled())
+                    {
+                        logger.warn("Ignoring failure to close: " + ioe.getMessage());
+                    }
+                }
+            }
         }
     }
     
