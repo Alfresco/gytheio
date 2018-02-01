@@ -224,10 +224,11 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         }
         finally
         {
-            if (object != null)
+            if ((object != null) && (object.getObjectContent() != null))
             {
-                try  {
-                    object.close();
+                try  
+                {
+                	object.getObjectContent().close();
                 }
                 catch (IOException ioe)
                 {
