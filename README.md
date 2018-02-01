@@ -106,4 +106,21 @@ ActiveMQ Broker
 
 A convenience project which can start an ActiveMQ broker with a single Maven command.
 
+Contributing
+------------
+Thanks for your interest in contributing to this project!
+
+The following is a set of guidelines for contributing to this module. Most of them will make the life of the reviewer easier and therefore decrease the time required for the patch be included in a future version.
+
+Ways to contribute would be by submitting pull requests, reporting issues and creating suggestions. In the case of a defect please provide steps to reproduce the issue, as well as the expected result and the actual one.
+
+You can report an issue in the [ALF](https://issues.alfresco.com/jira/projects/ALF/issues) jira project of the Alfresco issue tracker. Read instructions for a [good issue report](https://community.alfresco.com/docs/DOC-6263-reporting-an-issue).
+
+If you'd like a hand at trying to implement features yourself, please validate your changes by running the tests. Also pull requests should contain tests whenever possible. Please follow the [coding standards](https://community.alfresco.com/docs/DOC-4658-coding-standards).
+
+As a contributor you must sign a contribution agreement, but please keep in mind that the contribution process includes a recorded acceptance step.
+
+* [Submitting Contributions](https://community.alfresco.com/docs/DOC-6269-submitting-contributions)
+* [Accepting the Contribution Agreement](https://community.alfresco.com/docs/DOC-7070-alfresco-contribution-agreement)
+
 
