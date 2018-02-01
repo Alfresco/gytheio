@@ -291,17 +291,17 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             ObjectMetadata metadata = s3.getObjectMetadata(
                     new GetObjectMetadataRequest(s3BucketName, remotePath));
 
-            long storedConentLength = metadata.getContentLength();
+            long storedContentLength = metadata.getContentLength();
             
             if (logger.isWarnEnabled())
             {
-                if ((contentLength != null) && (storedConentLength != contentLength))
+                if ((contentLength != null) && (storedContentLength != contentLength))
                 {
-                    logger.warn("Metadata length differs - expected " + contentLength + ", actual "+ storedConentLength);
+                    logger.warn("Metadata length differs - expected " + contentLength + ", actual "+ storedContentLength);
                 }
             }
             
-            return storedConentLength;
+            return storedContentLength;
         } 
         catch (AmazonClientException e)
         {
