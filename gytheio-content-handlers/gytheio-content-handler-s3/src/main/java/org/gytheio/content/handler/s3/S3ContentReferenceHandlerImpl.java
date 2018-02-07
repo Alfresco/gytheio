@@ -18,9 +18,10 @@
  */
 package org.gytheio.content.handler.s3;
 
-import java.io.IOException;
 import java.io.InputStream;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentIOException;
@@ -31,7 +32,6 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectMetadataRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -43,6 +43,7 @@ import com.amazonaws.services.s3.model.S3Object;
  * AWS S3 content handler implementation
  * 
  * @author Ray Gauss II
+ * @author janv
  */
 public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHandler
 {
@@ -85,34 +86,35 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
     {
         this.s3BucketRegion = s3BucketLocation;
     }
-    
+
+    // Instantiate S3 Service and get or create necessary bucket
     public void init()
     {
-        // Instantiate S3 Service and get or create necessary bucket.
         try
         {
-        	// note: compatible with AWS SDK ~ 1.4.7 (in future, refactor to use AmazonS3ClientBuilder)
-        	if ((s3AccessKey == null) && (s3SecretKey == null))
+            // equivalent to "defaultClient" (unless credentials &/or region are overridden)
+            AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard();
+
+        	if ((s3AccessKey != null) || (s3SecretKey != null))
         	{
-        		s3 = new AmazonS3Client();
+        	    // override default credentials
+                s3ClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(s3AccessKey, s3SecretKey)));
         	}
-        	else 
-        	{
-        		s3 = new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
-        	}
-            
+
             if (s3BucketRegion != null)
             {
-                if (!s3.doesBucketExist(s3BucketName))
-                {
-                    s3.createBucket(s3BucketName, s3BucketRegion);
-                }
+                // override default region
+                s3ClientBuilder.withRegion(s3BucketRegion);
             }
-            else
+
+            s3 = s3ClientBuilder.build();
+
+            if (!s3.doesBucketExist(s3BucketName))
             {
-                s3.createBucket(s3BucketName); // default region
+                // relies on s3ClientBuilder regional endpoint (or else default region)
+                s3.createBucket(s3BucketName);
             }
-            
+
             if (logger.isDebugEnabled())
             {
                 logger.debug("S3 content transport initialization complete: " +
@@ -185,8 +187,6 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         {
             return false;
         }
-
-        S3Object object = null;
         
         try
         {
@@ -196,12 +196,8 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             {
                 logger.debug("Checking existence of reference: " + s3Url);
             }
-
-            // note: compatible with AWS SDK ~ 1.4.7 (in future, refactor to use s3.doesObjectExist)
-
-            // Get the object and retrieve the input stream
-            object = s3.getObject(new GetObjectRequest(s3BucketName, getRelativePath(s3Url)));
-            return (object != null);
+            
+            return s3.doesObjectExist(s3BucketName, getRelativePath(s3Url));
         }
         catch (AmazonServiceException e)
         {
@@ -221,22 +217,6 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             }
 
             return false;
-        }
-        finally
-        {
-            if (object != null)
-            {
-                try  {
-                    object.close();
-                }
-                catch (IOException ioe)
-                {
-                    if (logger.isWarnEnabled())
-                    {
-                        logger.warn("Ignoring failure to close: " + ioe.getMessage());
-                    }
-                }
-            }
         }
     }
     
