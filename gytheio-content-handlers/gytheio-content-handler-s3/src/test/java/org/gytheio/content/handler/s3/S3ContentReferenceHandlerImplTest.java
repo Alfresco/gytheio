@@ -20,8 +20,6 @@
 package org.gytheio.content.handler.s3;
 
 import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.gytheio.content.ContentReference;
 import org.junit.BeforeClass;
@@ -29,7 +27,6 @@ import org.junit.AfterClass;
 import org.junit.Test;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 
 import java.io.ByteArrayInputStream;
@@ -54,19 +51,22 @@ public class S3ContentReferenceHandlerImplTest
 {
     private static S3ContentReferenceHandlerImpl handler;
 
-    // As per DefaultAWSCredentialsProviderChain, if null then search for credentials in this order:
+    //
+    // If s3AccessKey / s3SecretKey are not overridden 
+    // then use DefaultAWSCredentialsProviderChain which searches for credentials in this order:
+    //
     // - Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
     // - Java System Properties - aws.accessKeyId and aws.secretKey
     // - Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
     // - Credentials delivered through the Amazon EC2 container service if AWS_CONTAINER_CREDENTIALS_RELATIVE_URI env var is set
     //   and security manager has permission to access the var,
     // - Instance profile credentials delivered through the Amazon EC2 metadata service
+    //
     private static String s3AccessKey = null; 
     private static String s3SecretKey = null;
 
     private static String s3BucketName = "alf-gytheio-s3-test-"+UUID.randomUUID().toString();
 
-    // if null then use default region (for user) - eg. "eu-west-2" => EU (London)
     private static String s3BucketRegion = null;
 
     // note: bucket must be empty
@@ -96,7 +96,7 @@ public class S3ContentReferenceHandlerImplTest
     	{
 	        try
 	        {
-	        	AmazonS3 s3 = initClient();
+	        	AmazonS3 s3 = S3ContentReferenceHandlerImpl.initClient(s3AccessKey, s3SecretKey, s3BucketRegion);
 	            s3.deleteBucket(s3BucketName);
 	        }
 	        catch (AmazonClientException e)
@@ -104,26 +104,6 @@ public class S3ContentReferenceHandlerImplTest
 	            throw e;
 	        }
     	}
-    }
-
-    private static AmazonS3 initClient()
-    {
-        // equivalent to "defaultClient" (unless credentials &/or region are overridden)
-        AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard();
-
-        if ((s3AccessKey != null) || (s3SecretKey != null))
-        {
-            // override default credentials
-            s3ClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(s3AccessKey, s3SecretKey)));
-        }
-
-        if (s3BucketRegion != null)
-        {
-            // override default region
-            s3ClientBuilder.withRegion(s3BucketRegion);
-        }
-
-        return s3ClientBuilder.build();
     }
 
     protected void checkReference(String fileName, String mediaType)

@@ -56,11 +56,25 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
     public static final String HTTPS_PROTOCOL = "https";
 
     private AmazonS3 s3;
-    
+
+    //
+    // If s3AccessKey / s3SecretKey are not overridden 
+    // then use DefaultAWSCredentialsProviderChain which searches for credentials in this order:
+    //
+    // - Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
+    // - Java System Properties - aws.accessKeyId and aws.secretKey
+    // - Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
+    // - Credentials delivered through the Amazon EC2 container service if AWS_CONTAINER_CREDENTIALS_RELATIVE_URI env var is set
+    //   and security manager has permission to access the var,
+    // - Instance profile credentials delivered through the Amazon EC2 metadata service
+    //
     private String s3AccessKey;
     private String s3SecretKey;
+    
     private String s3BucketName;
     private String s3BucketRegion;
+    
+    private static final String DEFAULT_BUCKET_REGION = "us-east-1";
     
     public void setS3AccessKey(String s3AccessKey)
     {
@@ -86,28 +100,13 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
     {
         this.s3BucketRegion = s3BucketLocation;
     }
-
+    
     // Instantiate S3 Service and get or create necessary bucket
-    public void init()
+    public void init() 
     {
         try
         {
-            // equivalent to "defaultClient" (unless credentials &/or region are overridden)
-            AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard();
-
-        	if ((s3AccessKey != null) || (s3SecretKey != null))
-        	{
-        	    // override default credentials
-                s3ClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(s3AccessKey, s3SecretKey)));
-        	}
-
-            if (s3BucketRegion != null)
-            {
-                // override default region
-                s3ClientBuilder.withRegion(s3BucketRegion);
-            }
-
-            s3 = s3ClientBuilder.build();
+            s3 = initClient(s3AccessKey, s3SecretKey, s3BucketRegion);
 
             if (!s3.doesBucketExist(s3BucketName))
             {
@@ -118,20 +117,57 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             if (logger.isDebugEnabled())
             {
                 logger.debug("S3 content transport initialization complete: " +
-                        "{ bucketName: '"+s3BucketName+"', bucketLocation: '"+s3BucketRegion + "' }");
+                        "{ bucketName: '" + s3BucketName + "', bucketLocation: '" + s3BucketRegion + "' }");
             }
+
             this.isAvailable = true;
         }
         catch (AmazonClientException e)
         {
-            if (logger.isDebugEnabled())
+            if (logger.isErrorEnabled())
             {
-                logger.debug("S3 content transport failed to initialize bucket " +
+                logger.error("S3 content transport failed to initialize bucket " +
                         "'" + s3BucketName + "': " + e.getMessage());
             }
-            
+
             this.isAvailable = false;
         }
+    }
+
+    // helper
+    public static AmazonS3 initClient(String s3AccessKey, String s3SecretKey, String s3BucketRegion)
+    {
+        // equivalent to "defaultClient" (unless credentials &/or region are overridden)
+        AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard();
+
+        if ((s3AccessKey != null) || (s3SecretKey != null))
+        {
+            // override default credentials
+            s3ClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(s3AccessKey, s3SecretKey)));
+        }
+
+        if (s3BucketRegion != null)
+        {
+            // override default region
+            s3ClientBuilder.withRegion(s3BucketRegion);
+        }
+
+        AmazonS3 s3 = null;
+        
+        try
+        {
+            s3 = s3ClientBuilder.build();
+        }
+        catch (AmazonClientException e)
+        {
+            if (e.getMessage().contains("Unable to find a region via the region provider chain"))
+            {
+                s3ClientBuilder.withRegion(DEFAULT_BUCKET_REGION);
+                s3 = s3ClientBuilder.build();
+            }
+        }
+        
+        return s3;
     }
     
     @Override
