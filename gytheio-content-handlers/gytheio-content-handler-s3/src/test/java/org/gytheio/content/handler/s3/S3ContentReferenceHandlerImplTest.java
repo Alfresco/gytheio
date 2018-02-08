@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -157,7 +158,10 @@ public class S3ContentReferenceHandlerImplTest
         assertFalse(handler.isContentReferenceExists(reference));
 
         // create the S3 object
-        byte[] dataIn = uuid.getBytes();
+
+        byte[] dataIn = new byte[1024]; // 1 KiB
+        new Random().nextBytes(dataIn);
+
         int contentLen = dataIn.length;
         try 
         {
@@ -181,15 +185,17 @@ public class S3ContentReferenceHandlerImplTest
 	        InputStream is = handler.getInputStream(reference, false);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			int nRead;
-			byte[] dataOut = new byte[contentLen];
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) != -1)
+            {
+                baos.write(buffer, 0, length);
+            }
 
-			while ((nRead = is.read(dataOut, 0, dataOut.length)) != -1) 
-			{
-			    baos.write(dataOut, 0, nRead);
-			}
 			baos.close();
 			is.close();
+
+            byte[] dataOut = baos.toByteArray();
 
 			// check bytes
 			assertTrue(Arrays.equals(dataOut, dataIn));
