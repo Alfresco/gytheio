@@ -151,9 +151,9 @@ public class S3ContentReferenceHandlerImplTest
     private void testFileOpsImpl()
     {
     	String uuid = UUID.randomUUID().toString();
-        String fileName = "test-" + uuid + ".txt";
+        String fileName = "test-" + uuid + ".bin";
 
-        ContentReference reference = handler.createContentReference(fileName, "text/plain");
+        ContentReference reference = handler.createContentReference(fileName, "application/octet-stream");
 
         assertFalse(handler.isContentReferenceExists(reference));
 
