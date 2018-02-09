@@ -18,9 +18,10 @@
  */
 package org.gytheio.content.handler.s3;
 
-import java.io.IOException;
 import java.io.InputStream;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentIOException;
@@ -31,7 +32,6 @@ import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectMetadataRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -43,6 +43,7 @@ import com.amazonaws.services.s3.model.S3Object;
  * AWS S3 content handler implementation
  * 
  * @author Ray Gauss II
+ * @author janv
  */
 public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHandler
 {
@@ -55,11 +56,25 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
     public static final String HTTPS_PROTOCOL = "https";
 
     private AmazonS3 s3;
-    
+
+    //
+    // If s3AccessKey / s3SecretKey are not overridden 
+    // then use DefaultAWSCredentialsProviderChain which searches for credentials in this order:
+    //
+    // - Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
+    // - Java System Properties - aws.accessKeyId and aws.secretKey
+    // - Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
+    // - Credentials delivered through the Amazon EC2 container service if AWS_CONTAINER_CREDENTIALS_RELATIVE_URI env var is set
+    //   and security manager has permission to access the var,
+    // - Instance profile credentials delivered through the Amazon EC2 metadata service
+    //
     private String s3AccessKey;
     private String s3SecretKey;
+    
     private String s3BucketName;
     private String s3BucketRegion;
+    
+    private static final String DEFAULT_BUCKET_REGION = "us-east-1";
     
     public void setS3AccessKey(String s3AccessKey)
     {
@@ -86,50 +101,73 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         this.s3BucketRegion = s3BucketLocation;
     }
     
-    public void init()
+    // Instantiate S3 Service and get or create necessary bucket
+    public void init() 
     {
-        // Instantiate S3 Service and get or create necessary bucket.
         try
         {
-        	// note: compatible with AWS SDK ~ 1.4.7 (in future, refactor to use AmazonS3ClientBuilder)
-        	if ((s3AccessKey == null) && (s3SecretKey == null))
-        	{
-        		s3 = new AmazonS3Client();
-        	}
-        	else 
-        	{
-        		s3 = new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
-        	}
-            
-            if (s3BucketRegion != null)
+            s3 = initClient(s3AccessKey, s3SecretKey, s3BucketRegion);
+
+            if (!s3.doesBucketExist(s3BucketName))
             {
-                if (!s3.doesBucketExist(s3BucketName))
-                {
-                    s3.createBucket(s3BucketName, s3BucketRegion);
-                }
+                // relies on s3ClientBuilder regional endpoint (or else default region)
+                s3.createBucket(s3BucketName);
             }
-            else
-            {
-                s3.createBucket(s3BucketName); // default region
-            }
-            
+
             if (logger.isDebugEnabled())
             {
                 logger.debug("S3 content transport initialization complete: " +
-                        "{ bucketName: '"+s3BucketName+"', bucketLocation: '"+s3BucketRegion + "' }");
+                        "{ bucketName: '" + s3BucketName + "', bucketLocation: '" + s3BucketRegion + "' }");
             }
+
             this.isAvailable = true;
         }
         catch (AmazonClientException e)
         {
-            if (logger.isDebugEnabled())
+            if (logger.isErrorEnabled())
             {
-                logger.debug("S3 content transport failed to initialize bucket " +
+                logger.error("S3 content transport failed to initialize bucket " +
                         "'" + s3BucketName + "': " + e.getMessage());
             }
-            
+
             this.isAvailable = false;
         }
+    }
+
+    // helper
+    public static AmazonS3 initClient(String s3AccessKey, String s3SecretKey, String s3BucketRegion)
+    {
+        // equivalent to "defaultClient" (unless credentials &/or region are overridden)
+        AmazonS3ClientBuilder s3ClientBuilder = AmazonS3ClientBuilder.standard();
+
+        if ((s3AccessKey != null) || (s3SecretKey != null))
+        {
+            // override default credentials
+            s3ClientBuilder.withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(s3AccessKey, s3SecretKey)));
+        }
+
+        if (s3BucketRegion != null)
+        {
+            // override default region
+            s3ClientBuilder.withRegion(s3BucketRegion);
+        }
+
+        AmazonS3 s3 = null;
+        
+        try
+        {
+            s3 = s3ClientBuilder.build();
+        }
+        catch (AmazonClientException e)
+        {
+            if (e.getMessage().contains("Unable to find a region via the region provider chain"))
+            {
+                s3ClientBuilder.withRegion(DEFAULT_BUCKET_REGION);
+                s3 = s3ClientBuilder.build();
+            }
+        }
+        
+        return s3;
     }
     
     @Override
@@ -185,8 +223,6 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         {
             return false;
         }
-
-        S3Object object = null;
         
         try
         {
@@ -196,12 +232,8 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             {
                 logger.debug("Checking existence of reference: " + s3Url);
             }
-
-            // note: compatible with AWS SDK ~ 1.4.7 (in future, refactor to use s3.doesObjectExist)
-
-            // Get the object and retrieve the input stream
-            object = s3.getObject(new GetObjectRequest(s3BucketName, getRelativePath(s3Url)));
-            return (object != null);
+            
+            return s3.doesObjectExist(s3BucketName, getRelativePath(s3Url));
         }
         catch (AmazonServiceException e)
         {
@@ -221,22 +253,6 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             }
 
             return false;
-        }
-        finally
-        {
-            if (object != null)
-            {
-                try  {
-                    object.close();
-                }
-                catch (IOException ioe)
-                {
-                    if (logger.isWarnEnabled())
-                    {
-                        logger.warn("Ignoring failure to close: " + ioe.getMessage());
-                    }
-                }
-            }
         }
     }
     

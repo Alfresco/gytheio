@@ -27,15 +27,14 @@ import org.junit.AfterClass;
 import org.junit.Test;
 
 import com.amazonaws.AmazonClientException;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -45,22 +44,30 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests the s3 content reference handler
  * 
+ * @author janv
+ *  
  * @see {@link S3ContentReferenceHandlerImpl}
  */
 public class S3ContentReferenceHandlerImplTest
 {
     private static S3ContentReferenceHandlerImpl handler;
 
-    // As per AWSS3Client, if null then search for credentials in this order:
+    //
+    // If s3AccessKey / s3SecretKey are not overridden 
+    // then use DefaultAWSCredentialsProviderChain which searches for credentials in this order:
+    //
     // - Environment Variables - AWS_ACCESS_KEY_ID and AWS_SECRET_KEY
     // - Java System Properties - aws.accessKeyId and aws.secretKey
-    // - Instance Profile Credentials - delivered through the Amazon EC2
+    // - Credential profiles file at the default location (~/.aws/credentials) shared by all AWS SDKs and the AWS CLI
+    // - Credentials delivered through the Amazon EC2 container service if AWS_CONTAINER_CREDENTIALS_RELATIVE_URI env var is set
+    //   and security manager has permission to access the var,
+    // - Instance profile credentials delivered through the Amazon EC2 metadata service
+    //
     private static String s3AccessKey = null; 
     private static String s3SecretKey = null;
 
     private static String s3BucketName = "alf-gytheio-s3-test-"+UUID.randomUUID().toString();
 
-    // if null then use default region (for user)
     private static String s3BucketRegion = null;
 
     // note: bucket must be empty
@@ -90,7 +97,7 @@ public class S3ContentReferenceHandlerImplTest
     	{
 	        try
 	        {
-	        	AmazonS3 s3 = initClient();
+	        	AmazonS3 s3 = S3ContentReferenceHandlerImpl.initClient(s3AccessKey, s3SecretKey, s3BucketRegion);
 	            s3.deleteBucket(s3BucketName);
 	        }
 	        catch (AmazonClientException e)
@@ -98,20 +105,6 @@ public class S3ContentReferenceHandlerImplTest
 	            throw e;
 	        }
     	}
-    }
-
-    private static AmazonS3 initClient()
-    {
-    	AmazonS3 s3;
-    	if ((s3AccessKey == null) && (s3SecretKey == null))
-    	{
-    		s3 = new AmazonS3Client();
-    	}
-    	else 
-    	{
-    		s3 = new AmazonS3Client(new BasicAWSCredentials(s3AccessKey, s3SecretKey));
-    	}
-    	return s3;
     }
 
     protected void checkReference(String fileName, String mediaType)
@@ -158,14 +151,17 @@ public class S3ContentReferenceHandlerImplTest
     private void testFileOpsImpl()
     {
     	String uuid = UUID.randomUUID().toString();
-        String fileName = "test-" + uuid + ".txt";
+        String fileName = "test-" + uuid + ".bin";
 
-        ContentReference reference = handler.createContentReference(fileName, "text/plain");
+        ContentReference reference = handler.createContentReference(fileName, "application/octet-stream");
 
         assertFalse(handler.isContentReferenceExists(reference));
 
         // create the S3 object
-        byte[] dataIn = uuid.getBytes();
+
+        byte[] dataIn = new byte[1024]; // 1 KiB
+        new Random().nextBytes(dataIn);
+
         int contentLen = dataIn.length;
         try 
         {
@@ -189,15 +185,17 @@ public class S3ContentReferenceHandlerImplTest
 	        InputStream is = handler.getInputStream(reference, false);
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			int nRead;
-			byte[] dataOut = new byte[contentLen];
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) != -1)
+            {
+                baos.write(buffer, 0, length);
+            }
 
-			while ((nRead = is.read(dataOut, 0, dataOut.length)) != -1) 
-			{
-			    baos.write(dataOut, 0, nRead);
-			}
 			baos.close();
 			is.close();
+
+            byte[] dataOut = baos.toByteArray();
 
 			// check bytes
 			assertTrue(Arrays.equals(dataOut, dataIn));
