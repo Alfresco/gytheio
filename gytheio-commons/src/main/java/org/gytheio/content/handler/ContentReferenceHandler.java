@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -18,6 +18,7 @@
  */
 package org.gytheio.content.handler;
 
+import java.io.File;
 import java.io.InputStream;
 
 import org.gytheio.content.ContentIOException;
@@ -79,7 +80,18 @@ public interface ContentReferenceHandler
      * @throws ContentIOException
      */
     public long putInputStream(InputStream sourceInputStream, ContentReference targetContentReference) throws ContentIOException;
-    
+
+    /**
+     * Writes the given source file into the given target content reference.
+     * <p>
+     * 
+     * @param sourceFile
+     * @param targetContentReference
+     * @return the size copied
+     * @throws ContentIOException
+     */
+    public long putFile(File sourceFile, ContentReference targetContentReference) throws ContentIOException;
+
     /**
      * Deletes the given content reference
      * @param contentReference

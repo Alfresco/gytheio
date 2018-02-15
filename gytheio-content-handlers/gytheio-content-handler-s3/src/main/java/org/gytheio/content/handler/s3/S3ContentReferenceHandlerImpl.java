@@ -18,10 +18,14 @@
  */
 package org.gytheio.content.handler.s3;
 
+import java.io.File;
 import java.io.InputStream;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.amazonaws.services.s3.transfer.Upload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentIOException;
@@ -56,6 +60,7 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
     public static final String HTTPS_PROTOCOL = "https";
 
     private AmazonS3 s3;
+    private TransferManager tm;
 
     //
     // If s3AccessKey / s3SecretKey are not overridden 
@@ -119,6 +124,8 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
                 logger.debug("S3 content transport initialization complete: " +
                         "{ bucketName: '" + s3BucketName + "', bucketLocation: '" + s3BucketRegion + "' }");
             }
+
+            tm = TransferManagerBuilder.standard().withS3Client(s3).build();
 
             this.isAvailable = true;
         }
@@ -266,13 +273,20 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         try
         {
             String s3Url = getS3UrlFromHttpUrl(contentReference.getUri());
-            
+
             if (logger.isDebugEnabled())
             {
                 logger.debug("Getting remote input stream for reference: " + s3Url);
             }
+
             // Get the object and retrieve the input stream
             S3Object object = s3.getObject(new GetObjectRequest(s3BucketName, getRelativePath(s3Url)));
+
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Get object: " + s3Url);
+            }
+
             return object.getObjectContent();
         }
         catch (Throwable t)
@@ -282,13 +296,68 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
     }
 
     @Override
-    public long putInputStream(InputStream sourceInputStream, ContentReference targetContentReference)
+    public long putFile(File sourceFile, ContentReference targetContentReference)
             throws ContentIOException
     {
-        if (!isContentReferenceSupported(targetContentReference))
+        if (! isContentReferenceSupported(targetContentReference))
         {
             throw new ContentIOException("ContentReference not supported");
         }
+
+        long startTime = System.currentTimeMillis();
+
+        String remotePath = getRelativePath(targetContentReference.getUri());
+
+        try
+        {
+            Long contentLength = sourceFile.length();
+
+            try
+            {
+                Upload xfer = tm.upload(s3BucketName, remotePath, sourceFile);
+                xfer.waitForCompletion();
+            }
+            catch (InterruptedException e)
+            {
+                throw new ContentIOException("Failed to write content", e);
+            }
+
+            ObjectMetadata metadata = s3.getObjectMetadata(
+                    new GetObjectMetadataRequest(s3BucketName, remotePath));
+
+            long storedContentLength = metadata.getContentLength();
+
+            if (logger.isWarnEnabled())
+            {
+                if ((contentLength != null) && (storedContentLength != contentLength))
+                {
+                    logger.warn("Metadata length differs - expected " + contentLength + ", actual "+ storedContentLength);
+                }
+            }
+
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Upload file: " + s3BucketName + ":" + remotePath + " (in "+(System.currentTimeMillis()-startTime)+" msecs)");
+            }
+
+            return storedContentLength;
+        }
+        catch (AmazonClientException e)
+        {
+            throw new ContentIOException("Failed to write content", e);
+        }
+    }    
+
+    @Override
+    public long putInputStream(InputStream sourceInputStream, ContentReference targetContentReference)
+            throws ContentIOException
+    {
+        if (! isContentReferenceSupported(targetContentReference))
+        {
+            throw new ContentIOException("ContentReference not supported");
+        }
+        
+        long startTime = System.currentTimeMillis();
         
         String remotePath = getRelativePath(targetContentReference.getUri());
         
@@ -300,15 +369,14 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             {
                 omd.setContentLength(contentLength);
             }
-            
-            s3.putObject(new PutObjectRequest(
-                    s3BucketName, remotePath, sourceInputStream, omd));
-            
+
+            s3.putObject(new PutObjectRequest(s3BucketName, remotePath, sourceInputStream, omd));
+
             ObjectMetadata metadata = s3.getObjectMetadata(
                     new GetObjectMetadataRequest(s3BucketName, remotePath));
 
             long storedContentLength = metadata.getContentLength();
-            
+
             if (logger.isWarnEnabled())
             {
                 if ((contentLength != null) && (storedContentLength != contentLength))
@@ -316,7 +384,12 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
                     logger.warn("Metadata length differs - expected " + contentLength + ", actual "+ storedContentLength);
                 }
             }
-            
+
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Put object: " + s3BucketName + ":" + remotePath + " (in "+(System.currentTimeMillis()-startTime)+" msecs)");
+            }
+
             return storedContentLength;
         } 
         catch (AmazonClientException e)
@@ -332,17 +405,21 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         {
             throw new ContentIOException("ContentReference not supported");
         }
-        
+
         String remotePath = getRelativePath(contentReference.getUri());
-        
+
         try
         {
             s3.deleteObject(new DeleteObjectRequest(s3BucketName, remotePath));
-        } catch (AmazonClientException e)
+
+            if (logger.isDebugEnabled())
+            {
+                logger.debug("Deleted object: " + s3BucketName + ":" + remotePath);
+            }
+        } 
+        catch (AmazonClientException e)
         {
             throw new ContentIOException("Failed to delete content", e);
         }
-        
     }
-
 }
