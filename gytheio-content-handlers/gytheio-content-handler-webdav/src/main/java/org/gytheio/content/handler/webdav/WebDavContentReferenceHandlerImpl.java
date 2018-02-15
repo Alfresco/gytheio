@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -18,6 +18,8 @@
  */
 package org.gytheio.content.handler.webdav;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -186,6 +188,32 @@ public class WebDavContentReferenceHandlerImpl extends AbstractUrlContentReferen
         catch (IOException e)
         {
             throw new ContentIOException("Failed to read content: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public long putFile(File sourceFile, ContentReference targetContentReference)
+            throws ContentIOException
+    {
+        try
+        {
+            FileInputStream fis = new FileInputStream(sourceFile);
+            try
+            {
+                return putInputStream(fis, targetContentReference);
+            } 
+            finally
+            {
+                if (fis != null)
+                {
+                    fis.close();
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            logger.error(e.getMessage(), e);
+            throw new ContentIOException("Failed to write content: " + e.getMessage(), e);
         }
     }
 
