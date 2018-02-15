@@ -235,7 +235,7 @@ public class S3ContentReferenceHandlerImplTest
     public void testPutFile() throws IOException
     {
         String envVar;
-        
+
         envVar = getVar("pf_start_size");
         long pf_start_size = (envVar != null ? new Long(envVar) : 1024 * 1024 * 1L); // default 1 MiB
 
@@ -247,7 +247,7 @@ public class S3ContentReferenceHandlerImplTest
 
         envVar = getVar("pf_repeat");
         int pf_repeat = (envVar != null ? new Integer(envVar) : 1);
-        
+
         if (logger.isInfoEnabled())
         {
             logger.info("testPutFile: pf_start_size="+pf_start_size+", pf_multiplier="+pf_multiplier
@@ -255,11 +255,9 @@ public class S3ContentReferenceHandlerImplTest
         }
 
         long testContentSizeInBytes = pf_start_size;
-        
+
         for (int i = 0; i < pf_count; i++)
         {
-            testContentSizeInBytes = testContentSizeInBytes * pf_multiplier;
-
             File testFile = createTestFile(testContentSizeInBytes);
 
             for (int j = 0; j < pf_repeat; j++)
@@ -275,6 +273,9 @@ public class S3ContentReferenceHandlerImplTest
             {
                 testFile.delete();
             }
+
+            // increase test file size for next loop
+            testContentSizeInBytes = testContentSizeInBytes * pf_multiplier;
         }
     }
 
