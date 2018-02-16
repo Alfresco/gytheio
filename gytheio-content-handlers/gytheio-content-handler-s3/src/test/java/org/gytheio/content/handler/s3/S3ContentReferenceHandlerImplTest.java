@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.file.TempFileProvider;
+import org.gytheio.content.mediatype.FileMediaType;
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -176,11 +177,10 @@ public class S3ContentReferenceHandlerImplTest
         int contentLen = dataIn.length;
         try 
         {
-        	reference.setSize((long)contentLen); // prevents AmazonS3Client warn
-
 	    	ByteArrayInputStream bais = new ByteArrayInputStream(dataIn);
 
-            // upload the S3 object
+            // S3 putObject
+            reference.setSize((long)contentLen); // prevents AmazonS3Client warn
             handler.putInputStream(bais, reference);
 
 	        bais.close();
@@ -194,7 +194,7 @@ public class S3ContentReferenceHandlerImplTest
 
         try
         {
-            // get the S3 object
+            // S3 getObject
             InputStream is = handler.getInputStream(reference, false);
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -221,7 +221,7 @@ public class S3ContentReferenceHandlerImplTest
 
         if (cleanup)
         {
-            // delete the S3 object
+            // S3 deleteObject
             handler.delete(reference);
 
             assertFalse(handler.isContentReferenceExists(reference));
@@ -234,19 +234,10 @@ public class S3ContentReferenceHandlerImplTest
     @Test
     public void testPutFile() throws IOException
     {
-        String envVar;
-
-        envVar = getVar("pf_start_size");
-        long pf_start_size = (envVar != null ? new Long(envVar) : 1024 * 1024 * 1L); // default 1 MiB
-
-        envVar = getVar("pf_multiplier");
-        int pf_multiplier = (envVar != null ? new Integer(envVar) : 2);
-
-        envVar = getVar("pf_count");
-        int pf_count = (envVar != null ? new Integer(envVar) : 3);
-
-        envVar = getVar("pf_repeat");
-        int pf_repeat = (envVar != null ? new Integer(envVar) : 1);
+        Long pf_start_size = getVar("pf_start_size", new Long(1024 * 1024 * 1L), Long.class); // default 1 MiB
+        Integer pf_multiplier = getVar("pf_multiplier", new Integer(2), Integer.class);
+        Integer pf_count = getVar("pf_count", new Integer(3), Integer.class);
+        Integer pf_repeat = getVar("pf_repeat", new Integer(1), Integer.class);
 
         if (logger.isInfoEnabled())
         {
@@ -279,50 +270,67 @@ public class S3ContentReferenceHandlerImplTest
         }
     }
 
-    private void testPutFileImpl(File testFile, boolean usePutFile) throws FileNotFoundException
+    private void testPutFileImpl(File sourceTestFile, boolean usePutFile) throws FileNotFoundException
     {
-        String uuid = UUID.randomUUID().toString();
+        String fileName = sourceTestFile.getName();
+        String fileMediaType = FileMediaType.SERVICE.getMediaTypeByName(sourceTestFile);
 
-        String fileName = "test-" + uuid + ".bin";
+        ContentReference targetContentReference = handler.createContentReference(fileName, fileMediaType);
 
-        ContentReference reference = handler.createContentReference(fileName, "application/octet-stream");
-
-        assertFalse(handler.isContentReferenceExists(reference));
-
-        long contentLen = testFile.length();
-
-        reference.setSize(contentLen); // prevents AmazonS3Client warn
-
+        assertFalse(handler.isContentReferenceExists(targetContentReference));
+        
         if (usePutFile)
         {
-            // write to target (upload to S3)
-            handler.putFile(testFile, reference);
+            // S3 upload
+            handler.putFile(sourceTestFile, targetContentReference);
         }
         else
         {
-            FileInputStream targetInputStream = new FileInputStream(testFile);
-            handler.putInputStream(targetInputStream, reference);
+            FileInputStream targetInputStream = new FileInputStream(sourceTestFile);
+
+            // S3 putObject
+            targetContentReference.setSize(sourceTestFile.length()); // prevents AmazonS3Client warn
+            handler.putInputStream(targetInputStream, targetContentReference);
         }
 
-        assertTrue(handler.isContentReferenceExists(reference));
+        assertTrue(handler.isContentReferenceExists(targetContentReference));
 
         if (cleanup)
         {
-            // delete the S3 object
-            handler.delete(reference);
+            // S3 deleteObject
+            handler.delete(targetContentReference);
 
-            assertFalse(handler.isContentReferenceExists(reference));
+            assertFalse(handler.isContentReferenceExists(targetContentReference));
         }
     }
 
-    private String getVar(String varName)
+    private <T> T getVar(String varName, T defaultValue, Class<T> type)
     {
         String value = System.getProperty(varName);
         if (value == null)
         {
             value = System.getenv(varName);
         }
-        return value;
+        if (value == null)
+        {
+            return defaultValue;
+        }
+        else if (type == Long.class)
+        {
+            return type.cast(Long.parseLong(value));
+        }
+        else if (type == Integer.class)
+        {
+            return type.cast(Integer.parseInt(value));
+        }
+        else if (type == String.class)
+        {
+            return type.cast(value);
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Unsupported type: "+ type);
+        }
     }
 
     private File createTestFile(long testContentSizeInBytes) throws IOException

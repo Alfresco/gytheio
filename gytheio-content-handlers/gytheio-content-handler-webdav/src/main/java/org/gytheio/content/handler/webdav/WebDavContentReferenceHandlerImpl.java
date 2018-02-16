@@ -195,6 +195,10 @@ public class WebDavContentReferenceHandlerImpl extends AbstractUrlContentReferen
     public long putFile(File sourceFile, ContentReference targetContentReference)
             throws ContentIOException
     {
+        if (!isContentReferenceSupported(targetContentReference))
+        {
+            throw new ContentIOException("ContentReference not supported");
+        }
         try
         {
             FileInputStream fis = new FileInputStream(sourceFile);

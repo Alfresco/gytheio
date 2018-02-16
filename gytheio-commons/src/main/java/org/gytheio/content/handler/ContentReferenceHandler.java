@@ -83,7 +83,6 @@ public interface ContentReferenceHandler
 
     /**
      * Writes the given source file into the given target content reference.
-     * <p>
      * 
      * @param sourceFile
      * @param targetContentReference
