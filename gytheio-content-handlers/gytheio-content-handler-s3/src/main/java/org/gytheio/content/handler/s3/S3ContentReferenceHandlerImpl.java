@@ -319,6 +319,11 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
             }
             catch (InterruptedException e)
             {
+                logger.error("Upload was interrupted: "+e.getMessage());
+
+                // Be a good citizen  and set interrupt flag
+                Thread.currentThread().interrupt();
+
                 throw new ContentIOException("Failed to write content", e);
             }
 
