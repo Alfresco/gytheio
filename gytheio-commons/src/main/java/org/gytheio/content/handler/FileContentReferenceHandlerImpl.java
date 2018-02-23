@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -253,6 +253,41 @@ public class FileContentReferenceHandlerImpl implements FileContentReferenceHand
                 catch (IOException e)
                 {
                 }
+            }
+        }
+    }
+
+    @Override
+    public long putFile(File sourceFile, ContentReference targetContentReference)
+            throws ContentIOException
+    {
+        FileOutputStream fileOutputStream = null;
+        FileInputStream fileInputStream = null;
+        try
+        {
+            File targetFile = getFile(targetContentReference, false);
+            fileOutputStream = new FileOutputStream(targetFile);
+            fileInputStream = new FileInputStream(sourceFile);
+            return IOUtils.copyLarge(fileInputStream, fileOutputStream);
+        }
+        catch (IOException e)
+        {
+            throw new ContentIOException("Error copying input stream", e);
+        }
+        catch (InterruptedException e)
+        {
+            return 0;
+        }
+        finally
+        {
+            try
+            {
+                if (fileOutputStream != null) { fileOutputStream.close(); }
+                if (fileInputStream != null) { fileInputStream.close(); }
+            }
+            catch (IOException e)
+            {
+                // Ignore
             }
         }
     }

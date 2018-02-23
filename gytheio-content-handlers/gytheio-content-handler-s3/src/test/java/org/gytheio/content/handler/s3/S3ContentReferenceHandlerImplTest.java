@@ -21,7 +21,11 @@ package org.gytheio.content.handler.s3;
 
 import com.amazonaws.ClientConfiguration;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentReference;
+import org.gytheio.content.file.TempFileProvider;
+import org.gytheio.content.mediatype.FileMediaType;
 import org.junit.BeforeClass;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -31,8 +35,12 @@ import com.amazonaws.services.s3.AmazonS3;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
@@ -50,6 +58,8 @@ import static org.junit.Assert.assertTrue;
  */
 public class S3ContentReferenceHandlerImplTest
 {
+    private static final Log logger = LogFactory.getLog(S3ContentReferenceHandlerImplTest.class);
+    
     private static S3ContentReferenceHandlerImpl handler;
 
     //
@@ -70,8 +80,7 @@ public class S3ContentReferenceHandlerImplTest
 
     private static String s3BucketRegion = null;
 
-    // note: bucket must be empty
-    private static boolean deleteTestBucket = true;
+    private static boolean cleanup = true;
 
     @BeforeClass
     public static void setUp()
@@ -93,7 +102,7 @@ public class S3ContentReferenceHandlerImplTest
     @AfterClass
     public static void tearDown()
     {
-    	if (deleteTestBucket)
+    	if (cleanup)
     	{
 	        try
 	        {
@@ -137,18 +146,23 @@ public class S3ContentReferenceHandlerImplTest
         checkReference("my.file.txt", "text/plain");
     }
 
+    /**
+     * Tests: putInputStream, getInputStream, delete
+     */
     @Test
-    public void testFileOps()
+    public void testPutGetDelete()
     {
         int LOOP_COUNT = ClientConfiguration.DEFAULT_MAX_CONNECTIONS + 5; // MM-682
-        
+
+        int TEST_SIZE_IN_BYTES = 1024; // 1 KiB
+
         for (int i = 0; i < LOOP_COUNT; i++)
         {
-            testFileOpsImpl();
+            testPutGetDeleteImpl(TEST_SIZE_IN_BYTES);
         }
     }
-    
-    private void testFileOpsImpl()
+
+    private void testPutGetDeleteImpl(int testContentSizeInBytes)
     {
     	String uuid = UUID.randomUUID().toString();
         String fileName = "test-" + uuid + ".bin";
@@ -157,32 +171,32 @@ public class S3ContentReferenceHandlerImplTest
 
         assertFalse(handler.isContentReferenceExists(reference));
 
-        // create the S3 object
-
-        byte[] dataIn = new byte[1024]; // 1 KiB
+        byte[] dataIn = new byte[testContentSizeInBytes];
         new Random().nextBytes(dataIn);
 
         int contentLen = dataIn.length;
         try 
         {
-        	reference.setSize((long)contentLen); // prevents AmazonS3Client warn
-
 	    	ByteArrayInputStream bais = new ByteArrayInputStream(dataIn);
-	        handler.putInputStream(bais, reference);
+
+            // S3 putObject
+            reference.setSize((long)contentLen); // prevents AmazonS3Client warn
+            handler.putInputStream(bais, reference);
 
 	        bais.close();
         }
         catch (IOException ioe)
         {
-        	System.err.println(ioe.getMessage());
+        	logger.error(ioe.getMessage());
         }
 
         assertTrue(handler.isContentReferenceExists(reference));
 
-        // get the S3 object
         try
         {
-	        InputStream is = handler.getInputStream(reference, false);
+            // S3 getObject
+            InputStream is = handler.getInputStream(reference, false);
+
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             byte[] buffer = new byte[1024];
@@ -202,12 +216,141 @@ public class S3ContentReferenceHandlerImplTest
         }
         catch (IOException ioe)
         {
-        	System.err.println(ioe.getMessage());
+        	logger.error(ioe.getMessage());
         }
 
-        // delete the S3 object
-        handler.delete(reference);
+        if (cleanup)
+        {
+            // S3 deleteObject
+            handler.delete(reference);
 
-        assertFalse(handler.isContentReferenceExists(reference));
+            assertFalse(handler.isContentReferenceExists(reference));
+        }
+    }
+    
+    /**
+     * Tests: putFile (+ delete for cleanup)
+     */
+    @Test
+    public void testPutFile() throws IOException
+    {
+        Long pf_start_size = getVar("pf_start_size", new Long(1024 * 1024 * 1L), Long.class); // default 1 MiB
+        Integer pf_multiplier = getVar("pf_multiplier", new Integer(2), Integer.class);
+        Integer pf_count = getVar("pf_count", new Integer(3), Integer.class);
+        Integer pf_repeat = getVar("pf_repeat", new Integer(1), Integer.class);
+
+        if (logger.isInfoEnabled())
+        {
+            logger.info("testPutFile: pf_start_size="+pf_start_size+", pf_multiplier="+pf_multiplier
+                    +", pf_count="+pf_count+", pf_repeat="+pf_repeat);
+        }
+
+        long testContentSizeInBytes = pf_start_size;
+
+        for (int i = 0; i < pf_count; i++)
+        {
+            File testFile = createTestFile(testContentSizeInBytes);
+
+            for (int j = 0; j < pf_repeat; j++)
+            {
+                // via S3 Transfer Manger Upload
+                testPutFileImpl(testFile, true);
+
+                // via S3 PutObject
+                testPutFileImpl(testFile, false);
+            }
+
+            if (cleanup)
+            {
+                testFile.delete();
+            }
+
+            // increase test file size for next loop
+            testContentSizeInBytes = testContentSizeInBytes * pf_multiplier;
+        }
+    }
+
+    private void testPutFileImpl(File sourceTestFile, boolean usePutFile) throws FileNotFoundException
+    {
+        String fileName = sourceTestFile.getName();
+        String fileMediaType = FileMediaType.SERVICE.getMediaTypeByName(sourceTestFile);
+
+        ContentReference targetContentReference = handler.createContentReference(fileName, fileMediaType);
+
+        assertFalse(handler.isContentReferenceExists(targetContentReference));
+        
+        if (usePutFile)
+        {
+            // S3 upload
+            handler.putFile(sourceTestFile, targetContentReference);
+        }
+        else
+        {
+            FileInputStream targetInputStream = new FileInputStream(sourceTestFile);
+
+            // S3 putObject
+            targetContentReference.setSize(sourceTestFile.length()); // prevents AmazonS3Client warn
+            handler.putInputStream(targetInputStream, targetContentReference);
+        }
+
+        assertTrue(handler.isContentReferenceExists(targetContentReference));
+
+        if (cleanup)
+        {
+            // S3 deleteObject
+            handler.delete(targetContentReference);
+
+            assertFalse(handler.isContentReferenceExists(targetContentReference));
+        }
+    }
+
+    private <T> T getVar(String varName, T defaultValue, Class<T> type)
+    {
+        String value = System.getProperty(varName);
+        if (value == null)
+        {
+            value = System.getenv(varName);
+        }
+        if (value == null)
+        {
+            return defaultValue;
+        }
+        else if (type == Long.class)
+        {
+            return type.cast(Long.parseLong(value));
+        }
+        else if (type == Integer.class)
+        {
+            return type.cast(Integer.parseInt(value));
+        }
+        else if (type == String.class)
+        {
+            return type.cast(value);
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Unsupported type: "+ type);
+        }
+    }
+
+    private File createTestFile(long testContentSizeInBytes) throws IOException
+    {
+        long startTime = System.currentTimeMillis();
+
+        String fileSuffix = ".tmp";
+        String fileBase = "test-" + UUID.randomUUID().toString();
+
+        File testFile = TempFileProvider.createTempFile(fileBase, fileSuffix);
+
+        RandomAccessFile raf = new RandomAccessFile(testFile.getAbsoluteFile(), "rw");
+        raf.setLength(testContentSizeInBytes);
+        raf.close();
+
+        if (logger.isDebugEnabled())
+        {
+            logger.debug("Create (random access) test file [" + testFile.getAbsolutePath() + " , " + testContentSizeInBytes + "] (in "+(System.currentTimeMillis()-startTime)+" msecs)");
+        }
+
+        return testFile;
     }
 }
