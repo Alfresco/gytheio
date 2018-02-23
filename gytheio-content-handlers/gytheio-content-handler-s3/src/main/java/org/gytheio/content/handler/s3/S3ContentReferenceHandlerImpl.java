@@ -310,7 +310,7 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
 
         try
         {
-            Long contentLength = sourceFile.length();
+            long contentLength = sourceFile.length();
 
             try
             {
@@ -334,7 +334,7 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
 
             if (logger.isWarnEnabled())
             {
-                if ((contentLength != null) && (storedContentLength != contentLength))
+                if (storedContentLength != contentLength)
                 {
                     logger.warn("Metadata length differs - expected " + contentLength + ", actual "+ storedContentLength);
                 }
