@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -187,8 +187,7 @@ public abstract class AbstractFileContentTransformerWorker extends AbstractConte
                             resultFile.getName(), resultMediaType);
                 }
                 target.setSize(resultFile.length());
-                FileInputStream targetInputStream = new FileInputStream(resultFile);
-                targetContentReferenceHandler.putInputStream(targetInputStream, target);
+                targetContentReferenceHandler.putFile(resultFile, target);
             }
             else
             {

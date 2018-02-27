@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -150,6 +150,17 @@ public class MockUrlContentReferenceHandlerContentTransformerWorkerTest extends 
                 throw new IllegalArgumentException(EXCEPTION_MESSAGE_NULL_SIZE);
             }
             return delegateContentReferenceHandler.putInputStream(sourceInputStream, targetContentReference);
+        }
+
+        @Override
+        public long putFile(File sourceFile, ContentReference targetContentReference)
+                throws ContentIOException
+        {
+            if (targetContentReference.getSize() == null)
+            {
+                throw new IllegalArgumentException(EXCEPTION_MESSAGE_NULL_SIZE);
+            }
+            return delegateContentReferenceHandler.putFile(sourceFile, targetContentReference);
         }
 
         @Override
