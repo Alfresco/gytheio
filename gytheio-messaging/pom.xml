@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.gytheio</groupId>
         <artifactId>gytheio-parent</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <version>0.8</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
