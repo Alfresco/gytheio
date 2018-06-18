@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -68,16 +68,21 @@ public class BenchmarkRunner
     protected int logAfterNumMessages = 1000;
     
     protected String brokerUrl;
+    protected String brokerUsername;
+    protected String brokerPassword;
     protected String endpointSend;
     protected String endpointReceive;
     protected int numMessages;
     protected boolean runProducer;
     protected boolean runConsumer;
     
-    public BenchmarkRunner(String brokerUrl, String endpointSend, String endpointReceive, 
-                    int numMessages, boolean runProducer, boolean runConsumer)
+    public BenchmarkRunner(String brokerUrl, String brokerUsername, String brokerPassword, 
+                           String endpointSend, String endpointReceive, 
+                           int numMessages, boolean runProducer, boolean runConsumer)
     {
         this.brokerUrl = brokerUrl;
+        this.brokerUsername = brokerUsername;
+        this.brokerPassword = brokerPassword;
         this.endpointSend = endpointSend;
         this.endpointReceive = endpointReceive;
         this.numMessages = numMessages;
@@ -122,13 +127,16 @@ public class BenchmarkRunner
         
         if (brokerUrl.startsWith("tcp") || brokerUrl.startsWith("failover"))
         {
-            logger.debug("Initializing Camel Endpoint");
-            producer = initializeCamelEndpoint(brokerUrl, endpointSend, endpointReceive, messageConsumer);
+            logger.debug("Initializing Camel Endpoint: "+brokerUrl);
+            producer = initializeCamelEndpoint(brokerUrl, 
+                    endpointSend, endpointReceive, messageConsumer);
         }
         else if (brokerUrl.startsWith("amqp"))
         {
-            logger.debug("Initializing AmqpDirect Endpoint");
-            producer = initializeAmqpDirectEndpoint(brokerUrl, endpointSend, endpointReceive, messageConsumer);
+            // note: amqp://, amqps:// or amqp+ssl://
+            logger.debug("Initializing AmqpDirect Endpoint: "+brokerUrl+(brokerUsername != null ? " ("+brokerUsername+")": ""));
+            producer = initializeAmqpDirectEndpoint(brokerUrl, brokerUsername, brokerPassword, 
+                    endpointSend, endpointReceive, messageConsumer);
         }
         else
         {
@@ -248,14 +256,15 @@ public class BenchmarkRunner
      * @return the Gytheio message producer
      */
     protected MessageProducer initializeAmqpDirectEndpoint(
-            final String brokerUrl, final String endpointSend, final String endpointReceive, 
+            final String brokerUrl, final String brokerUsername, final String brokerPassword,
+            final String endpointSend, final String endpointReceive, 
             final MessageConsumer messageConsumer)
     {
         AmqpDirectEndpoint amqpEndpoint = null;
         if (messageConsumer != null)
         {
             amqpEndpoint = 
-                AmqpNodeBootstrapUtils.createEndpoint(messageConsumer, brokerUrl, null, null, endpointSend, endpointReceive);
+                AmqpNodeBootstrapUtils.createEndpoint(messageConsumer, brokerUrl, brokerUsername, brokerPassword, endpointSend, endpointReceive);
         
             // Start listener
             ExecutorService executorService = Executors.newCachedThreadPool();
