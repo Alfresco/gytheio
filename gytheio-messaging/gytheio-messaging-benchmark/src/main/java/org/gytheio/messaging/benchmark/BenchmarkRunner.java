@@ -155,6 +155,13 @@ public class BenchmarkRunner
             {
                 Object message = getBenchmarkMessage(i);
                 producer.send(message);
+                
+                // TODO temp hack ! - why is this needed to enqueue all messages (eg. when running AMQP "produce-only") ?
+                if (! runConsumer)
+                {
+                    Thread.sleep(100);
+                }
+                
                 if (i > 0 && i % logAfterNumMessages == 0)
                 {
                     logger.debug("Sent " + (i + 1) + " messages...");
@@ -193,7 +200,9 @@ public class BenchmarkRunner
             receiveTime = end - start;
         }
         
-        logStatistics(producer, messageConsumer, getBenchmarkMessage(0), numMessages, sendTime, receiveTime);
+        logStatistics((runProducer ? producer : null), (runConsumer ? messageConsumer : null), 
+                getBenchmarkMessage(0), numMessages, sendTime, receiveTime);
+        
         System.exit(0);
     }
     
@@ -252,7 +261,7 @@ public class BenchmarkRunner
      * 
      * @param brokerUrl
      * @param endpoint
-     * @param messageConsumer
+     * @param messageConsumer - can be null
      * @return the Gytheio message producer
      */
     protected MessageProducer initializeAmqpDirectEndpoint(
@@ -260,12 +269,11 @@ public class BenchmarkRunner
             final String endpointSend, final String endpointReceive, 
             final MessageConsumer messageConsumer)
     {
-        AmqpDirectEndpoint amqpEndpoint = null;
-        if (messageConsumer != null)
-        {
-            amqpEndpoint = 
+        AmqpDirectEndpoint amqpEndpoint = 
                 AmqpNodeBootstrapUtils.createEndpoint(messageConsumer, brokerUrl, brokerUsername, brokerPassword, endpointSend, endpointReceive);
         
+        if (messageConsumer != null)
+        {
             // Start listener
             ExecutorService executorService = Executors.newCachedThreadPool();
             executorService.execute(amqpEndpoint.getListener());
@@ -304,33 +312,35 @@ public class BenchmarkRunner
                 + (runConsumer && !runProducer ? "Receiving..." + "\n\n": "")
                 + "Number of Messages: " + numMessages + "\n"
                 + "Broker URL:         " + brokerUrl + "\n"
-                + "Send Endpoint:      " + endpointSend + "\n"
-                + "Receive Endpoint:   " + endpointReceive + "\n"
+                + (runProducer ? "Send Endpoint:      " + endpointSend + "\n": "")
+                + (runConsumer ? "Receive Endpoint:   " + endpointReceive + "\n": "")
                 + LOG_SEPERATOR);
     }
     
     /**
      * Logs the results of the benchmark to sys out
      * 
-     * @param endpoint
+     * @param producer
+     * @param consumer
+     * @param message
      * @param numMessages
      * @param sendTime
      * @param receiveTime
      */
-    protected void logStatistics(
-            MessageProducer endpoint, BenchmarkConsumer consumer, 
+    protected void logStatistics(MessageProducer producer, BenchmarkConsumer consumer, 
             Object message, int numMessages, long sendTime, long receiveTime)
     {
-        double messagesPerSecond = numMessages / (receiveTime / 1000.0);
+        double messagesPerSecond = numMessages / ((consumer != null ? receiveTime : sendTime) / 1000.0);
+        
         System.out.println("\n"
                 + LOG_SEPERATOR
                 + "BENCHMARK RESULTS\n"
                 + LOG_SEPERATOR
-                + "MessageProducer: " + endpoint.getClass().getSimpleName() + "\n"
-                + "MessageConsumer: " + consumer.getClass().getSimpleName() + "\n"
+                + (producer != null ? "MessageProducer: " + producer.getClass().getSimpleName() + "\n": "")
+                + (consumer != null ? "MessageConsumer: " + consumer.getClass().getSimpleName() + "\n": "")
                 + "Message Type:    " + message.getClass().getSimpleName() + "\n"
-                + "Sent:            " + numMessages + " messages in " + formatMillis(sendTime) + "\n"
-                + "Received:        " + numMessages + " messages in " + formatMillis(receiveTime) + "\n"
+                + (producer != null ? "Sent:            " + numMessages + " messages in " + formatMillis(sendTime) + "\n": "")
+                + (consumer != null ? "Received:        " + numMessages + " messages in " + formatMillis(receiveTime) + "\n" : "")
                 + "Throughput:      " + Math.round(messagesPerSecond) + " messages/second\n"
                 + LOG_SEPERATOR + "\n"
                 + "Note that results include time taken for factors\n"
