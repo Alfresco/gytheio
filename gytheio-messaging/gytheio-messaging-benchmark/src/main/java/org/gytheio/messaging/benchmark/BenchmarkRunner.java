@@ -155,13 +155,7 @@ public class BenchmarkRunner
             {
                 Object message = getBenchmarkMessage(i);
                 producer.send(message);
-                
-                // TODO temp hack ! - why is this needed to enqueue all messages (eg. when running AMQP "produce-only") ?
-                if (! runConsumer)
-                {
-                    Thread.sleep(100);
-                }
-                
+
                 if (i > 0 && i % logAfterNumMessages == 0)
                 {
                     logger.debug("Sent " + (i + 1) + " messages...");
@@ -199,7 +193,16 @@ public class BenchmarkRunner
             long end = (new Date()).getTime();
             receiveTime = end - start;
         }
-        
+
+        if (!runConsumer && (producer instanceof AmqpDirectEndpoint))
+        {
+            // TODO why is this needed to enqueue all messages (eg. when running AMQP "produce-only")
+            // note: not currently counted in sendTime (throughput calculation)
+            int delaySecs = 5;
+            logger.debug("Waiting for "+delaySecs+" secs ...");
+            Thread.sleep(delaySecs*1000);
+        }
+
         logStatistics((runProducer ? producer : null), (runConsumer ? messageConsumer : null), 
                 getBenchmarkMessage(0), numMessages, sendTime, receiveTime);
         
