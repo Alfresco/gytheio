@@ -125,10 +125,10 @@ public class BenchmarkRunner
             messageConsumer = getBenchmarkConsumer();
         }
         
-        if (brokerUrl.startsWith("tcp") || brokerUrl.startsWith("failover"))
+        if (brokerUrl.startsWith("tcp") || brokerUrl.startsWith("failover") || brokerUrl.startsWith("ssl"))
         {
-            logger.debug("Initializing Camel Endpoint: "+brokerUrl);
-            producer = initializeCamelEndpoint(brokerUrl, 
+            logger.debug("Initializing Camel Endpoint: "+brokerUrl+(brokerUsername != null ? " ("+brokerUsername+")": ""));
+            producer = initializeCamelEndpoint(brokerUrl, brokerUsername, brokerPassword,
                     endpointSend, endpointReceive, messageConsumer);
         }
         else if (brokerUrl.startsWith("amqp"))
@@ -220,13 +220,15 @@ public class BenchmarkRunner
      * @throws Exception
      */
     protected MessageProducer initializeCamelEndpoint(
-            final String brokerUrl, final String endpointSend, final String endpointReceive,
+            final String brokerUrl, final String brokerUsername, final String brokerPassword,
+            final String endpointSend, final String endpointReceive,
             final MessageConsumer messageConsumer) throws Exception
     {
         CamelContext context = new DefaultCamelContext();
         
         ConnectionFactory connectionFactory = 
-                new ActiveMQConnectionFactory(brokerUrl);
+                new ActiveMQConnectionFactory(brokerUsername, brokerPassword, brokerUrl);
+        
         JmsComponent component = AMQPComponent.jmsComponent();
         component.setConnectionFactory(connectionFactory);
         context.addComponent("amqp", component);
