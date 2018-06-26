@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -21,6 +21,8 @@ package org.gytheio.messaging.benchmark;
 public class BootstrapArguments
 {
     public String brokerUrl;
+    public String brokerUsername;
+    public String brokerPassword;
     public int numMessages;
     public String endpointSend;
     public String endpointReceive;

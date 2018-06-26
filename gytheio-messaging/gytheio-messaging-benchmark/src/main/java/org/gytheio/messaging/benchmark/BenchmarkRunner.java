@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -68,16 +68,21 @@ public class BenchmarkRunner
     protected int logAfterNumMessages = 1000;
     
     protected String brokerUrl;
+    protected String brokerUsername;
+    protected String brokerPassword;
     protected String endpointSend;
     protected String endpointReceive;
     protected int numMessages;
     protected boolean runProducer;
     protected boolean runConsumer;
     
-    public BenchmarkRunner(String brokerUrl, String endpointSend, String endpointReceive, 
-                    int numMessages, boolean runProducer, boolean runConsumer)
+    public BenchmarkRunner(String brokerUrl, String brokerUsername, String brokerPassword, 
+                           String endpointSend, String endpointReceive, 
+                           int numMessages, boolean runProducer, boolean runConsumer)
     {
         this.brokerUrl = brokerUrl;
+        this.brokerUsername = brokerUsername;
+        this.brokerPassword = brokerPassword;
         this.endpointSend = endpointSend;
         this.endpointReceive = endpointReceive;
         this.numMessages = numMessages;
@@ -122,13 +127,16 @@ public class BenchmarkRunner
         
         if (brokerUrl.startsWith("tcp") || brokerUrl.startsWith("failover"))
         {
-            logger.debug("Initializing Camel Endpoint");
-            producer = initializeCamelEndpoint(brokerUrl, endpointSend, endpointReceive, messageConsumer);
+            logger.debug("Initializing Camel Endpoint: "+brokerUrl);
+            producer = initializeCamelEndpoint(brokerUrl, 
+                    endpointSend, endpointReceive, messageConsumer);
         }
         else if (brokerUrl.startsWith("amqp"))
         {
-            logger.debug("Initializing AmqpDirect Endpoint");
-            producer = initializeAmqpDirectEndpoint(brokerUrl, endpointSend, endpointReceive, messageConsumer);
+            // note: amqp://, amqps:// or amqp+ssl://
+            logger.debug("Initializing AmqpDirect Endpoint: "+brokerUrl+(brokerUsername != null ? " ("+brokerUsername+")": ""));
+            producer = initializeAmqpDirectEndpoint(brokerUrl, brokerUsername, brokerPassword, 
+                    endpointSend, endpointReceive, messageConsumer);
         }
         else
         {
@@ -147,6 +155,7 @@ public class BenchmarkRunner
             {
                 Object message = getBenchmarkMessage(i);
                 producer.send(message);
+
                 if (i > 0 && i % logAfterNumMessages == 0)
                 {
                     logger.debug("Sent " + (i + 1) + " messages...");
@@ -184,8 +193,19 @@ public class BenchmarkRunner
             long end = (new Date()).getTime();
             receiveTime = end - start;
         }
+
+        if (!runConsumer && (producer instanceof AmqpDirectEndpoint))
+        {
+            // TODO why is this needed to enqueue all messages (eg. when running AMQP "produce-only")
+            // note: not currently counted in sendTime (throughput calculation)
+            int delaySecs = 5;
+            logger.debug("Waiting for "+delaySecs+" secs ...");
+            Thread.sleep(delaySecs*1000);
+        }
+
+        logStatistics((runProducer ? producer : null), (runConsumer ? messageConsumer : null), 
+                getBenchmarkMessage(0), numMessages, sendTime, receiveTime);
         
-        logStatistics(producer, messageConsumer, getBenchmarkMessage(0), numMessages, sendTime, receiveTime);
         System.exit(0);
     }
     
@@ -244,19 +264,19 @@ public class BenchmarkRunner
      * 
      * @param brokerUrl
      * @param endpoint
-     * @param messageConsumer
+     * @param messageConsumer - can be null
      * @return the Gytheio message producer
      */
     protected MessageProducer initializeAmqpDirectEndpoint(
-            final String brokerUrl, final String endpointSend, final String endpointReceive, 
+            final String brokerUrl, final String brokerUsername, final String brokerPassword,
+            final String endpointSend, final String endpointReceive, 
             final MessageConsumer messageConsumer)
     {
-        AmqpDirectEndpoint amqpEndpoint = null;
+        AmqpDirectEndpoint amqpEndpoint = 
+                AmqpNodeBootstrapUtils.createEndpoint(messageConsumer, brokerUrl, brokerUsername, brokerPassword, endpointSend, endpointReceive);
+        
         if (messageConsumer != null)
         {
-            amqpEndpoint = 
-                AmqpNodeBootstrapUtils.createEndpoint(messageConsumer, brokerUrl, null, null, endpointSend, endpointReceive);
-        
             // Start listener
             ExecutorService executorService = Executors.newCachedThreadPool();
             executorService.execute(amqpEndpoint.getListener());
@@ -295,33 +315,35 @@ public class BenchmarkRunner
                 + (runConsumer && !runProducer ? "Receiving..." + "\n\n": "")
                 + "Number of Messages: " + numMessages + "\n"
                 + "Broker URL:         " + brokerUrl + "\n"
-                + "Send Endpoint:      " + endpointSend + "\n"
-                + "Receive Endpoint:   " + endpointReceive + "\n"
+                + (runProducer ? "Send Endpoint:      " + endpointSend + "\n": "")
+                + (runConsumer ? "Receive Endpoint:   " + endpointReceive + "\n": "")
                 + LOG_SEPERATOR);
     }
     
     /**
      * Logs the results of the benchmark to sys out
      * 
-     * @param endpoint
+     * @param producer
+     * @param consumer
+     * @param message
      * @param numMessages
      * @param sendTime
      * @param receiveTime
      */
-    protected void logStatistics(
-            MessageProducer endpoint, BenchmarkConsumer consumer, 
+    protected void logStatistics(MessageProducer producer, BenchmarkConsumer consumer, 
             Object message, int numMessages, long sendTime, long receiveTime)
     {
-        double messagesPerSecond = numMessages / (receiveTime / 1000.0);
+        double messagesPerSecond = numMessages / ((consumer != null ? receiveTime : sendTime) / 1000.0);
+        
         System.out.println("\n"
                 + LOG_SEPERATOR
                 + "BENCHMARK RESULTS\n"
                 + LOG_SEPERATOR
-                + "MessageProducer: " + endpoint.getClass().getSimpleName() + "\n"
-                + "MessageConsumer: " + consumer.getClass().getSimpleName() + "\n"
+                + (producer != null ? "MessageProducer: " + producer.getClass().getSimpleName() + "\n": "")
+                + (consumer != null ? "MessageConsumer: " + consumer.getClass().getSimpleName() + "\n": "")
                 + "Message Type:    " + message.getClass().getSimpleName() + "\n"
-                + "Sent:            " + numMessages + " messages in " + formatMillis(sendTime) + "\n"
-                + "Received:        " + numMessages + " messages in " + formatMillis(receiveTime) + "\n"
+                + (producer != null ? "Sent:            " + numMessages + " messages in " + formatMillis(sendTime) + "\n": "")
+                + (consumer != null ? "Received:        " + numMessages + " messages in " + formatMillis(receiveTime) + "\n" : "")
                 + "Throughput:      " + Math.round(messagesPerSecond) + " messages/second\n"
                 + LOG_SEPERATOR + "\n"
                 + "Note that results include time taken for factors\n"

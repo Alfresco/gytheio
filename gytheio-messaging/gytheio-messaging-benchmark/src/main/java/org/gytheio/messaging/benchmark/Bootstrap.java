@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -31,9 +31,11 @@ public class Bootstrap
     private static final Log logger = LogFactory.getLog(Bootstrap.class);
 
     protected static final String USAGE_MESSAGE = 
-            "\n\nUSAGE: brokerUrl numMessages "
+            "\n\nUSAGE: brokerUrl numMessages [un=username] [pw=password] "
             + "[endpointSend] [endpointReceive] [consume-only] [produce-only]\n\n"
-            + "\tbrokerUrl\tThe broker URL, example: tcp://localhost:61616\n"
+            + "\tbrokerUrl\tThe broker URL, examples: tcp://localhost:61616, amqp://my.host.test:5672, ampqs://my.host.test:5671, amqp+ssl://my.host.test:5671\n"
+            + "\tusername\tThe broker username, example: un=admin\n"
+            + "\tpassword\tThe broker password, example: pw=mysecretpassword\n"                   
             + "\tnumMessages\tThe number of messages to send and/or expect\n"
             + "\tendpointSend\tThe endpoint to send messages to, default: queue:gytheio.test.benchmark\n"
             + "\tendpointReceive\tThe endpoint to consumer messages from, default: queue:gytheio.test.benchmark\n"
@@ -47,6 +49,8 @@ public class Bootstrap
         {
             BenchmarkRunner runner = new BenchmarkRunner(
                     argsObject.brokerUrl, 
+                    argsObject.brokerUsername,
+                    argsObject.brokerPassword,
                     argsObject.endpointSend, 
                     argsObject.endpointReceive, 
                     argsObject.numMessages, 
@@ -74,11 +78,27 @@ public class Bootstrap
         
         argsObject.numMessages = Integer.valueOf(args[1]);
         
-        for (int i = 2; i < 6; i++)
+        for (int i = 2; i < 8; i++)
         {
             if (args.length > i)
             {
-                if (args[i].equals("consume-only"))
+                if (args[i].startsWith("un="))
+                {
+                    String[] split = args[i].split("un=");
+                    if (split.length == 2)
+                    {
+                        argsObject.brokerUsername = split[1];
+                    }
+                }
+                else if (args[i].startsWith("pw="))
+                {
+                    String[] split = args[i].split("pw=");
+                    if (split.length == 2)
+                    {
+                        argsObject.brokerPassword = split[1];
+                    }
+                }
+                else if (args[i].equals("consume-only"))
                 {
                     argsObject.runProducer = false;
                 }
@@ -102,7 +122,6 @@ public class Bootstrap
     
     protected static boolean isSupportedEndpoint(String endpoint)
     {
-        return endpoint != null && (endpoint.startsWith("queue") ||
-                endpoint.startsWith("topic"));
+        return endpoint != null && (endpoint.startsWith("queue") || endpoint.startsWith("topic"));
     }
 }

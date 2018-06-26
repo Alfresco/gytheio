@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2014 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -62,7 +62,8 @@ public class AmqpDirectEndpoint implements MessageProducer
     private static final String ENDPOINT_PREFIX_TOPIC = "topic:";
     private static final String CONNECTION_PREFIX_TOPIC = "topic://";
     
-
+    private boolean isSSL = false;
+    
     private String host;
     private int port = DEFAULT_PORT;
     private String username = DEFAULT_USERNAME;
@@ -180,6 +181,11 @@ public class AmqpDirectEndpoint implements MessageProducer
         this.password = password;
     }
 
+    public void setIsSSL(boolean isSSL)
+    {
+        this.isSSL = isSSL;
+    }
+
     public void setReceiveEndpoint(String receiveEndpoint)
     {
         this.receiveEndpoint = receiveEndpoint;
@@ -205,7 +211,8 @@ public class AmqpDirectEndpoint implements MessageProducer
         if (consumerConnection == null)
         {
             ConnectionFactory connectionFactory = 
-                    new ConnectionFactoryImpl(host, port, username, password);
+                    new ConnectionFactoryImpl(host, port, username, password, null, isSSL);
+            
             ((ConnectionFactoryImpl) connectionFactory).setTopicPrefix(CONNECTION_PREFIX_TOPIC);
             consumerConnection = connectionFactory.createConnection();
             
@@ -217,8 +224,9 @@ public class AmqpDirectEndpoint implements MessageProducer
     {
         if (producerConnection == null)
         {
-            ConnectionFactory connectionFactory = 
-                    new ConnectionFactoryImpl(host, port, username, password);
+            ConnectionFactory connectionFactory =
+                    new ConnectionFactoryImpl(host, port, username, password, null, isSSL);
+
             ((ConnectionFactoryImpl) connectionFactory).setTopicPrefix(CONNECTION_PREFIX_TOPIC);
             producerConnection = connectionFactory.createConnection();
             
