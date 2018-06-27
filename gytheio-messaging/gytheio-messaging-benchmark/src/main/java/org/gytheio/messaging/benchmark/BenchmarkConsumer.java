@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2015 Alfresco Software Limited.
+ * Copyright (C) 2005-2018 Alfresco Software Limited.
  *
  * This file is part of Gytheio
  *
@@ -66,7 +66,7 @@ public class BenchmarkConsumer implements MessageConsumer
     protected void validateMessage(Object message)
     {
         if (message == null || ((BenchmarkMessage) message).getValue() == null ||
-                !((BenchmarkMessage) message).getValue().equals(BenchmarkMessage.DEFAULT_VALUE))
+                !((BenchmarkMessage) message).getValue().equals(BenchmarkMessage.getDefaultValue()))
         {
             throw new IllegalArgumentException("Could not verify message");
         }

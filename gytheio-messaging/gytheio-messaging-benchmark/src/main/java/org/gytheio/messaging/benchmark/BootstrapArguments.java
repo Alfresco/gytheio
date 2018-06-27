@@ -28,4 +28,5 @@ public class BootstrapArguments
     public String endpointReceive;
     public boolean runProducer = true;
     public boolean runConsumer = true;
+    public int numSections = 100; // see also BenchmarkMessage
 }
