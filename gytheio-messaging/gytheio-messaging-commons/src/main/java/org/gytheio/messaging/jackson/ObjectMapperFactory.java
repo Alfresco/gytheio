@@ -37,7 +37,6 @@ public class ObjectMapperFactory
         mapper.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         SimpleModule module = new SimpleModule("GytheioJackson", 
                 new Version(0, 1, 0, "SNAPSHOT", "org.gytheio", "gytheio-messaging-commons"));
-        module.addKeyDeserializer(Class.class, new JsonClassKeyDeserializer());
         mapper.registerModule(module);
         return mapper;
     }
