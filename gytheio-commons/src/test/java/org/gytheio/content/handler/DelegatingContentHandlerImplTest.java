@@ -52,7 +52,7 @@ public class DelegatingContentHandlerImplTest
     @Before
     public void setUp() throws Exception
     {
-        FileProvider fileProviderA = new FileProviderImpl("ontent-handler-a");
+        FileProvider fileProviderA = new FileProviderImpl("content-handler-a");
         handlerA = new MockFileContentReferenceHandlerImpl("content-handler-a");
         ((FileContentReferenceHandlerImpl) handlerA).setFileProvider(fileProviderA);
 
