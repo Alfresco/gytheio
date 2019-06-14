@@ -11,7 +11,7 @@
     <artifactId>gytheio-messaging-amqp-direct</artifactId>
 
     <properties>
-        <dependency.qpid.version>0.26</dependency.qpid.version>
+        <dependency.qpid.version>0.32</dependency.qpid.version>
     </properties>
 
     <dependencies>
