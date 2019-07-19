@@ -25,7 +25,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.component.jackson.JacksonDataFormat;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.impl.DefaultExchange;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.gytheio.messaging.camel.dataformat.SimplePojo.EnumValue;
 import org.gytheio.messaging.jackson.ObjectMapperFactory;
@@ -101,7 +104,8 @@ public class JacksonDataFormatTest
         simplePojo.setField5(stringMap);
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        dataFormat.marshal(null, simplePojo, os);
+        Exchange exchange = new DefaultExchange(new DefaultCamelContext());
+        dataFormat.marshal(exchange, simplePojo, os);
         
         String result = new String(os.toByteArray(), "UTF-8");
         
