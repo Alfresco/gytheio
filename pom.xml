@@ -40,7 +40,7 @@
         
         <dependency.junit.version>4.10</dependency.junit.version>
         <dependency.log4j.version>1.2.17</dependency.log4j.version>
-        <dependency.jackson.version>2.9.9</dependency.jackson.version>
+        <dependency.jackson.version>2.10.0.pr1</dependency.jackson.version>
         <dependency.jackson-databind.version>2.9.9.3</dependency.jackson-databind.version>
     </properties>
 
