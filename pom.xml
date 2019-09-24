@@ -5,7 +5,7 @@
 
     <groupId>org.gytheio</groupId>
     <artifactId>gytheio-parent</artifactId>
-    <version>0.11.2</version>
+    <version>0.11.3-SNAPSHOT</version>
     <packaging>pom</packaging>
     
     <organization>
@@ -22,7 +22,7 @@
         <connection>${maven.scm.connection}</connection>
         <developerConnection>${maven.scm.developerConnection}</developerConnection>
         <url>${maven.scm.url}</url>
-        <tag>v0.11.2</tag>
+        <tag>HEAD</tag>
   </scm>
     
     <properties>
