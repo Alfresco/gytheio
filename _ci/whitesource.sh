@@ -13,7 +13,7 @@ mvn clean install \
     -Dorg.whitesource.checkPolicies=true \
     -Dorg.whitesource.forceCheckAllDependencies=true \
     -Dorg.whitesource.ignorePomModules=false \
-    "-Dorg.whitesource.product=AI Content Enrichment" \
+    "-Dorg.whitesource.product=Media Management" \
     -Dmaven.wagon.http.pool=false
 
 
