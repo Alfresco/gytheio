@@ -11,6 +11,8 @@ pushd "$(dirname "${BASH_SOURCE[0]}")/../"
 # Travis CI runner work on DETACHED HEAD, so we need to checkout the release branch
 git checkout -B "${TRAVIS_BRANCH}"
 
+git config user.email "build@alfresco.com"
+
 # Run the release plugin - with "[skip ci]" in the release commit message
 mvn -B \
     ${DRY_RUN} \

@@ -54,5 +54,20 @@
             <username>bamboo</username>
             <password>${env.NEXUS_PASSWORD}</password>
         </server>
+        <server>
+            <id>alfresco-public-snapshots</id>
+            <username>bamboo</username>
+            <password>${env.NEXUS_PASSWORD}</password>
+        </server>
+        <server>
+            <id>alfresco-public</id>
+            <username>bamboo</username>
+            <password>${env.NEXUS_PASSWORD}</password>
+        </server>
+        <server>
+            <id>alfresco-thirdparty</id>
+            <username>bamboo</username>
+            <password>${env.NEXUS_PASSWORD}</password>
+        </server>
     </servers>
 </settings>
