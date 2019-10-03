@@ -14,6 +14,9 @@ cache:
 branches:
   only:
     - master
+    - /^SP/.+$/
+    - release
+    - /^release/SP/.+$/
     - /^MM-.*$/
 
 stages:
@@ -34,6 +37,6 @@ jobs:
 
     - name: "Release"
       stage: release
-      if: branch = release
+      if: branch = release OR branch =~ /^release/SP/.+$/
       before_install: bash _ci/init.sh
       script: bash _ci/release.sh
