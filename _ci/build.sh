@@ -10,7 +10,6 @@ pushd "$(dirname "${BASH_SOURCE[0]}")/../"
 
 # Todo - remove skipTests
 mvn -B -U clean source:jar source:test-jar ${DEPLOY} \
-    -DskipTests \
     -DaltDeploymentRepository=alfresco-internal::default::https://artifacts.alfresco.com/nexus/content/repositories/snapshots/
 
 popd
