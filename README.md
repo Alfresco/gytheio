@@ -26,7 +26,7 @@ are available.
 
 * Task Nodes: Bootstraps one or more components.
 
-![Example architecture of a simple image transform node](doc/resources/images/gytheio-architecture-simple-transform-node.png "Example architecture of a simple image transform node")
+![Example architecture of a simple image transform node](docs/resources/images/gytheio-architecture-simple-transform-node.png "Example architecture of a simple image transform node")
 
 Of course, you can produce messages by other means, plugin a different messaging system and routing, or even use node workers locally and forgo messaging altogether.
 
