@@ -123,4 +123,8 @@ As a contributor you must sign a contribution agreement, but please keep in mind
 * [Submitting Contributions](https://community.alfresco.com/docs/DOC-6269-submitting-contributions)
 * [Accepting the Contribution Agreement](https://community.alfresco.com/docs/DOC-7070-alfresco-contribution-agreement)
 
-
+Release Process
+------------
+For a complete walk-through check out the
+[build-and-release-101.MD](https://github.com/Alfresco/gytheio/tree/master/docs/build-and-release-101.md)
+under the `docs` folder.
