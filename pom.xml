@@ -31,8 +31,6 @@
         <maven.scm.connection>scm:git:https://github.com/Alfresco/gytheio.git</maven.scm.connection>
         <maven.scm.developerConnection>scm:git:git@github.com:Alfresco/gytheio.git</maven.scm.developerConnection>
         <maven.scm.url>https://github.com/Alfresco/gytheio</maven.scm.url>
-        <maven.distributionManagement.snapshot.url>https://artifacts.alfresco.com/nexus/content/repositories/snapshots</maven.distributionManagement.snapshot.url>
-        <maven.distributionManagement.url>https://artifacts.alfresco.com/nexus/content/repositories/thirdparty</maven.distributionManagement.url>
         <maven.compile.source>1.7</maven.compile.source>
         <maven.compile.target>1.7</maven.compile.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -90,16 +88,16 @@
             <url>https://artifacts.alfresco.com/nexus/content/groups/public</url>
         </repository>
     </repositories>
-    
+
     <distributionManagement>
+        <snapshotRepository>
+            <id>alfresco-public-snapshots</id>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
             <id>alfresco-thirdparty</id>
-            <url>${maven.distributionManagement.url}</url>
+            <url>https://artifacts.alfresco.com/nexus/content/repositories/thirdparty</url>
         </repository>
-        <snapshotRepository>
-            <id>alfresco-snapshots</id>
-            <url>${maven.distributionManagement.snapshot.url}</url>
-        </snapshotRepository>
     </distributionManagement>
 
     <build>
