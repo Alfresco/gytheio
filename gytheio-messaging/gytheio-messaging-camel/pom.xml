@@ -12,6 +12,7 @@
 
     <properties>
         <dependency.camel.version>2.24.1</dependency.camel.version>
+        <dependency.sl4j.version>1.7.30</dependency.sl4j.version>
     </properties>
 
     <dependencies>
@@ -34,6 +35,11 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
             <version>${dependency.camel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${dependency.sl4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
