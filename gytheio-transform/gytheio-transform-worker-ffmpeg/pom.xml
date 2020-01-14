@@ -44,7 +44,8 @@
                                     <groupId>org.gytheio</groupId>
                                     <artifactId>gytheio-commons</artifactId>
                                     <version>${project.version}</version>
-                                    <type>test-jar</type>
+                                    <type>jar</type>
+                                    <classifier>tests</classifier>
                                     <overWrite>false</overWrite>
                                     <includes>quick/*</includes>
                                     <outputDirectory>${project.build.directory}/test-classes</outputDirectory>
