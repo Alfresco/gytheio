@@ -20,13 +20,11 @@ package org.gytheio.content.handler;
 
 import java.util.UUID;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.gytheio.content.ContentReference;
 import org.gytheio.content.file.FileProvider;
 import org.gytheio.content.file.FileProviderImpl;
 import org.gytheio.content.file.TempFileProvider;
-import org.gytheio.content.handler.ContentReferenceHandler;
-import org.gytheio.content.handler.FileContentReferenceHandlerImpl;
 import org.junit.Before;
 import org.junit.Test;
 

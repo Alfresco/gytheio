@@ -18,7 +18,7 @@
  */
 package org.gytheio.messaging.amqp;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.qpid.amqp_1_0.jms.Connection;
