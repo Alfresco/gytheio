@@ -6,7 +6,7 @@ set -vex
 pushd "$(dirname "${BASH_SOURCE[0]}")/../"
 
 
-mvn clean install \
+mvn -B clean install \
     -DskipTests org.whitesource:whitesource-maven-plugin:update \
     -Dorg.whitesource.failOnError=true \
     -Dorg.whitesource.forceUpdate=true \
