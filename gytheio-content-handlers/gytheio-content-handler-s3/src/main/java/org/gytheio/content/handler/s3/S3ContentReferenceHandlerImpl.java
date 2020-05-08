@@ -20,12 +20,8 @@ package org.gytheio.content.handler.s3;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.transfer.TransferManager;
-import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
-import com.amazonaws.services.s3.transfer.Upload;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gytheio.content.ContentIOException;
@@ -34,14 +30,19 @@ import org.gytheio.content.handler.AbstractUrlContentReferenceHandler;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GetObjectMetadataRequest;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.transfer.TransferManager;
+import com.amazonaws.services.s3.transfer.TransferManagerBuilder;
+import com.amazonaws.services.s3.transfer.Upload;
 
 /**
  * AWS S3 content handler implementation
@@ -160,10 +161,20 @@ public class S3ContentReferenceHandlerImpl extends AbstractUrlContentReferenceHa
         }
 
         AmazonS3 s3 = null;
-        
+
         try
         {
             s3 = s3ClientBuilder.build();
+        }
+        catch (IllegalArgumentException e)
+        {
+            if (e.getCause() != null &&
+                e.getCause() instanceof URISyntaxException &&
+                e.getCause().getMessage().startsWith("Illegal character in authority at index 8: https://s3."))
+            {
+                s3ClientBuilder.withRegion(DEFAULT_BUCKET_REGION);
+                s3 = s3ClientBuilder.build();
+            }
         }
         catch (AmazonClientException e)
         {
