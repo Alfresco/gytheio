@@ -11,7 +11,7 @@
     <artifactId>gytheio-messaging-camel</artifactId>
 
     <properties>
-        <dependency.camel.version>2.24.2</dependency.camel.version>
+        <dependency.camel.version>3.5.0</dependency.camel.version>
         <dependency.sl4j.version>1.7.30</dependency.sl4j.version>
     </properties>
 
