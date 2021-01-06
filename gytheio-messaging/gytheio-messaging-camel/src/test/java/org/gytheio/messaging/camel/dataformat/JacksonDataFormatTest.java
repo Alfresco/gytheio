@@ -28,7 +28,7 @@ import java.util.HashMap;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.gytheio.messaging.camel.dataformat.SimplePojo.EnumValue;
 import org.gytheio.messaging.jackson.ObjectMapperFactory;
