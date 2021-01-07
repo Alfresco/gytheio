@@ -11,31 +11,30 @@ cache:
   directories:
     - ${HOME}/.m2/repository
 
+before_cache: rm -rf $HOME/.m2/repository/org/gytheio
+
 branches:
   only:
     - master
     - /^SP\/.+$/
     - /^HF\/.+$/
-    - /^MM-.*$/
 
 stages:
   - build
   - release
 
+before_install: bash _ci/init.sh
+
 jobs:
   include:
     - name: "Build"
       stage: build
-      before_install: bash _ci/init.sh
       script: bash _ci/build.sh
 
     - name: "WhiteSource"
-      stage: build
-      before_install: bash _ci/init.sh
       script: bash _ci/whitesource.sh
 
     - name: "Release"
       stage: release
-      if: commit_message ~= /\[trigger release\]/ AND branch ~= /^(master|SP\/.+|HF\/.+)$/
-      before_install: bash _ci/init.sh
+      if: commit_message ~= /\[release\]/ AND branch ~= /^(master|SP\/.+|HF\/.+)$/
       script: bash _ci/release.sh

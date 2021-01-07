@@ -16,7 +16,7 @@ git config user.email "build@alfresco.com"
 # Run the release plugin - with "[skip ci]" in the release commit message
 mvn -B \
     ${DRY_RUN} \
-    -Dmaven.javadoc.failOnError=false
+    -Dmaven.javadoc.failOnError=false \
     "-Darguments=-DskipTests -Dmaven.javadoc.skip -Dadditionalparam=-Xdoclint:none -Dbuildnumber=${TRAVIS_BUILD_NUMBER}" \
     release:clean release:prepare release:perform \
     -DscmCommentPrefix="[maven-release-plugin][skip ci] " \
