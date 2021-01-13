@@ -13,7 +13,7 @@ mvn -B clean install \
     -Dorg.whitesource.checkPolicies=true \
     -Dorg.whitesource.forceCheckAllDependencies=true \
     -Dorg.whitesource.ignorePomModules=false \
-    "-Dorg.whitesource.product=Gytheio" \
+    "-Dorg.whitesource.product=Media Management" \
     -Dmaven.wagon.http.pool=false
 
 
