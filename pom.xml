@@ -5,7 +5,7 @@
 
     <groupId>org.gytheio</groupId>
     <artifactId>gytheio-parent</artifactId>
-    <version>0.12-A2-SNAPSHOT</version>
+    <version>0.12-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <organization>
