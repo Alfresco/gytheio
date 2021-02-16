@@ -32,8 +32,8 @@ jobs:
       stage: build
       script: bash _ci/build.sh
 
-    - name: "WhiteSource"
-      script: bash _ci/whitesource.sh
+#    - name: "WhiteSource"
+#      script: bash _ci/whitesource.sh
     
     - name: "Source Clear Scan (SCA)"  
       before_install: bash _ci/init.sh
