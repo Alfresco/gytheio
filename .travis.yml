@@ -18,6 +18,7 @@ branches:
     - master
     - /^SP\/.+$/
     - /^HF\/.+$/
+    - /^features\/.+$/
 
 stages:
   - build
@@ -31,8 +32,13 @@ jobs:
       stage: build
       script: bash _ci/build.sh
 
-    - name: "WhiteSource"
-      script: bash _ci/whitesource.sh
+#    - name: "WhiteSource"
+#      script: bash _ci/whitesource.sh
+    
+    - name: "Source Clear Scan (SCA)"  
+      before_install: bash _ci/init.sh
+      # Run Veracode
+      script: travis_wait 30 bash _ci/source_clear.sh
 
     - name: "Release"
       stage: release
