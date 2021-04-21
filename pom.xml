@@ -35,7 +35,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-        <dependency.junit.version>4.13.1</dependency.junit.version>
+        <dependency.junit.version>4.13.2</dependency.junit.version>
 
         <dependency.camel.version>3.7.0</dependency.camel.version>
 
