@@ -1,56 +1,17 @@
 version: 2
 registries:
-  maven-repository-artifacts-alfresco-com-nexus-content-groups-int:
+  maven-alfresco-internal:
     type: maven-repository
     url: https://artifacts.alfresco.com/nexus/content/groups/internal
-    username: bamboo
-    password: "${{secrets.MAVEN_REPOSITORY_ARTIFACTS_ALFRESCO_COM_NEXUS_CONTENT_GROUPS_INT_PASSWORD}}"
-
+    username: ${{secrets.NEXUS_USERNAME}}
+    password: ${{secrets.NEXUS_PASSWORD}}
 updates:
 - package-ecosystem: maven
   directory: "/"
   schedule:
     interval: daily
     time: "22:00"
-    timezone: Africa/Abidjan
+    timezone: Europe/London
   open-pull-requests-limit: 99
-  ignore:
-  - dependency-name: org.apache.activemq:activemq-client
-    versions:
-    - 5.16.1
-  - dependency-name: com.fasterxml.jackson.core:jackson-annotations
-    versions:
-    - 2.12.1
-    - 2.12.2
-  - dependency-name: com.fasterxml.jackson.module:jackson-module-jaxb-annotations
-    versions:
-    - 2.12.1
-    - 2.12.2
-  - dependency-name: org.apache.logging.log4j:log4j-slf4j-impl
-    versions:
-    - 2.14.0
-  - dependency-name: org.apache.logging.log4j:log4j-core
-    versions:
-    - 2.14.0
-  - dependency-name: org.apache.camel:camel-amqp
-    versions:
-    - 3.7.1
-    - 3.7.2
-    - 3.8.0
-  - dependency-name: org.apache.camel:camel-test
-    versions:
-    - 3.7.1
-    - 3.7.2
-    - 3.8.0
-  - dependency-name: org.apache.camel:camel-jackson
-    versions:
-    - 3.7.1
-    - 3.7.2
-    - 3.8.0
-  - dependency-name: org.apache.camel:camel-core
-    versions:
-    - 3.7.1
-    - 3.7.2
-    - 3.8.0
   registries:
-  - maven-repository-artifacts-alfresco-com-nexus-content-groups-int
+  - maven-alfresco-internal
