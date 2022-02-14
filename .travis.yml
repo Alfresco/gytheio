@@ -18,7 +18,8 @@ branches:
     - master
     - /^SP\/.+$/
     - /^HF\/.+$/
-    - /^features\/.+$/
+    - /^ACS-.*$/
+    - /^feature\/.+$/
 
 stages:
   - build
