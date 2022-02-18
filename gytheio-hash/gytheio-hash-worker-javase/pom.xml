@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.gytheio</groupId>
         <artifactId>gytheio-hash</artifactId>
-        <version>0.13-SNAPSHOT</version>
+        <version>0.16-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -30,7 +30,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.0</version>
                 <executions>
                     <execution>
                         <id>unpack-test-resources</id>

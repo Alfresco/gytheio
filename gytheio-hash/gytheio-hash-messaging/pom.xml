@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.gytheio</groupId>
         <artifactId>gytheio-hash</artifactId>
-        <version>0.13-SNAPSHOT</version>
+        <version>0.16-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 

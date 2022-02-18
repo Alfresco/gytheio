@@ -5,7 +5,7 @@
 
     <groupId>org.gytheio</groupId>
     <artifactId>gytheio-parent</artifactId>
-    <version>0.13-SNAPSHOT</version>
+    <version>0.16-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <organization>
@@ -37,7 +37,7 @@
 
         <dependency.junit.version>4.13.2</dependency.junit.version>
 
-        <dependency.camel.version>3.7.7</dependency.camel.version>
+        <dependency.camel.version>3.14.1</dependency.camel.version>
 
         <dependency.commons-logging.version>1.2</dependency.commons-logging.version>
         <dependency.log4j2.version>2.17.1</dependency.log4j2.version>
@@ -48,7 +48,7 @@
         <!-- gytheio-commons -->
         <dependency.commons-io.version>2.11.0</dependency.commons-io.version>
         <dependency.tika.version>2.2.1</dependency.tika.version>
-        <dependency.commons-lang3.version>3.11</dependency.commons-lang3.version>
+        <dependency.commons-lang3.version>3.12.0</dependency.commons-lang3.version>
     </properties>
 
     <modules>
@@ -121,7 +121,7 @@
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.0</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -137,7 +137,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
-                    <version>3.1.0</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

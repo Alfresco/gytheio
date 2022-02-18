@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.gytheio</groupId>
         <artifactId>gytheio-messaging</artifactId>
-        <version>0.13-SNAPSHOT</version>
+        <version>0.16-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -13,7 +13,7 @@
     <properties>
         <dependency.activemq.version>5.16.1</dependency.activemq.version>
 
-        <dependency.sl4j.version>1.7.35</dependency.sl4j.version>
+        <dependency.sl4j.version>1.7.36</dependency.sl4j.version>
     </properties>
 
     <dependencies>
