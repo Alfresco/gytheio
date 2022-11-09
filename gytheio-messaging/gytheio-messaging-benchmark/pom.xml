@@ -11,7 +11,7 @@
     <artifactId>gytheio-messaging-benchmark</artifactId>
 
     <properties>
-        <dependency.activemq.version>5.17.1</dependency.activemq.version>
+        <dependency.activemq.version>5.17.2</dependency.activemq.version>
 
         <dependency.sl4j.version>1.7.36</dependency.sl4j.version>
     </properties>
