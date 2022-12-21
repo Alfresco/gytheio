@@ -37,7 +37,7 @@
 
         <dependency.junit.version>4.13.2</dependency.junit.version>
 
-        <dependency.camel.version>3.18.2</dependency.camel.version>
+        <dependency.camel.version>3.20.0</dependency.camel.version>
 
         <dependency.commons-logging.version>1.2</dependency.commons-logging.version>
         <dependency.log4j2.version>2.18.0</dependency.log4j2.version>
