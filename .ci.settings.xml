@@ -19,10 +19,6 @@
                     <url>https://artifacts.alfresco.com/nexus/content/groups/internal</url>
                 </pluginRepository>
             </pluginRepositories>
-            <properties>
-                <!-- WhiteSource token -->
-                <org.whitesource.orgToken>${env.WHITESOURCE_TOKEN}</org.whitesource.orgToken>
-            </properties>
         </profile>
     </profiles>
 

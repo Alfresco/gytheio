@@ -1,6 +1,6 @@
 # Build
-The `gytheio` project uses _Travis CI_. \
-The `.travis.yml` config file can be found in the root of the repository.
+The `gytheio` project uses _GitHub Actions CI_. \
+The `ci.yml` config file can be found in the `.github/workflows` directory.
 
 
 ## Stages and Jobs
@@ -9,14 +9,14 @@ The `.travis.yml` config file can be found in the root of the repository.
 
 
 ## Branches
-Travis CI builds differ by branch:
+GitHub Actions CI builds differ by branch:
 * `master` / `SP/*` / `HF/*` branches:
   - regular builds which include the _Build_ stage;
   - if the commit message contains the `[release]` tag, the builds will also 
   include the _Release_ stage;
   - PR builds where the latest commit contains the `[release]` tag will execute dry runs 
   of the release jobs (no artifacts will be published until the PR is actually merged).
-* `MM-*` branches:
+* `MM-*` / `feature/*` / `ACS-*` branches:
   - regular builds which include only the _Build_ stage.
 
 All other branches are ignored.

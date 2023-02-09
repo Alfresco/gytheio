@@ -1,0 +1,73 @@
+name: Gytheio CI
+
+on:
+  pull_request:
+    branches:
+      - master
+      - SP/**
+      - HF/**
+      - ACS-**
+      - feature/**
+  push:
+    branches:
+      - master
+      - SP/**
+      - HF/**
+      - ACS-**
+      - feature/**
+      - MM-**
+  schedule:
+    - cron: '0 5 * * 3'
+  workflow_dispatch:
+
+env:
+  NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+  NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+
+jobs:
+  veracode:
+    name: "Source Clear Scan (SCA)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/veracode@v1.34.2
+        with:
+          srcclr-api-token: ${{ secrets.SRCCLR_API_TOKEN }}
+
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - name: "Remove SNAPSHOT artifacts"
+        run: find "${HOME}/.m2/repository/" -type d -name "*-SNAPSHOT*" | xargs -r -l rm -rf
+      - name: "Build and test"
+        run: bash _ci/build.sh
+
+  release:
+    name: "Release"
+    needs: build
+    runs-on: ubuntu-latest
+    if: >
+      !failure() &&
+      contains(github.event.head_commit.message, '[release]') &&
+      (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/') ||
+      github.base_ref == 'master' || startsWith(github.base_ref, 'SP/') || startsWith(github.base_ref, 'HF/'))
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/configure-git-author@v1.35.0
+        with:
+          username: ${{ secrets.BOT_GITHUB_USERNAME }}
+          email: ${{ secrets.BOT_GITHUB_EMAIL }}
+      - name: "Remove SNAPSHOT artifacts"
+        run: find "${HOME}/.m2/repository/" -type d -name "*-SNAPSHOT*" | xargs -r -l rm -rf
+      - name: "Release"
+        run: bash _ci/release.sh
