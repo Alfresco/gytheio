@@ -48,13 +48,27 @@ jobs:
       - name: "Build and test"
         run: bash _ci/build.sh
 
+  get_commit_message:
+    name: "Get last commit message"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-commit-message@v1.34.2
+      - name: "Store last commit message as job output"
+        id: last_commit
+        run: echo "commit_message=${COMMIT_MESSAGE}" >> $GITHUB_OUTPUT
+    outputs:
+      commit_message: ${{ steps.last_commit.outputs.commit_message }}
+
   release:
     name: "Release"
-    needs: build
+    needs: [build, get_commit_message]
     runs-on: ubuntu-latest
     if: >
       !failure() &&
-      contains(github.event.head_commit.message, '[release]') &&
+      (contains(github.event.head_commit.message, '[release]') || contains(needs.get_commit_message.outputs.commit_message, '[release]') &&
       (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/') ||
       github.base_ref == 'master' || startsWith(github.base_ref, 'SP/') || startsWith(github.base_ref, 'HF/'))
     steps:
