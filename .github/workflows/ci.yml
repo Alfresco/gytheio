@@ -55,7 +55,7 @@ jobs:
     if: >
       !failure() &&
       contains(github.event.head_commit.message, '[release]') &&
-      github.event_name != 'pull_request'
+      github.event_name != 'pull_request' &&
       (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/')
     steps:
       - uses: actions/checkout@v3
