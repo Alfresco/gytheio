@@ -46,8 +46,6 @@ jobs:
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.35.0
       - name: "Remove SNAPSHOT artifacts"
         run: find "${HOME}/.m2/repository/" -type d -name "*-SNAPSHOT*" | xargs -r -l rm -rf
-      - name: "Allow ImageMagick to parse PDFs"
-        run: sudo sed -i '/PDF/s/none/read|write/' /etc/ImageMagick-6/policy.xml
       - name: "Configure AWS credentials"
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -55,7 +53,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
       - name: "Build and test"
-        run: bash _ci/build.sh
+        run: |
+          sudo sed -i '/PDF/s/none/read|write/' /etc/ImageMagick-6/policy.xml
+          bash _ci/build.sh
 
   release:
     name: "Release"
