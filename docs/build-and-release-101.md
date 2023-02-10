@@ -14,8 +14,6 @@ GitHub Actions CI builds differ by branch:
   - regular builds which include the _Build_ stage;
   - if the commit message contains the `[release]` tag, the builds will also 
   include the _Release_ stage;
-  - PR builds where the latest commit contains the `[release]` tag will execute dry runs 
-  of the release jobs (no artifacts will be published until the PR is actually merged).
 * `MM-*` / `feature/*` / `ACS-*` branches:
   - regular builds which include only the _Build_ stage.
 

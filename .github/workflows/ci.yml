@@ -30,9 +30,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
-      - uses: Alfresco/alfresco-build-tools/.github/actions/veracode@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.35.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.35.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/veracode@v1.35.0
         with:
           srcclr-api-token: ${{ secrets.SRCCLR_API_TOKEN }}
 
@@ -41,26 +41,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.35.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.35.0
       - name: "Remove SNAPSHOT artifacts"
         run: find "${HOME}/.m2/repository/" -type d -name "*-SNAPSHOT*" | xargs -r -l rm -rf
       - name: "Build and test"
         run: bash _ci/build.sh
-
-  get_commit_message:
-    name: "Get last commit message"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-commit-message@v1.34.2
-      - name: "Store last commit message as job output"
-        id: last_commit
-        run: echo "commit_message=${COMMIT_MESSAGE}" >> $GITHUB_OUTPUT
-    outputs:
-      commit_message: ${{ steps.last_commit.outputs.commit_message }}
 
   release:
     name: "Release"
@@ -68,15 +54,15 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       !failure() &&
-      (contains(github.event.head_commit.message, '[release]') || contains(needs.get_commit_message.outputs.commit_message, '[release]')) &&
-      (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/') ||
-      github.base_ref == 'master' || startsWith(github.base_ref, 'SP/') || startsWith(github.base_ref, 'HF/'))
+      contains(github.event.head_commit.message, '[release]') &&
+      github.event_name != 'pull_request'
+      (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/')
     steps:
       - uses: actions/checkout@v3
         with:
           persist-credentials: false
-      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.34.2
-      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.34.2
+      - uses: Alfresco/alfresco-build-tools/.github/actions/get-build-info@v1.35.0
+      - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.35.0
       - uses: Alfresco/alfresco-build-tools/.github/actions/configure-git-author@v1.35.0
         with:
           username: ${{ secrets.BOT_GITHUB_USERNAME }}
