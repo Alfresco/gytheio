@@ -50,7 +50,7 @@ jobs:
 
   release:
     name: "Release"
-    needs: [build, get_commit_message]
+    needs: build
     runs-on: ubuntu-latest
     if: >
       !failure() &&
