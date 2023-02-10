@@ -23,6 +23,7 @@ on:
 env:
   NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
   NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+  AWS_REGION: eu-west-1
 
 jobs:
   veracode:
@@ -45,6 +46,12 @@ jobs:
       - uses: Alfresco/alfresco-build-tools/.github/actions/setup-java-build@v1.35.0
       - name: "Remove SNAPSHOT artifacts"
         run: find "${HOME}/.m2/repository/" -type d -name "*-SNAPSHOT*" | xargs -r -l rm -rf
+      - name: "Configure AWS credentials"
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
       - name: "Build and test"
         run: bash _ci/build.sh
 
