@@ -15,14 +15,15 @@ on:
       - HF/**
       - ACS-**
       - feature/**
-      - MM-**
   schedule:
     - cron: '0 5 * * 3'
   workflow_dispatch:
 
 env:
-  NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-  NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+  MAVEN_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+  MAVEN_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+  GIT_USERNAME: ${{ secrets.BOT_GITHUB_USERNAME }}
+  GIT_PASSWORD: ${{ secrets.BOT_GITHUB_TOKEN }}
   AWS_REGION: eu-west-1
 
 jobs:
@@ -62,7 +63,7 @@ jobs:
 
   release:
     name: "Release"
-    needs: build
+    needs: [veracode, build]
     runs-on: ubuntu-latest
     if: >
       !failure() &&
