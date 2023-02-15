@@ -50,7 +50,8 @@ jobs:
       - name: "Install ImageMagick to parse PDFs"
         run: |
           sudo apt-get update
-          sudo apt-get install -q -y  imagemagick ghostscript ffmpeg
+          sudo apt-get install -q -y imagemagick ghostscript ffmpeg
+#         ImageMagick6's default security policy doesn't allow it to parse PDFs
           sudo sed -i '/PDF/s/none/read|write/' /etc/ImageMagick-6/policy.xml
       - name: "Configure AWS credentials"
         uses: aws-actions/configure-aws-credentials@v1
@@ -66,7 +67,6 @@ jobs:
     needs: [veracode, build]
     runs-on: ubuntu-latest
     if: >
-      !failure() &&
       contains(github.event.head_commit.message, '[release]') &&
       github.event_name != 'pull_request' &&
       (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/'))
