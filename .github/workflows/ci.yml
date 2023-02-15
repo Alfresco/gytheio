@@ -51,7 +51,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -q -y imagemagick ghostscript ffmpeg
-#         ImageMagick6's default security policy doesn't allow it to parse PDFs
+          # ImageMagick6's default security policy doesn't allow it to parse PDFs
           sudo sed -i '/PDF/s/none/read|write/' /etc/ImageMagick-6/policy.xml
       - name: "Configure AWS credentials"
         uses: aws-actions/configure-aws-credentials@v1
