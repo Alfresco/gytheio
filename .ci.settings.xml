@@ -19,10 +19,6 @@
                     <url>https://artifacts.alfresco.com/nexus/content/groups/internal</url>
                 </pluginRepository>
             </pluginRepositories>
-            <properties>
-                <!-- WhiteSource token -->
-                <org.whitesource.orgToken>${env.WHITESOURCE_TOKEN}</org.whitesource.orgToken>
-            </properties>
         </profile>
     </profiles>
 
@@ -30,44 +26,44 @@
         <!-- Credential for private Nexus repository groups -->
         <server>
             <id>alfresco-internal</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <!-- Credential for private Nexus repositories -->
         <server>
             <id>alfresco-internal-snapshots</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <server>
             <id>alfresco-internal-releases</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <server>
             <id>alfresco-enterprise-snapshots</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <server>
             <id>alfresco-enterprise-releases</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <server>
             <id>alfresco-public-snapshots</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <server>
             <id>alfresco-public</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
         <server>
             <id>alfresco-thirdparty</id>
-            <username>${env.NEXUS_USERNAME}</username>
-            <password>${env.NEXUS_PASSWORD}</password>
+            <username>${env.MAVEN_USERNAME}</username>
+            <password>${env.MAVEN_PASSWORD}</password>
         </server>
     </servers>
 </settings>
