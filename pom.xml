@@ -43,7 +43,7 @@
         <dependency.log4j2.version>2.18.0</dependency.log4j2.version>
 
         <dependency.jackson.version>2.14.0</dependency.jackson.version>
-        <dependency.jackson-databind.version>${dependency.jackson.version}</dependency.jackson-databind.version>
+        <dependency.jackson-databind.version>2.15.0</dependency.jackson-databind.version>
 
         <!-- gytheio-commons -->
         <dependency.commons-io.version>2.11.0</dependency.commons-io.version>
