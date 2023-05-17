@@ -40,7 +40,7 @@
         <dependency.camel.version>3.20.2</dependency.camel.version>
 
         <dependency.commons-logging.version>1.2</dependency.commons-logging.version>
-        <dependency.log4j2.version>2.18.0</dependency.log4j2.version>
+        <dependency.log4j2.version>2.20.0</dependency.log4j2.version>
 
         <dependency.jackson.version>2.14.0</dependency.jackson.version>
         <dependency.jackson-databind.version>${dependency.jackson.version}</dependency.jackson-databind.version>
