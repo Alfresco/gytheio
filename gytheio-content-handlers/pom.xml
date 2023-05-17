@@ -12,7 +12,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <dependency.http-client.version>4.5.13</dependency.http-client.version>
+        <dependency.http-client.version>4.5.14</dependency.http-client.version>
         <dependency.http-core.version>4.4.16</dependency.http-core.version>
         <dependency.commons-codec.version>1.15</dependency.commons-codec.version>
     </properties>
