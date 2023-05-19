@@ -5,7 +5,7 @@
 
     <groupId>org.gytheio</groupId>
     <artifactId>gytheio-parent</artifactId>
-    <version>0.19-SNAPSHOT</version>
+    <version>0.19</version>
     <packaging>pom</packaging>
 
     <organization>
@@ -24,7 +24,7 @@
         <connection>scm:git:https://github.com/Alfresco/gytheio.git</connection>
         <developerConnection>scm:git:https://github.com/Alfresco/gytheio.git</developerConnection>
         <url>https://github.com/Alfresco/gytheio</url>
-        <tag>HEAD</tag>
+        <tag>v0.19</tag>
     </scm>
 
     <properties>
