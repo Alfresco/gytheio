@@ -17,7 +17,7 @@ If you want to see the logging message you'll have to specify the path in the co
 
     mvn activemq:run -Dlog4j.configuration=file:///<full path to log4j.properties>
 
-As of now, runs ActiveMQ 5.8 (note: build & run with JDK 1.7). 
+As of now, runs ActiveMQ 5.17 (note: build & run with JDK 17). 
 
 Alternatively, you may choose use docker, for example:
 
