@@ -48,7 +48,7 @@
         <!-- gytheio-commons -->
         <dependency.commons-io.version>2.14.0</dependency.commons-io.version>
         <dependency.tika.version>2.4.1</dependency.tika.version>
-        <dependency.commons-lang3.version>3.13.0</dependency.commons-lang3.version>
+        <dependency.commons-lang3.version>3.14.0</dependency.commons-lang3.version>
     </properties>
 
     <modules>
