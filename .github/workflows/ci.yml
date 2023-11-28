@@ -27,7 +27,7 @@ env:
   AWS_REGION: eu-west-1
 
 jobs:
-  veracode:
+  veracode_sca:
     name: "Source Clear Scan (SCA)"
     runs-on: ubuntu-latest
     steps:
