@@ -42,7 +42,7 @@ jobs:
     name: "Pipeline SAST Scan"
     runs-on: ubuntu-latest
     if: >
-      ((github.ref_name == 'master' || startsWith(github.ref_name, 'release/') || github.event_name == 'pull_request')) &&
+      (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/') || github.event_name == 'pull_request') &&
       !contains(github.event.head_commit.message, '[skip build]')
     steps:
       - uses: actions/checkout@v3
@@ -59,27 +59,33 @@ jobs:
           registry: quay.io
           username: ${{ secrets.QUAY_USERNAME }}
           password: ${{ secrets.QUAY_PASSWORD }}
+      - uses: Alfresco/alfresco-build-tools/.github/actions/github-download-file@v5.6.0
+        with:
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          repository: "Alfresco/veracode-baseline-archive"
+          file-path: "gytheio/gytheio-baseline.json"
+          target: "baseline.json"
       - name: "Build"
         run: mvn -B -U install -DskipTests
       - name: Create zip
         run: find gytheio*/gytheio*/target gytheio*/target -name '*.jar'  -exec zip -y -r to-scan.zip {} +
       - name: "Run SAST Scan"
-        id: scan
         uses: veracode/Veracode-pipeline-scan-action@v1.0.10
         with:
-          vid: '${{ secrets.VERACODE_API_ID }}'
-          vkey: '${{ secrets.VERACODE_API_KEY }}'
+          vid: ${{ secrets.VERACODE_API_ID }}
+          vkey: ${{ secrets.VERACODE_API_KEY }}
           file: "to-scan.zip"
           fail_build: true
           project_name: gytheio
           issue_details: true
           veracode_policy_name: Alfresco Default
           summary_output: true
-          summary_output_file: readable_results.txt
+          summary_output_file: results.json
           summary_display: true
+          baseline_file: baseline.json
       - name: Upload scan result
         if: success() || failure()
-        run: zip readable_output.zip readable_results.txt
+        run: zip readable_output.zip results.json
       - name: Upload Artifact
         if: success() || failure()
         uses: actions/upload-artifact@v3
