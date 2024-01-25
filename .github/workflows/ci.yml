@@ -43,6 +43,7 @@ jobs:
     runs-on: ubuntu-latest
     if: >
       (github.ref_name == 'master' || startsWith(github.ref_name, 'SP/') || startsWith(github.ref_name, 'HF/') || github.event_name == 'pull_request') &&
+      github.actor != 'dependabot[bot]' &&
       !contains(github.event.head_commit.message, '[skip build]')
     steps:
       - uses: actions/checkout@v3
