@@ -13,7 +13,7 @@
     <properties>
         <dependency.activemq.version>5.17.4</dependency.activemq.version>
 
-        <dependency.sl4j.version>1.7.36</dependency.sl4j.version>
+        <dependency.sl4j.version>2.0.12</dependency.sl4j.version>
     </properties>
 
     <dependencies>
