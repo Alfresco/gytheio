@@ -11,7 +11,7 @@
     <artifactId>gytheio-content-handler-s3</artifactId>
 
     <properties>
-        <dependency.aws-java-sdk.version>1.12.718</dependency.aws-java-sdk.version>
+        <dependency.aws-java-sdk.version>1.12.731</dependency.aws-java-sdk.version>
     </properties>
 
     <dependencies>
