@@ -42,7 +42,7 @@
         <dependency.commons-logging.version>1.3.3</dependency.commons-logging.version>
         <dependency.log4j2.version>2.20.0</dependency.log4j2.version>
 
-        <dependency.jackson.version>2.17.2</dependency.jackson.version>
+        <dependency.jackson.version>2.18.0</dependency.jackson.version>
         <dependency.jackson-databind.version>${dependency.jackson.version}</dependency.jackson-databind.version>
 
         <!-- gytheio-commons -->
