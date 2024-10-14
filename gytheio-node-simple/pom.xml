@@ -11,7 +11,7 @@
     <artifactId>gytheio-node-simple</artifactId>
 
     <properties>
-        <dependency.commons-logging.version>1.3.3</dependency.commons-logging.version>
+        <dependency.commons-logging.version>99.0-does-not-exist</dependency.commons-logging.version>
     </properties>
 
     <dependencies>
